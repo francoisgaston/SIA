@@ -1,5 +1,12 @@
 {
-  "pokemon": "caterpie",
+  "pokemon":{
+    "name":"caterpie",
+    "current_hp":1,
+    "level":1,
+    "status_effect":"NONE" 
+  },
   "pokeball": "pokeball",
-  "output_csv": "caterpie_csv.csv"
+  "output": "caterpie",
+  "times":10,
+  "noise":0.1
 }
