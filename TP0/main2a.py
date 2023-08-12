@@ -20,15 +20,18 @@ if __name__ == "__main__":
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
     with open(f"{sys.argv[1]}", "r") as f:
         config = json.load(f)
-        ball = config["pokeball"]
         CSV = "data/2a/"+ config["output"] + "_" + timestamp + ".csv"
         with open(CSV, 'w', newline="") as output:
             writer = csv.writer(output)
-            writer.writerow(["pokemon","status_effect","result","current_iter","max_iter"])
+            writer.writerow(["pokemon","status_effect","pokeball","count","total"])
             for _pokemon in config["pokemons"]:
-                for effect in _pokemon["status_effect"]:
-                    pokemon = factory.create(_pokemon["name"], _pokemon["level"],
-                                              getattr(StatusEffect, effect), _pokemon["current_hp"])
-                    for i in range(config["times"]):
-                        res = attempt_catch(pokemon, ball, config["noise"])
-                        writer.writerow([pokemon.name, effect, res[0], i+1, config["times"]])
+                for ball in config["pokeballs"]:
+                    for effect in _pokemon["status_effect"]:
+                        pokemon = factory.create(_pokemon["name"], _pokemon["level"],
+                                                  getattr(StatusEffect, effect), _pokemon["current_hp"])
+                        count = 0
+                        for i in range(config["times"]):
+                            if attempt_catch(pokemon, ball, config["noise"])[0]:
+                                count += 1
+
+                        writer.writerow([pokemon.name, effect,ball, count, config["times"]])

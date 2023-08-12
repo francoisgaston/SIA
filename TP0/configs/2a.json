@@ -31,8 +31,8 @@
       "status_effect": ["NONE","FREEZE","SLEEP","PARALYSIS","BURN","POISON"]
       }
     ],
-  "pokeball": "pokeball",
+  "pokeballs": ["pokeball","ultraball","fastball","heavyball"],
   "output": "2a",
-  "times": 30,
-  "noise": 0.1
+  "times": 100,
+  "noise": 0
 }
