@@ -81,6 +81,6 @@ if __name__ == "__main__":
         
         write_to_csv(CSV, catch_attempts)
 
-filename = "graphs/pokemon_effectiveness.png"
+filename = "graphs/pokemon_effectiveness.html"
 plot_bar_diagram(catch_attempts, filename)
 
