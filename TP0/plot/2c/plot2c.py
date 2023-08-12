@@ -114,11 +114,11 @@ def main(data, config):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Please provide the data file as an argument.")
+    if len(sys.argv) < 3:
+        print("Please provide the data file and the config file as arguments.")
         sys.exit(1)
 
-    with open(f"{sys.argv[1]}", "r") as datafile, open(f"plot/2c/config.json", "r") as configfile:
+    with open(f"{sys.argv[1]}", "r") as datafile, open(f"{sys.argv[2]}", "r") as configfile:
         data = csv.reader(datafile)
         config = json.load(configfile)
         main(data, config)
