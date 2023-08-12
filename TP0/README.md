@@ -16,7 +16,7 @@ objetivo de evaluar la función de captura de un Pokemon.
 
 ### Instalación
 
-Parado en la carpeta del tp0 ejecutar
+Parado en el directorio raiz, ejecutar
 
 ```sh
 pipenv install
@@ -25,8 +25,97 @@ pipenv install
 para instalar las dependencias necesarias en el ambiente virtual
 
 ## Ejecución
+### Scripts
+#### main.py
+Script genérico para ejecutar la función de captura de Pokemon.
+- **Input**: Archivo JSON de configuración
+    ```json
+    {
+      "pokeball": Pokeball name - String,
+      "output": Output CSV file name - String,
+      "times": Number of times to run the simulation - Integer,
+      "noise": Normalized noise to add to the function - Float [0, 1],
+      "pokemon": {
+        "name": Pokemon name - String,
+        "level": Pokemon level - Integer,
+        "current_hp": Pokemon current HP - Float [0, 1],
+        "status_effect": StatusEffect constant name - String,
+      }
+    }
+    ```
+- **Output**: Archivo CSV con los resultados de la simulación
+    ```csv
+    attempt_success, catch_rate
+    ```
+    - <ins>attempt_success</ins>: Indica si el intento de captura fue exitoso o no - Boolean
+    - <ins>catch_rate</ins>: Probabilidad de captura del Pokemon - Float [0, 1]
+    
+- **Ejecución**
+    ```sh
+    pipenv run python main.py [config_file]
+    ```
+  
+#### main1a.py
 
-```
-pipenv run python main.py [config_file]
-```
+#### main1b.py
+
+#### main2a.py
+
+#### plot/2a/plot2a.py
+
+#### main2b.py
+
+#### plot/2b/plot2b.py
+
+#### main2c.py
+Ejecuta la función de captura de Pokemon realizando varias simulaciones para cada nivel del Pokemon, de 1 a 100.
+- **Input**: Archivo JSON de configuración
+    ```json
+    {
+      "pokemons": Array of Pokemon names - String[],
+      "pokeball": Pokeball name - String,
+      "current_hp": Pokemon current HP - Float [0, 1],
+      "status_effect": StatusEffect constant name - String,
+      "output": Output CSV file name - String,
+      "times_per_level": Number of times to run the simulation for each level - Integer,
+      "noise": Normalized noise to add to the function - Float [0, 1],
+    }
+    ```
+- **Output**: Archivo CSV con los resultados de la simulación
+    ```csv
+    pokemon, level, capture_rate, attempt_success
+    ```
+    - <ins>pokemon</ins>: Nombre del Pokemon - String
+    - <ins>level</ins>: Nivel del Pokemon - Integer
+    - <ins>catch_rate</ins>: Probabilidad de captura del Pokemon - Float [0, 1]
+    - <ins>attempt_success</ins>: Indica si el intento de captura fue exitoso o no - Boolean
+    
+- **Ejecución**
+    ```sh
+    pipenv run python main2c.py [config_file]
+    ```
+    
+#### plot/2c/plot2c.py   
+Realiza un gráfico de lineas a partir de los resultados obtenidos en `main2c.py`.
+- **Input**: 
+  - Archivo CSV generado por `main2c.py`
+  - Archivo JSON de configuración
+      ```json
+      {
+        "pokemons": Array of Pokemon names to graph - String[],
+        "output": Output HTML file name - String,
+        "graph": {
+          "title": Graph title - String,
+          "xaxis_title": X axis title - String,
+          "yaxis_title": Y axis title - String,
+          "decimal_places": Number of decimal places to round the values - Integer,
+        } 
+      }
+      ```
+- **Output**: Archivo HTML con el gráfico realizado por `Plotly`
+    
+- **Ejecución**
+    ```sh
+    pipenv run python plot/2c/plot2c.py [csv_file] [config_file]
+    ```
 
