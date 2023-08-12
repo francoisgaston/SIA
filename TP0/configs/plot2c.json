@@ -1,6 +1,6 @@
 {
   "available_pokemons": ["caterpie", "jolteon", "snorlax", "onix", "mewtwo"],
-  "pokemons": ["snorlax", "onix", "mewtwo"],
+  "pokemons": ["caterpie", "jolteon", "snorlax", "onix", "mewtwo"],
   "output": "graphs/capture_rate_per_level",
   "graph": {
     "title": "Probabilidad de captura por nivel",
