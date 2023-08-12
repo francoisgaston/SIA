@@ -2,13 +2,26 @@
   "pokemons": [
     {
       "name": "jolteon",
-      "current_hp": 1,
       "level": 1,
       "status_effect": "NONE"
     },
     {
       "name": "snorlax",
-      "current_hp": 1,
+      "level": 1,
+      "status_effect": "NONE"
+    },
+    {
+      "name": "caterpie",
+      "level": 1,
+      "status_effect": "NONE"
+    },
+    {
+      "name": "onix",
+      "level": 1,
+      "status_effect": "NONE"
+    },
+    {
+      "name": "mewtwo",
       "level": 1,
       "status_effect": "NONE"
     }
