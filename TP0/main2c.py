@@ -23,7 +23,7 @@ def main(config):
             pokemon = factory.create(pokemon_name, level, status_effect, current_hp)
             for _ in range(times_per_level):
                 attempt = attempt_catch(pokemon, pokeball, noise)
-                catch_attempts.append(tuple((pokemon_name, level, attempt[1], attempt[0], noise)))
+                catch_attempts.append(tuple((pokemon_name, level, attempt[1], attempt[0])))
 
     # Save the results to a csv file
     write_to_csv(
