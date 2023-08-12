@@ -4,42 +4,51 @@ import sys
 from datetime import datetime
 from src.catching import attempt_catch
 from src.pokemon import PokemonFactory, StatusEffect
-from matplotlib import pyplot as plt
+import plotly.graph_objects as go
+
 import numpy as np
 
 def plot_bar_diagram(catch_attempts, filename):
-    pokeballs = []
-    effectiveness = []
-    errors = []  
+    pokeballs = {}
+    
     for _, ball, prob in catch_attempts:
         if ball not in pokeballs:
-            pokeballs.append(ball)
-            effectiveness.append(prob)
-            errors.append(prob * 0.05)
+            pokeballs[ball] = []
+        pokeballs[ball].append(prob)
 
-    _, ax = plt.subplots(figsize=(10, 6))
+    x_values = []
+    y_values = []
+    lower_errors = []
+    upper_errors = []
 
-    # Create a bar chart
-    y_pos = np.arange(len(pokeballs))
-    ax.bar(y_pos, effectiveness, yerr=errors, align='center', alpha=0.5, ecolor='black', capsize=10)
-    ax.set_xticks(y_pos)
-    ax.set_xticklabels(pokeballs)
-    ax.set_xlabel('Pokeballs ')
-    ax.set_title('Efectividad en Capturar Pokémon')
-    ax.yaxis.grid(True)
+    for ball, probs in pokeballs.items():
+        x_values.append(ball)
+        mean_effectiveness = np.mean(probs)
+        y_values.append(mean_effectiveness)
+        lower_error = mean_effectiveness - min(probs)
+        upper_error = max(probs) - mean_effectiveness
+        lower_errors.append(lower_error)
+        upper_errors.append(upper_error)
 
-    plt.ylabel('Efectividad')
-    plt.xticks(rotation=45)
+    # Create the bar chart using Plotly
+    fig = go.Figure()
+    fig.add_trace(go.Bar(
+        x=x_values,
+        y=y_values,
+        error_y=dict(type='data', symmetric=False, array=upper_errors, arrayminus=lower_errors),
+        name='Efectividad',
+    ))
 
-    ax.set_ylabel('Efectividad')
-    ax.set_title('Efectividad de Diferentes Pokeballs en Capturar Pokémon')
-    ax.set_xticks(y_pos)
-    ax.set_xticklabels(pokeballs)
+    fig.update_layout(
+        title='Efectividad de Diferentes Pokeballs en Capturar Pokémon',
+        xaxis_title='Pokeballs',
+        yaxis_title='Efectividad',
+        barmode='group'
+    )
 
-    plt.tight_layout()
-    plt.savefig(filename) 
-    plt.show()
-
+    # Save the figure to HTML
+    fig.write_html(filename)
+    fig.show()
 
 def write_to_csv(filename, data):
     with open(filename, 'w', newline="") as file:
