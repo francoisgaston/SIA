@@ -1,0 +1,21 @@
+{
+  "pokemons": [
+    {
+      "name": "jolteon",
+      "current_hp": 1,
+      "level": 1,
+      "status_effect": "NONE"
+    },
+    {
+      "name": "snorlax",
+      "current_hp": 1,
+      "level": 1,
+      "status_effect": "NONE"
+    }
+  ],
+  "pokeball": "pokeball",
+  "output": "2b",
+  "times": 10,
+  "noise": 0.15,
+  "dots": 25
+}
