@@ -1,0 +1,38 @@
+{
+  "pokemons":[
+      {
+      "name": "caterpie",
+      "current_hp": 1,
+      "level": 100,
+      "status_effect": ["NONE","FREEZE","SLEEP","PARALYSIS","BURN","POISON"]
+      },
+      {
+      "name": "jolteon",
+      "current_hp": 1,
+      "level": 100,
+      "status_effect": ["NONE","FREEZE","SLEEP","PARALYSIS","BURN","POISON"]
+      },
+      {
+      "name": "snorlax",
+      "current_hp": 1,
+      "level": 100,
+      "status_effect": ["NONE","FREEZE","SLEEP","PARALYSIS","BURN","POISON"]
+      },
+      {
+      "name": "onix",
+      "current_hp": 1,
+      "level": 100,
+      "status_effect": ["NONE","FREEZE","SLEEP","PARALYSIS","BURN","POISON"]
+      },
+      {
+      "name": "mewtwo",
+      "current_hp": 1,
+      "level": 100,
+      "status_effect": ["NONE","FREEZE","SLEEP","PARALYSIS","BURN","POISON"]
+      }
+    ],
+  "pokeball": "pokeball",
+  "output": "2a",
+  "times": 30,
+  "noise": 0.1
+}
