@@ -31,15 +31,15 @@ Script genérico para ejecutar la función de captura de Pokemon.
 - **Input**: Archivo JSON de configuración
     ```json
     {
-      "pokeball": Pokeball name - String,
-      "output": Output CSV file name - String,
-      "times": Number of times to run the simulation - Integer,
-      "noise": Normalized noise to add to the function - Float [0, 1],
+      "pokeball": "Pokeball name - String",
+      "output": "Output CSV file name - String",
+      "times": "Number of times to run the simulation - Integer",
+      "noise": "Normalized noise to add to the function - Float [0, 1]",
       "pokemon": {
-        "name": Pokemon name - String,
-        "level": Pokemon level - Integer,
-        "current_hp": Pokemon current HP - Float [0, 1],
-        "status_effect": StatusEffect constant name - String,
+        "name": "Pokemon name - String",
+        "level": "Pokemon level - Integer",
+        "current_hp": "Pokemon current HP - Float [0, 1]",
+        "status_effect": "StatusEffect constant name - String",
       }
     }
     ```
@@ -72,13 +72,13 @@ Ejecuta la función de captura de Pokemon realizando varias simulaciones para ca
 - **Input**: Archivo JSON de configuración
     ```json
     {
-      "pokemons": Array of Pokemon names - String[],
-      "pokeball": Pokeball name - String,
-      "current_hp": Pokemon current HP - Float [0, 1],
-      "status_effect": StatusEffect constant name - String,
-      "output": Output CSV file name - String,
-      "times_per_level": Number of times to run the simulation for each level - Integer,
-      "noise": Normalized noise to add to the function - Float [0, 1],
+      "pokemons": "Array of Pokemon names - String[]",
+      "pokeball": "Pokeball name - String",
+      "current_hp": "Pokemon current HP - Float [0, 1]",
+      "status_effect": "StatusEffect constant name - String",
+      "output": "Output CSV file name - String",
+      "times_per_level": "Number of times to run the simulation for each level - Integer",
+      "noise": "Normalized noise to add to the function - Float [0, 1]",
     }
     ```
 - **Output**: Archivo CSV con los resultados de la simulación
@@ -102,13 +102,13 @@ Realiza un gráfico de lineas a partir de los resultados obtenidos en `main2c.py
   - Archivo JSON de configuración
       ```json
       {
-        "pokemons": Array of Pokemon names to graph - String[],
-        "output": Output HTML file name - String,
+        "pokemons": "Array of Pokemon names to graph - String[]",
+        "output": "Output HTML file name - String",
         "graph": {
-          "title": Graph title - String,
-          "xaxis_title": X axis title - String,
-          "yaxis_title": Y axis title - String,
-          "decimal_places": Number of decimal places to round the values - Integer,
+          "title": "Graph title - String",
+          "xaxis_title": "X axis title - String",
+          "yaxis_title": "Y axis title - String",
+          "decimal_places": "Number of decimal places to round the values - Integer",
         } 
       }
       ```
