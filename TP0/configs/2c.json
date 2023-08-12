@@ -5,5 +5,5 @@
   "status_effect": "NONE",
   "output": "data/2c/2c",
   "times_per_level": 10,
-  "noise": 0.1
+  "noise": 0.05
 }
