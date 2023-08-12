@@ -3,6 +3,7 @@ import csv
 import json
 import plotly.graph_objects as go
 
+
 # Creates a data structure like this:
 # {
 #     "bulbasaur": {
@@ -14,15 +15,14 @@ import plotly.graph_objects as go
 #     ...
 # }
 # Only consider the pokemons in the config file
-# The catch rate is rounded to the number of decimals places specified in the config file
-def get_catch_rate_per_pokemon_and_level(data, pokemons, decimals_places):
+def get_catch_rate_per_pokemon_and_level(data, pokemons):
     catch_rate_per_pokemon_and_level = {}
     for row in data:
         pokemon_name = row[0]
         if pokemon_name not in pokemons:
             continue
         level = int(row[1])
-        catch_rate = float("{:.{}f}".format(float(row[2]), decimals_places))
+        catch_rate = float(row[2])
         if pokemon_name not in catch_rate_per_pokemon_and_level:
             catch_rate_per_pokemon_and_level[pokemon_name] = {}
         if level not in catch_rate_per_pokemon_and_level[pokemon_name]:
@@ -56,8 +56,8 @@ def calculate_catch_rate_data_per_pokemon_and_level(catch_rate_per_pokemon_and_l
             data = {}
             data["average"] = sum(catch_rate_per_pokemon_and_level[pokemon_name][level]) / len(
                 catch_rate_per_pokemon_and_level[pokemon_name][level])
-            data["min"] = data["average"] - min(catch_rate_per_pokemon_and_level[pokemon_name][level])
-            data["max"] = max(catch_rate_per_pokemon_and_level[pokemon_name][level]) - data["average"]
+            data["min"] = min(catch_rate_per_pokemon_and_level[pokemon_name][level])
+            data["max"] = max(catch_rate_per_pokemon_and_level[pokemon_name][level])
             catch_rate_data_per_pokemon_and_level[pokemon_name][level] = data
     return catch_rate_data_per_pokemon_and_level
 
@@ -70,6 +70,7 @@ def calculate_catch_rate_data_per_pokemon_and_level(catch_rate_per_pokemon_and_l
 # - The title, xaxis_title and yaxis_title are taken from the config file
 # - The graph is saved to a HTML file with the name specified in the config file
 def graph(catch_rate_data_per_pokemon_and_level, graph_data, filename):
+    decimal_places = graph_data["decimal_places"]
     fig = go.Figure()
     for pokemon_name in catch_rate_data_per_pokemon_and_level:
         x = []
@@ -77,15 +78,21 @@ def graph(catch_rate_data_per_pokemon_and_level, graph_data, filename):
         max = []
         min = []
         for level in catch_rate_data_per_pokemon_and_level[pokemon_name]:
+            data = catch_rate_data_per_pokemon_and_level[pokemon_name][level]
             x.append(level)
-            y.append(catch_rate_data_per_pokemon_and_level[pokemon_name][level]["average"])
-            max.append(catch_rate_data_per_pokemon_and_level[pokemon_name][level]["max"])
-            min.append(catch_rate_data_per_pokemon_and_level[pokemon_name][level]["min"])
+            y.append(data["average"])
+            max.append(data["max"] - data["average"])
+            min.append(data["average"] - data["min"])
         fig.add_trace(
             go.Scatter(
                 x=x,
                 y=y,
                 name=pokemon_name.capitalize(),
+                hovertemplate=graph_data["xaxis_title"] + ": %{x}<br>" +
+                              graph_data["yaxis_title"] + ": %{y:." + str(decimal_places) +
+                              "f} (+%{error_y.array:." + str(decimal_places) +
+                              "f} / -%{error_y.arrayminus:." + str(decimal_places) +
+                              "f})<extra></extra>",
                 error_y=dict(
                     type="data",
                     symmetric=False,
@@ -105,7 +112,7 @@ def graph(catch_rate_data_per_pokemon_and_level, graph_data, filename):
 
 def main(data, config):
     catch_rate_per_pokemon_and_level = (
-        get_catch_rate_per_pokemon_and_level(data, config["pokemons"], config["decimals_places"])
+        get_catch_rate_per_pokemon_and_level(data, config["pokemons"])
     )
     catch_rate_data_per_pokemon_and_level = (
         calculate_catch_rate_data_per_pokemon_and_level(catch_rate_per_pokemon_and_level)
