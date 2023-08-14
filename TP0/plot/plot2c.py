@@ -15,20 +15,20 @@ import plotly.graph_objects as go
 #     ...
 # }
 # Only consider the pokemons in the config file
-def get_catch_rate_per_pokemon_and_level(data, pokemons):
-    catch_rate_per_pokemon_and_level = {}
+def get_effectiveness_per_pokemon_and_level(data, pokemons):
+    effectiveness_per_pokemon_and_level = {}
     for row in data:
         pokemon_name = row[0]
         if pokemon_name not in pokemons:
             continue
         level = int(row[1])
-        catch_rate = float(row[2])
-        if pokemon_name not in catch_rate_per_pokemon_and_level:
-            catch_rate_per_pokemon_and_level[pokemon_name] = {}
-        if level not in catch_rate_per_pokemon_and_level[pokemon_name]:
-            catch_rate_per_pokemon_and_level[pokemon_name][level] = []
-        catch_rate_per_pokemon_and_level[pokemon_name][level].append(catch_rate)
-    return catch_rate_per_pokemon_and_level
+        effectiveness = float(row[2])
+        if pokemon_name not in effectiveness_per_pokemon_and_level:
+            effectiveness_per_pokemon_and_level[pokemon_name] = {}
+        if level not in effectiveness_per_pokemon_and_level[pokemon_name]:
+            effectiveness_per_pokemon_and_level[pokemon_name][level] = []
+        effectiveness_per_pokemon_and_level[pokemon_name][level].append(effectiveness)
+    return effectiveness_per_pokemon_and_level
 
 
 # Creates a data structure like this:
@@ -48,18 +48,18 @@ def get_catch_rate_per_pokemon_and_level(data, pokemons):
 #     },
 #     ...
 # }
-def calculate_catch_rate_data_per_pokemon_and_level(catch_rate_per_pokemon_and_level):
-    catch_rate_data_per_pokemon_and_level = {}
-    for pokemon_name in catch_rate_per_pokemon_and_level:
-        catch_rate_data_per_pokemon_and_level[pokemon_name] = {}
-        for level in catch_rate_per_pokemon_and_level[pokemon_name]:
+def calculate_effectiveness_data_per_pokemon_and_level(effectiveness_per_pokemon_and_level):
+    effectiveness_data_per_pokemon_and_level = {}
+    for pokemon_name in effectiveness_per_pokemon_and_level:
+        effectiveness_data_per_pokemon_and_level[pokemon_name] = {}
+        for level in effectiveness_per_pokemon_and_level[pokemon_name]:
             data = {}
-            data["average"] = sum(catch_rate_per_pokemon_and_level[pokemon_name][level]) / len(
-                catch_rate_per_pokemon_and_level[pokemon_name][level])
-            data["min"] = min(catch_rate_per_pokemon_and_level[pokemon_name][level])
-            data["max"] = max(catch_rate_per_pokemon_and_level[pokemon_name][level])
-            catch_rate_data_per_pokemon_and_level[pokemon_name][level] = data
-    return catch_rate_data_per_pokemon_and_level
+            data["average"] = sum(effectiveness_per_pokemon_and_level[pokemon_name][level]) / len(
+                effectiveness_per_pokemon_and_level[pokemon_name][level])
+            data["min"] = min(effectiveness_per_pokemon_and_level[pokemon_name][level])
+            data["max"] = max(effectiveness_per_pokemon_and_level[pokemon_name][level])
+            effectiveness_data_per_pokemon_and_level[pokemon_name][level] = data
+    return effectiveness_data_per_pokemon_and_level
 
 
 # Creates a graph with the data where:
@@ -69,16 +69,16 @@ def calculate_catch_rate_data_per_pokemon_and_level(catch_rate_per_pokemon_and_l
 # - The error bars are the min and max values
 # - The title, xaxis_title and yaxis_title are taken from the config file
 # - The graph is saved to a HTML file with the name specified in the config file
-def graph(catch_rate_data_per_pokemon_and_level, graph_data, filename):
+def graph(effectiveness_data_per_pokemon_and_level, graph_data, filename):
     decimal_places = graph_data["decimal_places"]
     fig = go.Figure()
-    for pokemon_name in catch_rate_data_per_pokemon_and_level:
+    for pokemon_name in effectiveness_data_per_pokemon_and_level:
         x = []
         y = []
         max = []
         min = []
-        for level in catch_rate_data_per_pokemon_and_level[pokemon_name]:
-            data = catch_rate_data_per_pokemon_and_level[pokemon_name][level]
+        for level in effectiveness_data_per_pokemon_and_level[pokemon_name]:
+            data = effectiveness_data_per_pokemon_and_level[pokemon_name][level]
             x.append(level)
             y.append(data["average"])
             max.append(data["max"] - data["average"])
@@ -111,13 +111,13 @@ def graph(catch_rate_data_per_pokemon_and_level, graph_data, filename):
 
 
 def main(data, config):
-    catch_rate_per_pokemon_and_level = (
-        get_catch_rate_per_pokemon_and_level(data, config["pokemons"])
+    effectiveness_per_pokemon_and_level = (
+        get_effectiveness_per_pokemon_and_level(data, config["pokemons"])
     )
-    catch_rate_data_per_pokemon_and_level = (
-        calculate_catch_rate_data_per_pokemon_and_level(catch_rate_per_pokemon_and_level)
+    effectiveness_data_per_pokemon_and_level = (
+        calculate_effectiveness_data_per_pokemon_and_level(effectiveness_per_pokemon_and_level)
     )
-    graph(catch_rate_data_per_pokemon_and_level, config["graph"], config["output"])
+    graph(effectiveness_data_per_pokemon_and_level, config["graph"], config["output"])
 
 
 if __name__ == "__main__":
