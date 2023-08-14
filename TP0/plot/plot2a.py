@@ -31,7 +31,7 @@ if __name__ == "__main__":
         ))
     fig.update_layout(title="Status effect Vs percentage",
                       xaxis=dict(title="Pokemon"),
-                      yaxis=dict(title="Percentage captured"))
+                      yaxis=dict(title="Captured percentage"))
     fig.show()
     #Vamos a hacer el resumen de la tendencia general para un status_effect
     #hacer un promedio con los 5 pokemons para cada status, para el punto final
@@ -47,5 +47,5 @@ if __name__ == "__main__":
     )
     factors.update_layout(title="Status effect Vs None",
                       xaxis=dict(title="Status effect"),
-                      yaxis=dict(title="Factor from None"))
+                      yaxis=dict(title="Factor of None"))
     factors.show()
