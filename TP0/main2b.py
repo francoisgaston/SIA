@@ -27,7 +27,7 @@ if __name__ == "__main__":
         # Plantear el problema de lento vs memoria usada
         with open(CSV, 'w', newline="") as file:
             writer = csv.writer(file)
-            writer.writerow(["name", "current_hp", "capture_rate"])
+            writer.writerow(["name", "current_hp", "captured_percentage"])
 
             for pokemon_config in config["pokemons"]:
                 for hp in np.arange(0, 1, inter):
@@ -35,5 +35,12 @@ if __name__ == "__main__":
 
                     pokemon = factory.create(pokemon_config["name"], pokemon_config["level"], getattr(StatusEffect, pokemon_config["status_effect"]), hp)
 
-                    for _ in range(config["times"]):
-                        writer.writerow([pokemon.name, hp, attempt_catch(pokemon, ball, noise)[1]])
+                    for _ in range(config["values"]):
+                        sum = 0
+                        for _ in range(config["times"]):
+                            if attempt_catch(pokemon, ball, noise)[0]:
+                                sum += 1
+
+                        writer.writerow([pokemon.name, hp, sum/config["times"]])
+
+

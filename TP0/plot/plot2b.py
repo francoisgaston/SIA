@@ -9,7 +9,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     csv = pandas.read_csv(sys.argv[1])
-    res = seaborn.lineplot(data=csv, x="current_hp", y="capture_rate", hue="name", legend="auto", errorbar=("pi", 90)).set(title='%HP vs CAPTURE RATE')
+    res = seaborn.lineplot(data=csv, x="current_hp", y="captured_percentage", hue="name", legend="auto", errorbar=("pi", 90)).set(title='%HP vs CAPTURE RATE')
 
     plt.legend(title='Pokemon')
     plt.savefig(sys.argv[1].replace('csv', 'png'))

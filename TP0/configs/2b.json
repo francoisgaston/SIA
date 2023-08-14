@@ -1,19 +1,40 @@
 {
   "pokemons": [
     {
+      "name": "caterpie",
+      "current_hp": 1,
+      "level": 100,
+      "status_effect": "NONE"
+      },
+      {
+      "name": "jolteon",
+      "current_hp": 1,
+      "level": 100,
+      "status_effect": "NONE"
+      },
+      {
       "name": "snorlax",
-      "level": 1,
+      "current_hp": 1,
+      "level": 100,
       "status_effect": "NONE"
-    },
-    {
+      },
+      {
       "name": "onix",
-      "level": 1,
+      "current_hp": 1,
+      "level": 100,
       "status_effect": "NONE"
-    }
+      },
+      {
+      "name": "mewtwo",
+      "current_hp": 1,
+      "level": 100,
+      "status_effect": "NONE"
+      }
   ],
   "pokeball": "pokeball",
   "output": "2b",
-  "times": 10,
-  "noise": 0.15,
+  "times": 50,
+  "values": 5,
+  "noise": 0.1,
   "dots": 25
 }
