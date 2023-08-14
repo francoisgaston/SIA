@@ -61,18 +61,19 @@ if __name__ == "__main__":
 
             pokemon = factory.create(_pokemon, config["level"], getattr(StatusEffect, config["status_effect"]), config["current_hp"])
 
+            # Capture percentege for base pokeball
             effectiveness_base_pokeball = 0
-            for i in range(config["times"]):
+            for _ in range(config["times"]):
                 i, capture_rate = attempt_catch(pokemon, config["base_pokeball"], config["noise"])
                 if i == True:
                     effectiveness_base_pokeball += 1
             effectiveness_base_pokeball /= config["times"]
 
-            effectiveness_per_ball = []
 
+            # For each pokebal
             for _ball in config["pokeballs"]:
                 avg = 0
-                for i in range(config["times"]):
+                for _ in range(config["times"]):
                     i, capture_rate = attempt_catch(pokemon, _ball, config["noise"])
                     if i == True:
                         avg += 1
@@ -84,6 +85,7 @@ if __name__ == "__main__":
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         CSV = config["output"] + "_" + timestamp + ".csv"
         write_to_csv(CSV, values)
+        print(pokemons)
         print(values)
     
     filename = "graphs/pokeball_effectiveness_per_pokemon.html"

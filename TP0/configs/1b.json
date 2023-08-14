@@ -6,6 +6,6 @@
   "current_hp": 1,
   "status_effect": "NONE",
   "output": "1b",
-  "times": 1000,
+  "times": 100000,
   "noise": 0
 }
