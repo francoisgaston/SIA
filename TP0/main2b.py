@@ -18,7 +18,7 @@ if __name__ == "__main__":
     with open(f"{sys.argv[1]}", "r") as f:
         config = json.load(f)
         ball = config["pokeball"]
-        CSV = config["output"] + "_" + timestamp + ".csv"
+        CSV = "./data/2b/" + config["output"] + "_" + timestamp + ".csv"
         times = config["times"]
         noise = config["noise"]
         dots = config["dots"]
