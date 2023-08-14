@@ -1,11 +1,11 @@
 {
   "available_pokemons": ["caterpie", "jolteon", "snorlax", "onix", "mewtwo"],
   "pokemons": ["caterpie", "jolteon", "snorlax", "onix", "mewtwo"],
-  "output": "graphs/capture_rate_per_level",
+  "output": "graphs/effectiveness_per_level",
   "graph": {
-    "title": "Probabilidad de captura por nivel",
+    "title": "Efectividad de captura por nivel",
     "xaxis_title": "Nivel",
-    "yaxis_title": "Probabilidad de captura",
+    "yaxis_title": "Efectividad de captura",
     "decimal_places": 3
   }
 }

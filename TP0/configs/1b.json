@@ -1,0 +1,11 @@
+{
+  "pokemons": ["caterpie", "jolteon", "snorlax", "onix", "mewtwo"],
+  "base_pokeball": "pokeball",
+  "pokeballs": ["ultraball", "fastball", "heavyball"],
+  "level": 100,
+  "current_hp": 1,
+  "status_effect": "NONE",
+  "output": "1b",
+  "times": 100000,
+  "noise": 0
+}
