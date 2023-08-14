@@ -61,11 +61,11 @@ Script genérico para ejecutar la función de captura de Pokemon.
 
 #### main2a.py
 
-#### plot/2a/plot2a.py
+#### plot/plot2a.py
 
 #### main2b.py
 
-#### plot/2b/plot2b.py
+#### plot/plot2b.py
 
 #### main2c.py
 Ejecuta la función de captura de Pokemon realizando varias simulaciones para cada nivel del Pokemon, de 1 a 100.
@@ -95,7 +95,7 @@ Ejecuta la función de captura de Pokemon realizando varias simulaciones para ca
     pipenv run python main2c.py [config_file]
     ```
     
-#### plot/2c/plot2c.py   
+#### plot/plot2c.py   
 Realiza un gráfico de lineas a partir de los resultados obtenidos en `main2c.py`.
 - **Input**: 
   - Archivo CSV generado por `main2c.py`
