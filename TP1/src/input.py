@@ -15,43 +15,42 @@ def read_input(input):
         player_coord = None
         while True:
             char = file.read(1)
-            if char == '':  # Si el carácter leído está vacío => EOF
-                pos_y += 1
-                if pos_x > max_pos_x:
-                    max_pos_x = pos_x
-                pos_x = 0
+            while char != '' and char != '\n':
+                match char:
+                    case '#': # Wall
+                        map_limits.add(Point(pos_y, pos_x))
+                    case '@': # Player
+                        if player_coord is not None:
+                            raise Exception("More than one player")
+                        player_coord = Point(pos_y, pos_x)
+                    case '+': # Player on goal
+                        if player_coord is not None:
+                           raise Exception("More than one player")
+                        player_coord = Point(pos_y, pos_x)
+                        goal_points.add(Point(pos_y, pos_x))
+                    case '$':  # Box
+                        boxes_position.add(Point(pos_y, pos_x))
+                    case '*':  # Box on goal
+                        boxes_position.add(Point(pos_y, pos_x))
+                        goal_points.add(Point(pos_y, pos_x))
+                    case '.':  # Goal
+                        goal_points.add(Point(pos_y, pos_x))
+                pos_x += 1
+                char = file.read(1)
+            pos_y += 1
+            if pos_x > max_pos_x:
+                max_pos_x = pos_x
+            if char == '':
                 break
-            if char == '\n':
-                pos_y += 1
-                if pos_x > max_pos_x:
-                    max_pos_x = pos_x
-                pos_x = -1  # revisar
-            elif char == '#':  # Wall
-                map_limits.add(Point(pos_y, pos_x))
-            elif char == '@':  # Player
-                if player_coord is not None:
-                    raise Exception("More than one player")
-                player_coord = Point(pos_y, pos_x)
-            elif char == '+':  # Player on goal
-                if player_coord is not None:
-                    raise Exception("More than one player")
-                player_coord = Point(pos_y, pos_x)
-                goal_points.add(Point(pos_y, pos_x))
-            elif char == '$':  # Box
-                boxes_position.add(Point(pos_y, pos_x))
-            elif char == '*':  # Box on goal
-                boxes_position.add(Point(pos_y, pos_x))
-                goal_points.add(Point(pos_y, pos_x))
-            elif char == '.':  # Goal
-                goal_points.add(Point(pos_y, pos_x))
-            pos_x += 1
+            else:
+                pos_x = 0
 
         if len(boxes_position) != len(goal_points):
             raise Exception("Different numbers of boxes and goals")
         if player_coord is None:
             raise Exception("Player not found")
 
-        return (map_limits, goal_points, boxes_position, player_coord, pos_y, max_pos_x)
+        return map_limits, goal_points, boxes_position, player_coord, pos_y, max_pos_x
 
 
 ## Main
