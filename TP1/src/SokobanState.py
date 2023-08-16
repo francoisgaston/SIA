@@ -16,7 +16,8 @@ class SokobanState:
         self.player_coord = player_coord
 
     def __hash__(self):
-        return hash((self.box_set,self.player_coord))
+        # TODO: chequear si esto hace lo que queremos
+        return hash((tuple(self.box_set),self.player_coord))
 
     def __eq__(self, other):
         if isinstance(other, SokobanState):
