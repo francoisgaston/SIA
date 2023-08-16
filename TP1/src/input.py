@@ -1,6 +1,7 @@
-from src.data_structures.Point import Point
-from src.data_structures.SokobanState import SokobanState
+from Point import Point
+from SokobanState import SokobanState
 import sys
+import json
 
 def read_input(input):
     with open(input, 'r') as file:
@@ -14,30 +15,34 @@ def read_input(input):
         while True:
             char = file.read(1)
             if char == '':  # Si el carácter leído está vacío => EOF
+                pos_y += 1
+                if pos_x > max_pos_x:
+                    max_pos_x = pos_x
+                pos_x = 0
                 break
             if char == '\n':
                 pos_y += 1
                 if pos_x > max_pos_x:
                     max_pos_x = pos_x
-                pos_x = 0
+                pos_x = -1 # revisar
             elif char == '#': # Wall
-                map_limits.add(Point(pos_x, pos_y))
+                map_limits.add(Point(pos_y, pos_x))
             elif char == '@': # Player
                 if player_coord is not None:
                     raise Exception("More than one player")
-                player_coord = Point(pos_x, pos_y)
+                player_coord = Point(pos_y, pos_x)
             elif char == '+':  # Player on goal
                 if player_coord is not None:
                     raise Exception("More than one player")
-                player_coord = Point(pos_x, pos_y)
-                goal_points.add(Point(pos_x, pos_y))
+                player_coord = Point(pos_y, pos_x)
+                goal_points.add(Point(pos_y, pos_x))
             elif char == '$':  # Box
-                boxes_position.add(Point(pos_x, pos_y))
+                boxes_position.add(Point(pos_y, pos_x))
             elif char == '*':  # Box on goal
-                boxes_position.add(Point(pos_x, pos_y))
-                goal_points.add(Point(pos_x, pos_y))
+                boxes_position.add(Point(pos_y, pos_x))
+                goal_points.add(Point(pos_y, pos_x))
             elif char == '.': # Goal
-                goal_points.add(Point(pos_x, pos_y))
+                goal_points.add(Point(pos_y, pos_x))
             pos_x += 1
 
         if len(boxes_position) != len(goal_points):
@@ -46,11 +51,12 @@ def read_input(input):
             raise Exception("Player not found")
 
         return (map_limits, goal_points, boxes_position, player_coord, pos_y, max_pos_x)
-##
+
 
 ## Main
 if __name__ == "__main__":
-    with open(f'{sys.argv[1]}', 'r') as config:
+    with open(f"{sys.argv[1]}", "r") as file:
+        config = json.load(file)
         (map_limits, goal_points, boxes_position, player_coord, max_rows, max_cols) = read_input(config["map"])
         SokobanState.map_limits = map_limits
         SokobanState.goal_points = goal_points

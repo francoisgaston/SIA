@@ -13,7 +13,7 @@ class Point:
         return False
 
     def __str__(self):
-        return "(" + self.row + "; " + self.col + ")"
+        return "(" + str(self.row) + "; " + str(self.col) + ")"
 
     def move(self, delta_row, delta_col):
         return Point(self.row + delta_row, self.col + delta_col)

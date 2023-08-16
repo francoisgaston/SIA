@@ -33,17 +33,17 @@ class SokobanState:
             for col in range(SokobanState.max_cols):
                 p = Point(row,col)
                 if p in SokobanState.goal_points and p in self.box_set:
-                    ans += 'G' # Poner 🥅
+                    ans += '*' # Poner 🥅
                 elif p in SokobanState.goal_points and p == self.player_coord:
-                    ans += '$'
+                    ans += '+'
                 elif p in SokobanState.goal_points:
                     ans += '.'
                 elif p in SokobanState.map_limits:
-                    ans += 'X'
+                    ans += '#'
                 elif p in self.box_set:
-                    ans += 'B'
+                    ans += '$'
                 elif p == self.player_coord:
-                    ans += 'P'
+                    ans += '@'
                 else:
                     ans += ' '
                 ans += ' '
