@@ -11,12 +11,14 @@ class SokobanState:
     def __init__(self, parent, steps, box_points, player_coord):
         self.parent = parent
         self.steps = steps
-        self.box_set = box_points
+        self.box_set = frozenset(box_points)
+        # self.box_set = box_points
         self.player_coord = player_coord
 
     def __hash__(self):
         # TODO: chequear si esto hace lo que queremos
-        return hash((tuple(self.box_set), self.player_coord))
+        # return hash((tuple(self.box_set), self.player_coord))
+        return hash((self.box_set, self.player_coord))
 
     def __eq__(self, other):
         if isinstance(other, SokobanState):

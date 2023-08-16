@@ -8,6 +8,10 @@ import sys
 import json
 
 if __name__ == "__main__":
+    if len(sys.argv) <=1:
+        print("Por favor ingrese el archivo de configuración")
+        exit(1)
+
     with open(f"{sys.argv[1]}", "r") as file:
         config = json.load(file)
         (map_limits, goal_points, boxes_position, player_coord, max_rows, max_cols) = read_input(config["map"])
