@@ -16,9 +16,11 @@ class SokobanState:
         self.player_coord = player_coord
 
     def __hash__(self):
-        return 0
+        return hash((self.box_set,self.player_coord))
 
     def __eq__(self, other):
+        if isinstance(other, SokobanState):
+            return self.box_set == other.box_set and self.player_coord == other.player_coord
         return False
 
     def __str__(self):
@@ -30,11 +32,11 @@ class SokobanState:
             for col in range(SokobanState.max_cols):
                 p = Point(row,col)
                 if p in SokobanState.goal_points and p in self.box_set:
-                    ans += 'G'
+                    ans += 'G' # Poner 🥅
                 elif p in SokobanState.goal_points and p == self.player_coord:
                     ans += '$'
                 elif p in SokobanState.goal_points:
-                    ans += 'O'
+                    ans += '.'
                 elif p in SokobanState.map_limits:
                     ans += 'X'
                 elif p in self.box_set:
@@ -50,13 +52,19 @@ class SokobanState:
         ans += "|\n"
         return ans
 
+
     def explode(self):
-        # desp hacerlo
         dirs = [[-1, 0], [1, 0], [0, 1], [0, -1]]
         valid_moves = []
+
         for dir in dirs:
             new_player_coord = self.player_coord.move(dir[0], dir[1])
-            new_state = SokobanState(self,self.steps+1, self.box_set, new_player_coord)
+            new_box_state = set(self.box_set)
+            if new_player_coord in self.box_set:
+                #mueve una caja en la misma direccion de la persona
+                new_box_state.remove(new_player_coord)
+                new_box_state.add(new_player_coord.move(dir[0], dir[1]))
+            new_state = SokobanState(self, self.steps + 1, new_box_state, new_player_coord)
             if new_state.is_valid_state():
                 valid_moves.append(new_state)
         return valid_moves
@@ -66,4 +74,13 @@ class SokobanState:
             return False
         if self.player_coord in self.box_set:
             return False
+        if len(self.box_set) != len(SokobanState.goal_points):
+            # Una caja piso a otra
+            return False
+        for box in self.box_set:
+            if box in SokobanState.map_limits:
+                return False
         return True
+
+    def is_solution(self):
+        return self.box_set == SokobanState.goal_points
