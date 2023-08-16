@@ -4,6 +4,9 @@ class SSolution():
         self.valid = valid
         self.end_state = end_state
 
+    def is_valid(self):
+        return self.valid
+
     def build_solution(self):
         solution_path = []
         state = self.end_state

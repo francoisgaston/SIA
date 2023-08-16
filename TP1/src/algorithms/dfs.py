@@ -1,5 +1,5 @@
-from solver import Solver
-from solution import SSolution
+from algorithms.solver import Solver
+from algorithms.solution import SSolution
 
 
 class DFS(Solver):
@@ -14,7 +14,7 @@ class DFS(Solver):
             current_state = queue.pop()
 
             if current_state.is_solution():
-                return SSolution(True, visited_count,current_state)
+                return SSolution(visited_count,True,current_state)
 
             for next_state in current_state.explode():
                 if next_state not in visited:
@@ -23,4 +23,4 @@ class DFS(Solver):
 
             visited_count += 1
 
-        return SSolution(False, visited_count,None)
+        return SSolution(visited_count, False, None)

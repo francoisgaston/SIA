@@ -1,4 +1,5 @@
-from Point import Point
+from data_structures.Point import Point
+
 
 class SokobanState:
     # hola joseshito
@@ -17,7 +18,7 @@ class SokobanState:
 
     def __hash__(self):
         # TODO: chequear si esto hace lo que queremos
-        return hash((tuple(self.box_set),self.player_coord))
+        return hash((tuple(self.box_set), self.player_coord))
 
     def __eq__(self, other):
         if isinstance(other, SokobanState):
@@ -25,15 +26,15 @@ class SokobanState:
         return False
 
     def __str__(self):
-        ans = "|" # Horrible concatenar tantos strings, pero despues lo vemos
+        ans = "|"  # Horrible concatenar tantos strings, pero despues lo vemos
         for _ in range(SokobanState.max_cols):
             ans += "--"
         ans += "|\n|"
         for row in range(SokobanState.max_rows):
             for col in range(SokobanState.max_cols):
-                p = Point(row,col)
+                p = Point(row, col)
                 if p in SokobanState.goal_points and p in self.box_set:
-                    ans += '*' # Poner 🥅
+                    ans += '*'  # Poner 🥅
                 elif p in SokobanState.goal_points and p == self.player_coord:
                     ans += '+'
                 elif p in SokobanState.goal_points:
@@ -47,12 +48,11 @@ class SokobanState:
                 else:
                     ans += ' '
                 ans += ' '
-            ans += "|\n|"""# Termina una fila
+            ans += "|\n|"""  # Termina una fila
         for _ in range(SokobanState.max_cols):
             ans += '--'
         ans += "|\n"
         return ans
-
 
     def explode(self):
         dirs = [[-1, 0], [1, 0], [0, 1], [0, -1]]
@@ -62,7 +62,7 @@ class SokobanState:
             new_player_coord = self.player_coord.move(dir[0], dir[1])
             new_box_state = set(self.box_set)
             if new_player_coord in self.box_set:
-                #mueve una caja en la misma direccion de la persona
+                # mueve una caja en la misma direccion de la persona
                 new_box_state.remove(new_player_coord)
                 new_box_state.add(new_player_coord.move(dir[0], dir[1]))
             new_state = SokobanState(self, self.steps + 1, new_box_state, new_player_coord)

@@ -1,22 +1,27 @@
-from TP1.src.Point import Point
-from TP1.src.SokobanState import SokobanState
+from data_structures.Point import Point
+from data_structures.SokobanState import SokobanState
 from algorithms.bfs import BFS
-
-# from input import read_input
+from algorithms.dfs import DFS
+from input import read_input
+import sys
+import json
 
 if __name__ == "__main__":
-    SokobanState.max_rows = 5
-    SokobanState.max_cols = 5
-    SokobanState.map_limits = {Point(0, 0), Point(0, 1), Point(0, 2), Point(0, 3), Point(0,4),
-                               Point(4,0),Point(4,1),Point(4,2),Point(4,3),Point(4,4),
-                               Point(1,0),Point(2,0),Point(3,0),
-                               Point(1,4),Point(2,4),Point(3,4)}
-    SokobanState.goal_points = {Point(2, 3),Point(3,3)}
-    state = SokobanState(None,0,{Point(2,2),Point(3,2)}, Point(2, 1))
-    print(state)
-    solution = BFS.solve(state)
-    # print(solution.end_state)
-    for curr in solution.build_solution():
-        print(curr)
-
+    with open(f"{sys.argv[1]}", "r") as file:
+        config = json.load(file)
+        (map_limits, goal_points, boxes_position, player_coord, max_rows, max_cols) = read_input(config["map"])
+        SokobanState.map_limits = map_limits
+        SokobanState.goal_points = goal_points
+        SokobanState.max_rows = max_rows
+        SokobanState.max_cols = max_cols
+        state = SokobanState(None,0,boxes_position,player_coord)
+        print(state)
+        solution = BFS.solve(state)
+        if solution.is_valid():
+            for curr in solution.build_solution():
+                print(curr)
+        else:
+            print("There is no solution for the map")
+        print(solution.visited_count)
+        print(solution.end_state.steps)
 

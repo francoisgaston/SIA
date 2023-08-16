@@ -1,6 +1,6 @@
 from collections import deque
-from solver import Solver
-from solution import SSolution
+from algorithms.solver import Solver
+from algorithms.solution import SSolution
 
 
 class BFS(Solver):
@@ -15,7 +15,7 @@ class BFS(Solver):
             current_state = queue.popleft()
 
             if current_state.is_solution():
-                return SSolution(True, visited_count,current_state)
+                return SSolution(visited_count, True, current_state)
 
             for next_state in current_state.explode():
                 if next_state not in visited:
@@ -24,4 +24,5 @@ class BFS(Solver):
 
             visited_count += 1
 
-        return SSolution(False, visited_count)
+        return SSolution(visited_count, False, None)
+

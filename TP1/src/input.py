@@ -1,7 +1,8 @@
-from Point import Point
-from SokobanState import SokobanState
+from data_structures.Point import Point
+from data_structures.SokobanState import SokobanState
 import sys
 import json
+
 
 def read_input(input):
     with open(input, 'r') as file:
@@ -24,10 +25,10 @@ def read_input(input):
                 pos_y += 1
                 if pos_x > max_pos_x:
                     max_pos_x = pos_x
-                pos_x = -1 # revisar
-            elif char == '#': # Wall
+                pos_x = -1  # revisar
+            elif char == '#':  # Wall
                 map_limits.add(Point(pos_y, pos_x))
-            elif char == '@': # Player
+            elif char == '@':  # Player
                 if player_coord is not None:
                     raise Exception("More than one player")
                 player_coord = Point(pos_y, pos_x)
@@ -41,7 +42,7 @@ def read_input(input):
             elif char == '*':  # Box on goal
                 boxes_position.add(Point(pos_y, pos_x))
                 goal_points.add(Point(pos_y, pos_x))
-            elif char == '.': # Goal
+            elif char == '.':  # Goal
                 goal_points.add(Point(pos_y, pos_x))
             pos_x += 1
 
