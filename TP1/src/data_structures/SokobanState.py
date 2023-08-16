@@ -2,8 +2,6 @@ from data_structures.Point import Point
 
 
 class SokobanState:
-    # hola joseshito
-
     # Change when game starts
     map_limits = set()
     goal_points = set()
@@ -24,6 +22,11 @@ class SokobanState:
         if isinstance(other, SokobanState):
             return self.box_set == other.box_set and self.player_coord == other.player_coord
         return False
+
+    def __lt__(self, other):
+        if isinstance(other, SokobanState):
+            return self.steps < other.steps
+        return NotImplemented
 
     def __str__(self):
         ans = "|"  # Horrible concatenar tantos strings, pero despues lo vemos

@@ -1,7 +1,4 @@
 from data_structures.Point import Point
-from data_structures.SokobanState import SokobanState
-import sys
-import json
 
 
 def read_input(input):
@@ -13,19 +10,20 @@ def read_input(input):
         goal_points = set()
         boxes_position = set()
         player_coord = None
+
         while True:
             char = file.read(1)
             while char != '' and char != '\n':
                 match char:
-                    case '#': # Wall
+                    case '#':  # Wall
                         map_limits.add(Point(pos_y, pos_x))
-                    case '@': # Player
+                    case '@':  # Player
                         if player_coord is not None:
                             raise Exception("More than one player")
                         player_coord = Point(pos_y, pos_x)
-                    case '+': # Player on goal
+                    case '+':  # Player on goal
                         if player_coord is not None:
-                           raise Exception("More than one player")
+                            raise Exception("More than one player")
                         player_coord = Point(pos_y, pos_x)
                         goal_points.add(Point(pos_y, pos_x))
                     case '$':  # Box
@@ -51,17 +49,3 @@ def read_input(input):
             raise Exception("Player not found")
 
         return map_limits, goal_points, boxes_position, player_coord, pos_y, max_pos_x
-
-
-## Main
-if __name__ == "__main__":
-    with open(f"{sys.argv[1]}", "r") as file:
-        config = json.load(file)
-        (map_limits, goal_points, boxes_position, player_coord, max_rows, max_cols) = read_input(config["map"])
-        SokobanState.map_limits = map_limits
-        SokobanState.goal_points = goal_points
-        SokobanState.max_rows = max_rows
-        SokobanState.max_cols = max_cols
-
-        state = SokobanState(None, 0, boxes_position, player_coord)
-        print(state)
