@@ -9,7 +9,7 @@ class AStar(Solver):
     @staticmethod
     def solve(initial_state):
         border = queue.PriorityQueue()
-        border.put((distance_heuristic(initial_state)), initial_state)
+        border.put((distance_heuristic(initial_state), initial_state))
         visited = {initial_state}
         visited_count = 0
 

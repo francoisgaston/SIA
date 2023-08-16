@@ -3,6 +3,7 @@ from data_structures.SokobanState import SokobanState
 from algorithms.bfs import BFS
 from algorithms.dfs import DFS
 from algorithms.greedy import GREEDY
+from algorithms.astar import AStar
 from input import read_input
 import sys
 import json
@@ -23,7 +24,7 @@ if __name__ == "__main__":
         state = SokobanState(None, 0, boxes_position, player_coord)
         print(state)
 
-        solution = GREEDY.solve(state)
+        solution = AStar.solve(state)
         if solution.is_valid():
             for curr in solution.build_solution():
                 print(curr)
