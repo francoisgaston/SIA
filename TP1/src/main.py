@@ -1,6 +1,7 @@
-from Point import Point
-from SokobanState import SokobanState
-from bfs import BFS
+from data_structures.Point import Point
+from data_structures.SokobanState import SokobanState
+from algorithms.bfs import BFS
+from src.algorithms.dfs import DFS
 # from input import read_input
 
 if __name__ == "__main__":
