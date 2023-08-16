@@ -54,6 +54,7 @@ Script genérico para ejecutar la función de captura de Pokemon.
     ```sh
     pipenv run python main.py [config_file]
     ```
+    
   
 #### main1a.py
 
