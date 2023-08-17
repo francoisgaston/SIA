@@ -6,14 +6,14 @@ from algorithms.astar import AStar
 
 class Algorithm:
 
-    def from_string(name, initial_state):
+    def from_string(name):
         match name:
             case "GREEDY":
-                return GREEDY.solve(initial_state)
+                return GREEDY
             case "A*":
-                return AStar.solve(initial_state)
+                return AStar
             case "BFS":
-                return BFS.solve(initial_state)
+                return BFS
             case "DFS":
-                return DFS.solve(initial_state)
+                return DFS
 

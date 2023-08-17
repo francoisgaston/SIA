@@ -1,10 +1,6 @@
-from data_structures.Point import Point
 from data_structures.SokobanState import SokobanState
-from algorithms.bfs import BFS
-from algorithms.dfs import DFS
-from algorithms.greedy import GREEDY
-from algorithms.astar import AStar
 from algorithm_picker import Algorithm
+from heuristic_picker import Heuristic
 from input import read_input
 import sys
 import json
@@ -26,7 +22,9 @@ if __name__ == "__main__":
         print(state)
 
         # solution = AStar.solve(state)
-        solution = Algorithm.from_string(config["algorithm"], state)
+        solver = Algorithm.from_string(config["algorithm"])
+        heuristic = Heuristic.from_string(config["heuristic"])
+        solution = solver.solve(state, heuristic)
         if solution.is_valid():
             for curr in solution.build_solution():
                 print(curr)

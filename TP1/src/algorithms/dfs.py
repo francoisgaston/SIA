@@ -26,7 +26,7 @@ class DFS(Solver):
     #     return SSolution(visited_count, False, None)
 
     @staticmethod
-    def solve(initial_state):
+    def solve(initial_state, _):
         queue = [initial_state]
         visited = set()
         visited_count = 0
