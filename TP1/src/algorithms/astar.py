@@ -9,7 +9,7 @@ class AStar(Solver):
     @staticmethod
     def solve(initial_state):
         border = queue.PriorityQueue()
-        border.put((distance_heuristic(initial_state), initial_state))
+        border.put((distance_heuristic(initial_state), distance_heuristic(initial_state), initial_state))
         visited = {initial_state}
         visited_count = 0
 
@@ -22,7 +22,8 @@ class AStar(Solver):
             for next_state in current_state[1].explode():
                 if next_state not in visited:
                     visited.add(next_state)
-                    border.put((distance_heuristic(next_state) + next_state.steps, next_state))
+                    # If f(n) are equal, tiebreak by h(n)
+                    border.put((distance_heuristic(next_state) + next_state.steps, distance_heuristic(next_state), next_state))
 
             visited_count += 1
 

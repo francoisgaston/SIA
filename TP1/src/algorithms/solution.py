@@ -1,4 +1,4 @@
-class SSolution():
+class SSolution:
     def __init__(self, visited_count, valid, end_state):
         self.visited_count = visited_count
         self.valid = valid

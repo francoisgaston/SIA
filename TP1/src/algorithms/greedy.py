@@ -1,6 +1,7 @@
 from algorithms.solver import Solver
 from algorithms.solution import SSolution
 from algorithms.distance_heuristic import distance_heuristic
+from algorithms.path_heuristic import path_heuristic
 import queue
 
 
@@ -10,7 +11,7 @@ class GREEDY(Solver):
         # PriorityQueue ordena por el primer valor, en empate por el segundo
         # ordena por heuristica, en empate por menor step
         border = queue.PriorityQueue()
-        border.put((distance_heuristic(initial_state), initial_state))
+        border.put((path_heuristic(initial_state), initial_state))
         visited = {initial_state}
         visited_count = 0
 
@@ -23,7 +24,7 @@ class GREEDY(Solver):
             for next_state in current_state[1].explode():
                 if next_state not in visited:
                     visited.add(next_state)
-                    border.put((distance_heuristic(next_state), next_state))
+                    border.put((path_heuristic(next_state), next_state))
 
             visited_count += 1
 

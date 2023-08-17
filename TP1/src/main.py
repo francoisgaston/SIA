@@ -4,12 +4,13 @@ from algorithms.bfs import BFS
 from algorithms.dfs import DFS
 from algorithms.greedy import GREEDY
 from algorithms.astar import AStar
+from algorithm_picker import Algorithm
 from input import read_input
 import sys
 import json
 
 if __name__ == "__main__":
-    if len(sys.argv) <=1:
+    if len(sys.argv) <= 1:
         print("Por favor ingrese el archivo de configuración")
         exit(1)
 
@@ -24,7 +25,8 @@ if __name__ == "__main__":
         state = SokobanState(None, 0, boxes_position, player_coord)
         print(state)
 
-        solution = AStar.solve(state)
+        # solution = AStar.solve(state)
+        solution = Algorithm.from_string(config["algorithm"], state)
         if solution.is_valid():
             for curr in solution.build_solution():
                 print(curr)

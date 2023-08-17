@@ -1,7 +1,7 @@
 from data_structures.SokobanState import SokobanState
 
 
-# No es optima, deberiamos ver cual es la suma menor ed cada una
+# No es optima, deberiamos ver cual es la suma menor de cada una
 def distance_heuristic(state):
     total_dist = 0
     player_dist = SokobanState.max_rows + SokobanState.max_cols
