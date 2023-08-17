@@ -1,0 +1,7 @@
+{
+  "map": "src/config/test3.txt",
+  "algorithm": "A*",
+  "heuristic": "COSINE"
+}
+
+
