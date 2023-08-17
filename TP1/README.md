@@ -4,7 +4,7 @@
 ## Introducción
 
 Trabajo práctico orientativo para la materia Sistemas de Inteligencia Artificial con el
-objetivo de implementar diferentes metodos de busqueda informados o no informados.
+objetivo de implementar diferentes metodos de búsqueda informados y no informados.
 
 [Enunciado](docs/SIA_TP1.pdf)
 
@@ -35,6 +35,7 @@ pipenv run python src/main.py [config_file]
 ### Resultado
 El programa puede devolver dos resultados:
 - Si encuentra solución, imprime por salida estándar una serie de _snapshots_ con los pasos a realizar para resolver el mapa
+- Si no encuentra solución, imprime un mensaje de error por salida estándar
 
 ### Configuración
 El programa debe recibir por argumento el _path_ a un archivo JSON, el cual debe tener definido lo siguiente:
@@ -60,4 +61,6 @@ Tanto `algorithm` como `heuristic` solo toman ciertos valores predefinidos y *ca
 - `heuristic`
   - "DISTANCE": Implementado en `src/heuristics/distance_heuristic.py`
   - "PATH": Implementado en `src/heuristics/path_heuristic.py`
+    
+##### Nota
 Para los algoritmos BFS y DFS, la heurística se ignora.
