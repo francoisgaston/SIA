@@ -5,10 +5,10 @@ from data_structures.SokobanState import SokobanState
 class CosineHeuristic():
     @staticmethod
     def set_to_vector(box_set, max_rows, max_cols):
-        vector = np.zeros(max_rows * max_cols)
+        vector = np.ones(max_rows * max_cols)
         for point in box_set:
             index = point.row * max_cols + point.col
-            vector[index] = 1
+            vector[index] = 0
         return vector
 
     @staticmethod

@@ -1,5 +1,7 @@
 {
-  "map": "src/config/test1.txt",
+  "map": "src/config/test3.txt",
   "algorithm": "A*",
   "heuristic": "COSINE"
 }
+
+
