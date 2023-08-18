@@ -48,4 +48,18 @@ def read_input(input):
         if player_coord is None:
             raise Exception("Player not found")
 
-        return map_limits, goal_points, boxes_position, player_coord, pos_y, max_pos_x
+        forbidden_points = set()
+        # Agregampos los puntos donde si va una caja el juego no sigue
+        # Es un poco costoso, pero solo se hace al principio
+        for row in range(pos_y):
+            for col in range(max_pos_x):
+                curr = Point(row,col)
+                left = curr.move(0, -1)
+                right = curr.move(0, 1)
+                up = curr.move(-1,0)
+                down = curr.move(1,0)
+                # vemos si esta en una esquina
+                if ((up in map_limits and (left in map_limits or right in map_limits)) or (down in map_limits and (left in map_limits or right in map_limits))) and curr not in goal_points and curr not in map_limits:
+                    forbidden_points.add(curr)
+
+        return map_limits, goal_points, boxes_position, player_coord, pos_y, max_pos_x, forbidden_points

@@ -5,6 +5,7 @@ class SokobanState:
     # Change when game starts
     map_limits = set()
     goal_points = set()
+    forbidden_points = set()
     max_rows = 0
     max_cols = 0
 
@@ -42,6 +43,12 @@ class SokobanState:
                     ans += '*'  # Poner 🥅
                 elif p in SokobanState.goal_points and p == self.player_coord:
                     ans += '+'
+                # elif p in self.box_set and p in SokobanState.forbidden_points:
+                #     ans += 'O'
+                # elif p in SokobanState.forbidden_points and p in SokobanState.map_limits:
+                #     ans += 'A'
+                elif p in SokobanState.forbidden_points:
+                    ans += 'X'
                 elif p in SokobanState.goal_points:
                     ans += '.'
                 elif p in SokobanState.map_limits:
@@ -85,6 +92,8 @@ class SokobanState:
             return False
         for box in self.box_set:
             if box in SokobanState.map_limits:
+                return False
+            if box in SokobanState.forbidden_points:
                 return False
         return True
 

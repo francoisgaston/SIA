@@ -15,12 +15,13 @@ if __name__ == "__main__":
 
     with open(f"{sys.argv[1]}", "r") as file:
         config = json.load(file)
-        (map_limits, goal_points, boxes_position, player_coord, max_rows, max_cols) = read_input(config["map"])
+        (map_limits, goal_points, boxes_position, player_coord, max_rows, max_cols, forbidden_points) = read_input(config["map"])
 
         SokobanState.map_limits = map_limits
         SokobanState.goal_points = goal_points
         SokobanState.max_rows = max_rows
         SokobanState.max_cols = max_cols
+        SokobanState.forbidden_points = forbidden_points
         state = SokobanState(None, 0, boxes_position, player_coord)
         print(state)
 
@@ -31,6 +32,7 @@ if __name__ == "__main__":
         if solution.is_valid():
             for curr in solution.build_solution():
                 print(curr)
+            print(solution.end_state.steps)
         else:
             print("There is no solution for the map")
 
