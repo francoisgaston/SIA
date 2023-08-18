@@ -22,7 +22,8 @@ class AStar(Solver):
                 if next_state not in visited:
                     visited.add(next_state)
                     # If f(n) are equal, tiebreak by h(n)
-                    border.put((heuristic(next_state) + next_state.steps, heuristic(next_state), next_state))
+                    computed = heuristic(next_state)
+                    border.put((computed + next_state.steps, computed, next_state))
 
             visited_count += 1
 
