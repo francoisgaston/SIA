@@ -1,5 +1,5 @@
 {
   "map": "src/config/test3.txt",
-  "algorithm": "DFS",
+  "algorithm": "BFS",
   "heuristic": "DISTANCE"
 }

@@ -3,5 +3,3 @@
   "algorithm": "A*",
   "heuristic": "COSINE"
 }
-
-
