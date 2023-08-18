@@ -1,5 +1,5 @@
 {
-  "map": "src/config/test6.txt",
+  "map": "src/config/test7.txt",
   "algorithm": "A*",
   "heuristic": "DISTANCE"
 }
