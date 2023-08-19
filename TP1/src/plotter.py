@@ -16,6 +16,9 @@ df['Execution Time'] = df['Execution Time'].astype(float) # Convert Execution Ti
 df['Visited Count'] = pd.to_numeric(df['Visited Count'], errors='coerce') # Convert Visited Count to numeric
 df['End State Steps'] = pd.to_numeric(df['End State Steps'], errors='coerce') # Convert End State Steps to numeric
 
+color_mapping = {algorithm: px.colors.qualitative.Plotly[i % len(px.colors.qualitative.Plotly)] 
+                 for i, algorithm in enumerate(df['Algorithm'].unique())}
+
 # Function to plot the graph
 def plot_graph(y_column, y_label):
     # Create a new DataFrame to hold the restructured data
@@ -45,7 +48,10 @@ def plot_graph(y_column, y_label):
         plot_df.drop(columns=['BFS_Steps', 'Map'], inplace=True)
 
     # Plot the line graph
-    fig = px.line(plot_df, x='Mapa', y=y_label, color='Algoritmo', title=f'Comparación entre BFS y DFS - {y_label}', labels={y_label: y_label, 'Mapa': 'Mapa Probado'})
+
+    fig = px.line(plot_df, x='Mapa', y=y_label, color='Algoritmo', title=f'Comparación entre BFS y DFS - {y_label}', 
+                  labels={y_label: y_label, 'Mapa': 'Mapa Probado'},
+                  color_discrete_map=color_mapping) # Use the color mapping here
     fig.show()
 
 # Plot graph for Execution Time

@@ -8,6 +8,6 @@
     "src/config/test10.txt",
     "src/config/test11.txt"
   ],
-  "algorithm": ["BFS", "DFS", "A*"],
+  "algorithm": ["BFS", "DFS", "A*", "GREEDY"],
   "heuristic": ["DISTANCE"]
 }
