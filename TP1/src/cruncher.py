@@ -35,9 +35,11 @@ if __name__ == "__main__":
 
     with open('results.csv', 'w', newline='') as csvfile:
         csv_writer = csv.writer(csvfile)
-        csv_writer.writerow(['Map', 'Algorithm', 'Heuristic', 'Visited Count', 'End State Steps', 'Execution Time'])
+        csv_writer.writerow(['Map', 'Steps','Algorithm', 'Heuristic', 'Visited Count', 'End State Steps', 'Execution Time'])
 
-        for map_path in config["maps"]:
+        for map in config["maps"]:
+            map_path = map[0]
+            steps = map[1]
             print(f"Processing map: {map_path}")
             for algorithm_name in config["algorithm"]:
                 print(f"  Algorithm: {algorithm_name}")
@@ -45,6 +47,6 @@ if __name__ == "__main__":
                     print(f"    Heuristic: {heuristic_name}")
                     visited_count, end_state_steps, execution_time = solve_sokoban(map_path, algorithm_name, heuristic_name)
                     print(f"    Result: Visited Count = {visited_count}, End State Steps = {end_state_steps}, Execution Time = {execution_time:.2f}")
-                    csv_writer.writerow([map_path, algorithm_name, heuristic_name, visited_count, end_state_steps, execution_time])
+                    csv_writer.writerow([map_path, steps, algorithm_name, heuristic_name, visited_count, end_state_steps, execution_time])
     print("Done writing results to results.csv")
 
