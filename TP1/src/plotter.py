@@ -35,8 +35,17 @@ def plot_graph(y_column, y_label):
 
     plot_df = pd.DataFrame(plot_data)
 
+    # If plotting the End State Steps, sort the plot_df by the steps of the BFS algorithm
+    if y_column == 'End State Steps':
+        bfs_data = df[df['Algorithm'] == 'BFS']
+        bfs_data = bfs_data[['Map', 'End State Steps']]
+        bfs_data.rename(columns={'End State Steps': 'BFS_Steps'}, inplace=True)
+        plot_df = plot_df.merge(bfs_data, left_on='Mapa', right_on='Map')
+        plot_df.sort_values('BFS_Steps', inplace=True)
+        plot_df.drop(columns=['BFS_Steps', 'Map'], inplace=True)
+
     # Plot the line graph
-    fig = px.bar(plot_df, x='Mapa', y=y_label, color='Algoritmo', title=f'Comparación entre BFS y DFS - {y_label}', labels={y_label: y_label, 'Mapa': 'Mapa Probado'})
+    fig = px.line(plot_df, x='Mapa', y=y_label, color='Algoritmo', title=f'Comparación entre BFS y DFS - {y_label}', labels={y_label: y_label, 'Mapa': 'Mapa Probado'})
     fig.show()
 
 # Plot graph for Execution Time
