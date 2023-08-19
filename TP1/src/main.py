@@ -21,7 +21,10 @@ if __name__ == "__main__":
         SokobanState.goal_points = goal_points
         SokobanState.max_rows = max_rows
         SokobanState.max_cols = max_cols
-        SokobanState.forbidden_points = forbidden_points
+        if config["forbidden_points"] == "YES":
+            SokobanState.forbidden_points = forbidden_points
+        else:
+            SokobanState.forbidden_points = set()
         state = SokobanState(None, 0, boxes_position, player_coord)
 
         solver = Algorithm.from_string(config["algorithm"])
