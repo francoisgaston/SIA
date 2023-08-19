@@ -51,6 +51,8 @@ El archivo TXT:
 - No debe tener lineas vacías 
 - Debe respetar [este formato](http://www.sokobano.de/wiki/index.php?title=Level_format).
 
+Para encontrar diferentes mapas puede recurrir a [game sokoban](http://www.game-sokoban.com/index.php)
+
 #### Algoritmo y heuristica
 Tanto `algorithm` como `heuristic` solo toman ciertos valores predefinidos y *case-insensitive*:
 - `algorithm`
@@ -61,6 +63,8 @@ Tanto `algorithm` como `heuristic` solo toman ciertos valores predefinidos y *ca
 - `heuristic`
   - "DISTANCE": Implementado en `src/heuristics/distance_heuristic.py`
   - "PATH": Implementado en `src/heuristics/path_heuristic.py`
+  - MAX_BOX: Implementado en `src/heuristics/max_box_heuristic.py`
+  - REC_PATH: Implementado en `src/heuristics/rec_path_heristic.py`
     
 ##### Nota
 Para los algoritmos BFS y DFS, la heurística se ignora.
