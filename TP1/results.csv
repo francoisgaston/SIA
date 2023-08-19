@@ -3,5 +3,13 @@ src/config/test1.txt,BFS,DISTANCE,190,28,0.00
 src/config/test1.txt,DFS,DISTANCE,59,46,0.00
 src/config/test2.txt,BFS,DISTANCE,1,No solution,0.00
 src/config/test2.txt,DFS,DISTANCE,1,No solution,0.00
-src/config/test3.txt,BFS,DISTANCE,290940,57,3.32
+src/config/test3.txt,BFS,DISTANCE,290940,57,3.30
 src/config/test3.txt,DFS,DISTANCE,56312,3175,0.40
+src/config/test5.txt,BFS,DISTANCE,44110,34,0.56
+src/config/test5.txt,DFS,DISTANCE,161573,58,1.89
+src/config/test7.txt,BFS,DISTANCE,1447,16,0.02
+src/config/test7.txt,DFS,DISTANCE,74,49,0.00
+src/config/test9.txt,BFS,DISTANCE,45,12,0.00
+src/config/test9.txt,DFS,DISTANCE,12,12,0.00
+src/config/test10.txt,BFS,DISTANCE,16198,32,0.16
+src/config/test10.txt,DFS,DISTANCE,4723,104,0.04
