@@ -9,5 +9,7 @@
     ["src/config/test11.txt", 7]
   ],
   "algorithm": ["BFS", "DFS", "A*", "GREEDY"],
-  "heuristic": ["DISTANCE"]
+  "heuristic": ["DISTANCE"],
+  "repetitions": 1,
+  "forbidden_points": "YES"
 }
