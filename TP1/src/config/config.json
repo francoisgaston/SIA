@@ -1,5 +1,5 @@
 {
-  "map": "src/config/test1.txt",
-  "algorithm": "A*",
-  "heuristic": "COSINE"
+  "map": "src/config/test3.txt",
+  "algorithm": "BFS",
+  "heuristic": "DISTANCE"
 }
