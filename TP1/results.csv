@@ -1,0 +1,7 @@
+Map,Algorithm,Heuristic,Visited Count,End State Steps,Execution Time
+src/config/test1.txt,BFS,DISTANCE,190,28,0.00
+src/config/test1.txt,DFS,DISTANCE,59,46,0.00
+src/config/test2.txt,BFS,DISTANCE,1,No solution,0.00
+src/config/test2.txt,DFS,DISTANCE,1,No solution,0.00
+src/config/test3.txt,BFS,DISTANCE,290940,57,3.32
+src/config/test3.txt,DFS,DISTANCE,56312,3175,0.40
