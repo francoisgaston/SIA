@@ -40,6 +40,8 @@ if __name__ == "__main__":
         execution_time = end_time - start_time
 
         print(f"Visited Count: {solution.visited_count}")
-        print(f"End State Steps: {solution.end_state.steps}")
-        print(f"Time of Execution: {execution_time:.2f} seconds")
+        if solution.is_valid():
+            print(f"End State Steps: {solution.end_state.steps}")
+            print(f"Time of Execution: {execution_time:.2f} seconds")
+
 

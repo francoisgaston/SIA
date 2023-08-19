@@ -1,5 +1,5 @@
 {
-  "map": "src/config/test3.txt",
-  "algorithm": "BFS",
-  "heuristic": "DISTANCE"
+  "map": "/Users/josementa/SIA/SIA/TP1/src/config/test2.txt",
+  "algorithm": "GREEDY",
+  "heuristic": "MAX_BOX"
 }
