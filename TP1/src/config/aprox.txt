@@ -1,0 +1,15 @@
+Tiempos aproximados de BFS para los test para no tener que correr BFS
+
+Test    | time  | total | Steps |
+--------------------------------
+test1   | 0,03  | 190   | 28    |
+test2   | deberia no andar      |
+test3   | 30,11 |290940 | 57    |
+test4   | se me cerro pycharn   |
+test5   | 4,48  | 44110 | 34    |
+test6   | 1,03  | 15648 | 78    |
+test7   | 0.13  | 1447  | 16    |
+test8   | se me cerro pycharn   |
+test9   | 0,01  | 45    | 12    |
+test10  | 1,33  | 16198 | 32    |
+test11  | 20,89 |214360 | 21    |

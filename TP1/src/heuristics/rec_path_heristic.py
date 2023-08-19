@@ -15,16 +15,15 @@ def recursive_distance(point, eval_set, next_set):
     # Saco el punto (box, goal)
     next_set.discard(point)
 
-    # Caso base
+    # Caso base: no tengo mas puntos ni goals
     if not len(eval_set) and not len(next_set):
         return 0
 
-    # Menor distancia
+    # Menor distancia a lo que queda
     min_dist = SokobanState.max_rows + SokobanState.max_cols
     for x in eval_set:
-        # distancia del resto menor
+        # Cambio los goals por box o al reves
         aux = recursive_distance(x, set(next_set), set(eval_set))
-        # distancia a evaluar
         aux += abs(point.row - x.row) + abs(point.col - x.col)
         if aux < min_dist:
             min_dist = aux

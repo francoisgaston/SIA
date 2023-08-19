@@ -4,6 +4,7 @@ from heuristics.path_heuristic import path_heuristic
 from heuristics.max_box_heuristic import max_box_heuristic
 from heuristics.rec_path_heristic import rec_path_heuristic
 
+
 class Heuristic:
 
     def from_string(name):

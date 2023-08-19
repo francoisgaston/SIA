@@ -1,5 +1,5 @@
 {
-  "map": "src/config/test5.txt",
-  "algorithm": "A*",
-  "heuristic": "MAX_BOX"
+  "map": "src/config/test11.txt",
+  "algorithm": "BFS",
+  "heuristic": "PATH"
 }

@@ -23,7 +23,6 @@ if __name__ == "__main__":
         SokobanState.max_cols = max_cols
         SokobanState.forbidden_points = forbidden_points
         state = SokobanState(None, 0, boxes_position, player_coord)
-        print(state)
 
         solver = Algorithm.from_string(config["algorithm"])
         heuristic = Heuristic.from_string(config["heuristic"])
