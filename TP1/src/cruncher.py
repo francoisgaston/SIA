@@ -23,7 +23,7 @@ def solve_sokoban(map_path, algorithm_name, heuristic_name):
     solution = solver.solve(state, heuristic)
     end_time = time.time()
 
-    return solution.visited_count, solution.end_state.steps if solution.is_valid() else "No solution", end_time - start_time
+    return solution.visited_count, solution.end_state.steps if solution.is_valid() else float("inf"), end_time - start_time
 
 if __name__ == "__main__":
     if len(sys.argv) <= 1:
@@ -45,6 +45,6 @@ if __name__ == "__main__":
                     print(f"    Heuristic: {heuristic_name}")
                     visited_count, end_state_steps, execution_time = solve_sokoban(map_path, algorithm_name, heuristic_name)
                     print(f"    Result: Visited Count = {visited_count}, End State Steps = {end_state_steps}, Execution Time = {execution_time:.2f}")
-                    csv_writer.writerow([map_path, algorithm_name, heuristic_name, visited_count, end_state_steps, f"{execution_time:.2f}"])
+                    csv_writer.writerow([map_path, algorithm_name, heuristic_name, visited_count, end_state_steps, execution_time])
     print("Done writing results to results.csv")
 

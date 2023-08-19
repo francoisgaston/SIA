@@ -14,6 +14,7 @@ with open('results.csv', 'r') as csvfile:
 df = pd.DataFrame(data, columns=headers)
 df['Execution Time'] = df['Execution Time'].astype(float) # Convert Execution Time to float
 df['Visited Count'] = pd.to_numeric(df['Visited Count'], errors='coerce') # Convert Visited Count to numeric
+df['End State Steps'] = pd.to_numeric(df['End State Steps'], errors='coerce') # Convert End State Steps to numeric
 
 # Function to plot the graph
 def plot_graph(y_column, y_label):
@@ -35,7 +36,7 @@ def plot_graph(y_column, y_label):
     plot_df = pd.DataFrame(plot_data)
 
     # Plot the line graph
-    fig = px.line(plot_df, x='Mapa', y=y_label, color='Algoritmo', title=f'Comparación entre BFS y DFS - {y_label}', labels={y_label: y_label, 'Mapa': 'Mapa Probado'})
+    fig = px.bar(plot_df, x='Mapa', y=y_label, color='Algoritmo', title=f'Comparación entre BFS y DFS - {y_label}', labels={y_label: y_label, 'Mapa': 'Mapa Probado'})
     fig.show()
 
 # Plot graph for Execution Time
@@ -43,4 +44,7 @@ plot_graph('Execution Time', 'Tiempo de Ejecución (segundos)')
 
 # Plot graph for Visited Count (Nodes Expanded)
 plot_graph('Visited Count', 'Nodos Expandidos')
+
+# Plot graph for End State Steps (Optimal Solution Steps)
+plot_graph('End State Steps', 'Pasos de la Solución Óptima')
 

@@ -1,13 +1,13 @@
 {
   "maps": [
     "src/config/test1.txt",
-    "src/config/test2.txt",
     "src/config/test3.txt",
     "src/config/test5.txt",
     "src/config/test7.txt",
     "src/config/test9.txt",
-    "src/config/test10.txt"
+    "src/config/test10.txt",
+    "src/config/test11.txt"
   ],
-  "algorithm": ["BFS", "DFS"],
+  "algorithm": ["BFS", "DFS", "A*"],
   "heuristic": ["DISTANCE"]
 }
