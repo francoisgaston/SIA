@@ -12,6 +12,6 @@
   "algorithm": ["BFS", "DFS", "A*", "GREEDY"],
   "heuristic": ["DISTANCE", "PATH", "COSINE", "MAX_BOX"],
   "repetitions": 1,
-  "forbidden_points": "YES",
+  "forbidden_points": true,
   "output": "src/results/cruncher/greedy_vs_astar"
 }
