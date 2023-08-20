@@ -1,5 +1,6 @@
 from os import environ
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
+environ["SDL_VIDEODRIVER"] = "dummy"
 
 import pygame
 from data_structures.SokobanState import SokobanState
