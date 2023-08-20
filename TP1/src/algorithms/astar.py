@@ -17,7 +17,7 @@ class AStar(Solver):
             current_state = border.get()[2]
 
             if current_state.is_solution():
-                return SSolution(visited_count, True, current_state)
+                return SSolution(visited_count, True, current_state, border.qsize())
 
             if current_state in visited:
                 continue
@@ -33,4 +33,4 @@ class AStar(Solver):
 
             visited_count += 1
 
-        return SSolution(visited_count, False, None)
+        return SSolution(visited_count, False, None, border.qsize())

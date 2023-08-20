@@ -10,7 +10,6 @@ class GREEDY(Solver):
         # ordena por heuristica, en empate por menor step
         border = queue.PriorityQueue()
         border.put((heuristic(initial_state), initial_state))
-        # visited = {initial_state}
         visited = set()
         visited_count = 0
 
@@ -18,7 +17,7 @@ class GREEDY(Solver):
             current_state = border.get()[1]
 
             if current_state.is_solution():
-                return SSolution(visited_count, True, current_state)
+                return SSolution(visited_count, True, current_state, border.qsize())
 
             if current_state in visited:
                 continue
@@ -32,4 +31,4 @@ class GREEDY(Solver):
 
             visited_count += 1
 
-        return SSolution(visited_count, False, None)
+        return SSolution(visited_count, False, None, border.qsize())

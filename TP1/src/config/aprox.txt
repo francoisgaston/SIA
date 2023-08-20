@@ -13,3 +13,8 @@ test8   | se me cerro pycharn   |
 test9   | 0,01  | 45    | 12    |
 test10  | 1,33  | 16198 | 32    |
 test11  | 20,89 |214360 | 21    |
+
+
+test4 -> soko 9
+test8 -> soko 12
+test9 -> soko 23

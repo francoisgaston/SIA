@@ -34,7 +34,6 @@ if __name__ == "__main__":
         if solution.is_valid():
             for curr in solution.build_solution():
                 print(curr)
-            print(solution.end_state.steps)
         else:
             print("There is no solution for the map")
 
@@ -42,6 +41,7 @@ if __name__ == "__main__":
         execution_time = end_time - start_time
 
         print(f"Visited Count: {solution.visited_count}")
+        print(f"Frontier count: {solution.frontier_count}")
         if solution.is_valid():
             print(f"End State Steps: {solution.end_state.steps}")
             print(f"Time of Execution: {execution_time:.2f} seconds")
