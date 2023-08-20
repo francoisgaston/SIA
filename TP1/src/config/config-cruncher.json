@@ -12,8 +12,8 @@
     "src/config/test10.txt",
     "src/config/test11.txt"
   ],
-  "algorithm": ["GREEDY", "A*"],
-  "heuristic": ["DISTANCE", "COSINE", "MAX_BOX"],
+  "algorithms": ["GREEDY", "A*"],
+  "heuristics": ["DISTANCE", "COSINE", "MAX_BOX"],
   "output": "src/results/cruncher/greedy_vs_astar",
   "forbidden_points": "YES"
 }

@@ -44,9 +44,9 @@ if __name__ == "__main__":
         for map in config["maps"]:
             map_count += 1
             print(f"Processing map: {map}")
-            for algorithm_name in config["algorithm"]:
+            for algorithm_name in config["algorithms"]:
                 print(f"  Algorithm: {algorithm_name}")
-                for heuristic_name in config["heuristic"]:
+                for heuristic_name in config["heuristics"]:
                     print(f"    Heuristic: {heuristic_name}")
                     visited_count, end_state_steps, frontier_count, execution_time = solve_sokoban(map, algorithm_name, heuristic_name, config["forbidden_points"] == "YES")
                     print(f"    Result: Visited Count = {visited_count}, End State Steps = {end_state_steps}, Frontier Count = {frontier_count}, Execution Time = {execution_time:.2f}")
