@@ -4,14 +4,13 @@
     ["src/config/test3.txt", 2],
     ["src/config/test4.txt", 3],
     ["src/config/test5.txt", 4],
-    ["src/config/test6.txt",5],
-    ["src/config/test8.txt", 6],
+    ["src/config/test6.txt", 5],
     ["src/config/test9.txt", 7],
     ["src/config/test11.txt", 8]
   ],
-  "algorithm": ["BFS", "DFS", "A*", "GREEDY"],
-  "heuristic": ["DISTANCE"],
-  "repetitions": 1,
+  "algorithm": ["A*", "GREEDY"],
+  "heuristic": ["DISTANCE", "COSINE"],
+  "repetitions": 5,
   "forbidden_points": true,
   "output": "src/results/cruncher/greedy_vs_astar"
 }

@@ -22,5 +22,5 @@ class CosineHeuristic():
         similarity = np.dot(initial_vector, final_vector)
         cosine_distance = similarity / (np.linalg.norm(initial_vector) * np.linalg.norm(final_vector))
         CosineHeuristic.steps += 1
-        return (1 - cosine_distance) #* CosineHeuristic.steps
+        return (1 - cosine_distance) * CosineHeuristic.steps
 
