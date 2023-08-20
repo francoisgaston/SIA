@@ -11,6 +11,6 @@ class SSolution:
         solution_path = []
         state = self.end_state
         while state:
-            solution_path.append(str(state))
+            solution_path.append(state)
             state = state.parent
         return reversed(solution_path)

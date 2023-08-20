@@ -7,6 +7,8 @@ name = "pypi"
 numpy = "*"
 plotly = "*"
 pandas = "*"
+pygame = "*"
+imageio = "*"
 
 [dev-packages]
 
