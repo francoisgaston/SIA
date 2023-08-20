@@ -1,7 +1,8 @@
 {
-  "map": "src/config/test1.txt",
-  "algorithm":"BFS",
+  "map": "src/config/test11.txt",
+  "algorithm":"GREEDY",
   "heuristic": "DISTANCE",
-  "forbidden_points": "YES",
-  "output": "src/results/main/test1"
+  "forbidden_points": true,
+  "output": "src/images/test11",
+  "realistic": false
 }

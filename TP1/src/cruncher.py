@@ -54,14 +54,14 @@ if __name__ == "__main__":
                 print(f"  Algorithm: {algorithm_name}")
                 if algorithm_name in ["BFS","DFS"]:
                     for i in range(0, repetitions):
-                        visited_count, end_state_steps, frontier_count, execution_time = solve_sokoban(map_path, algorithm_name, "NONE", config["forbidden_points"] == "YES")
+                        visited_count, end_state_steps, frontier_count, execution_time = solve_sokoban(map_path, algorithm_name, "NONE", config["forbidden_points"])
                         print(f"    Result: Visited Count = {visited_count}, End State Steps = {end_state_steps}, Execution Time = {execution_time:.2f}")
                         csv_writer.writerow([map_path, steps, algorithm_name, 'NONE', visited_count, end_state_steps, frontier_count, execution_time])
                 else:
                     for heuristic_name in config["heuristic"]:
                         for i in range (0, repetitions):
                             print(f"    Heuristic: {heuristic_name}")
-                            visited_count, end_state_steps, frontier_count , execution_time = solve_sokoban(map_path, algorithm_name, heuristic_name, config["forbidden_points"] == "YES")
+                            visited_count, end_state_steps, frontier_count , execution_time = solve_sokoban(map_path, algorithm_name, heuristic_name, config["forbidden_points"])
                             print(f"    Result: Visited Count = {visited_count}, End State Steps = {end_state_steps}, Execution Time = {execution_time:.2f}")
                             csv_writer.writerow([map_path, steps, algorithm_name, heuristic_name, visited_count, end_state_steps, frontier_count, execution_time])
     print(f"Done writing results to {CSV}")
