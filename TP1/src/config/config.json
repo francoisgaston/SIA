@@ -3,6 +3,6 @@
   "algorithm":"GREEDY",
   "heuristic": "DISTANCE",
   "forbidden_points": true,
-  "output": "testPepe",
+  "output": "solucion",
   "realistic": true
 }
