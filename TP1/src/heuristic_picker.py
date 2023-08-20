@@ -19,4 +19,6 @@ class Heuristic:
                 return max_box_heuristic
             case "REC_PATH":
                 return rec_path_heuristic
+            case _:
+                return distance_heuristic
 

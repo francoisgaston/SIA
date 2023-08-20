@@ -5,6 +5,7 @@ from input import read_input
 from utils import write_to_txt
 import sys
 import json
+import time
 
 if __name__ == "__main__":
 
@@ -28,14 +29,20 @@ if __name__ == "__main__":
 
         solver = Algorithm.from_string(config["algorithm"])
         heuristic = Heuristic.from_string(config["heuristic"])
+        start_time = time.time()
         solution = solver.solve(state, heuristic)
-
+        end_time = time.time()
+        execution_time = end_time - start_time
         if solution.is_valid():
             printable_solution = []
             for curr in solution.build_solution():
                 printable_solution.append(curr)
             write_to_txt(config["output"], "\n".join(printable_solution))
+            print(f"End State Steps: {solution.end_state.steps}")
         else:
             print("There is no solution for the map")
 
-
+        print(f"Time of Execution: {execution_time:.2f} seconds")
+        print(f"Visited count: {solution.visited_count}")
+        print(f"Frontier count: {solution.frontier_count}")
+        print(f"The step by step solution is in {config['output']}")
