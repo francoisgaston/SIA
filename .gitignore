@@ -165,6 +165,7 @@ cython_debug/
 # Project
 **/data/**
 **/graphs/**
+**/results/**
 
 .DS_Store
 **/.DS_Store

@@ -2,10 +2,11 @@ from data_structures.SokobanState import SokobanState
 from algorithm_picker import Algorithm
 from heuristic_picker import Heuristic
 from input import read_input
+from utils import write_to_csv
 import time
 import sys
 import json
-import csv
+
 
 def solve_sokoban(map_path, algorithm_name, heuristic_name, do_forbidden_points):
     (map_limits, goal_points, boxes_position, player_coord, max_rows, max_cols, forbidden_points) = read_input(map_path)
@@ -26,7 +27,7 @@ def solve_sokoban(map_path, algorithm_name, heuristic_name, do_forbidden_points)
     solution = solver.solve(state, heuristic)
     end_time = time.time()
 
-    return solution.visited_count, solution.end_state.steps if solution.is_valid() else float("inf"), end_time - start_time
+    return solution.visited_count, solution.end_state.steps if solution.is_valid() else float("inf"), solution.frontier_count, end_time - start_time
 
 if __name__ == "__main__":
     if len(sys.argv) <= 1:
@@ -36,23 +37,20 @@ if __name__ == "__main__":
     with open(sys.argv[1], "r") as file:
         config = json.load(file)
 
-    repetitions = config["repetitions"]
-
-    with open('results.csv', 'w', newline='') as csvfile:
-        csv_writer = csv.writer(csvfile)
-        csv_writer.writerow(['Map', 'Steps','Algorithm', 'Heuristic', 'Visited Count', 'End State Steps', 'Execution Time'])
+        csv_rows = [["Map", "n-th map", "Algorithm", 'Heuristic', 'Visited Count', 'End State Steps', 'Frontier Count',
+                     'Execution Time']]
+        map_count = 0
 
         for map in config["maps"]:
-            map_path = map[0]
-            steps = map[1]
-            print(f"Processing map: {map_path}")
+            map_count += 1
+            print(f"Processing map: {map}")
             for algorithm_name in config["algorithm"]:
                 print(f"  Algorithm: {algorithm_name}")
                 for heuristic_name in config["heuristic"]:
-                    for i in range (0, repetitions):
-                        print(f"    Heuristic: {heuristic_name}")
-                        visited_count, end_state_steps, execution_time = solve_sokoban(map_path, algorithm_name, heuristic_name, config["forbidden_points"] == "YES")
-                        print(f"    Result: Visited Count = {visited_count}, End State Steps = {end_state_steps}, Execution Time = {execution_time:.2f}")
-                        csv_writer.writerow([map_path, steps, algorithm_name, heuristic_name, visited_count, end_state_steps, execution_time])
-    print("Done writing results to results.csv")
+                    print(f"    Heuristic: {heuristic_name}")
+                    visited_count, end_state_steps, frontier_count, execution_time = solve_sokoban(map, algorithm_name, heuristic_name, config["forbidden_points"] == "YES")
+                    print(f"    Result: Visited Count = {visited_count}, End State Steps = {end_state_steps}, Frontier Count = {frontier_count}, Execution Time = {execution_time:.2f}")
+                    csv_rows.append([map, map_count, algorithm_name, heuristic_name, visited_count, end_state_steps, frontier_count, execution_time])
+        write_to_csv(config["output"], csv_rows)
+    print("Done writing results to csv file")
 
