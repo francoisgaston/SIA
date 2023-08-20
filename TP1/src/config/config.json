@@ -2,5 +2,6 @@
   "map": "src/config/test1.txt",
   "algorithm":"BFS",
   "heuristic": "DISTANCE",
-  "forbidden_points": "YES"
+  "forbidden_points": "YES",
+  "output": "src/results/main/test1"
 }

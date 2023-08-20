@@ -14,6 +14,6 @@
   ],
   "algorithm": ["GREEDY", "A*"],
   "heuristic": ["DISTANCE", "COSINE", "MAX_BOX"],
-  "output": "src/results/greedy_vs_astar",
+  "output": "src/results/cruncher/greedy_vs_astar",
   "forbidden_points": "YES"
 }

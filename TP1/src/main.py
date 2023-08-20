@@ -2,12 +2,11 @@ from data_structures.SokobanState import SokobanState
 from algorithm_picker import Algorithm
 from heuristic_picker import Heuristic
 from input import read_input
-import time
+from utils import write_to_txt
 import sys
 import json
 
 if __name__ == "__main__":
-    start_time = time.time()
 
     if len(sys.argv) <= 1:
         print("Por favor ingrese el archivo de configuración")
@@ -32,18 +31,11 @@ if __name__ == "__main__":
         solution = solver.solve(state, heuristic)
 
         if solution.is_valid():
+            printable_solution = []
             for curr in solution.build_solution():
-                print(curr)
+                printable_solution.append(curr)
+            write_to_txt(config["output"], "\n".join(printable_solution))
         else:
             print("There is no solution for the map")
-
-        end_time = time.time()
-        execution_time = end_time - start_time
-
-        print(f"Visited Count: {solution.visited_count}")
-        print(f"Frontier count: {solution.frontier_count}")
-        if solution.is_valid():
-            print(f"End State Steps: {solution.end_state.steps}")
-            print(f"Time of Execution: {execution_time:.2f} seconds")
 
 
