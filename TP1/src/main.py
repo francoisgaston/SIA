@@ -41,18 +41,18 @@ if __name__ == "__main__":
                 filenames = []
                 image_number = 0
                 for state in builded_solution:
-                    filename = config["output"] + "_" + str(image_number) + ".png"
+                    filename = "src/results/" + config["output"] + "_" + str(image_number) + ".png"
                     filenames.append(filename)
                     print_state(state, filename)
                     image_number += 1
-                create_gif(filenames, config["output"] + ".gif")
+                create_gif(filenames, "src/results/" + config["output"] + ".gif")
                 for filename in filenames:
                     os.remove(filename)
             else:
                 printable_solution = []
                 for curr in builded_solution:
                     printable_solution.append(str(curr))
-                write_to_txt(config["output"], "\n".join(printable_solution))
+                write_to_txt("src/results/" + config["output"], "\n".join(printable_solution))
             print(f"End State Steps: {solution.end_state.steps}")
         else:
             print("There is no solution for the map")
@@ -60,4 +60,4 @@ if __name__ == "__main__":
         print(f"Time of Execution: {execution_time:.2f} seconds")
         print(f"Visited count: {solution.visited_count}")
         print(f"Frontier count: {solution.frontier_count}")
-        print(f"The step by step solution is in {config['output']}")
+        print(f"The step by step solution is in src/results/{config['output']}")

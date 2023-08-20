@@ -1,8 +1,8 @@
 {
-  "map": "src/config/test11.txt",
+  "map": "src/config/test5.txt",
   "algorithm":"GREEDY",
   "heuristic": "DISTANCE",
   "forbidden_points": true,
-  "output": "src/images/test11",
-  "realistic": false
+  "output": "testPepe",
+  "realistic": true
 }
