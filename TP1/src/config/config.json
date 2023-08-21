@@ -1,8 +1,8 @@
 {
-  "map": "src/config/test5.txt",
-  "algorithm":"DFS",
+  "map": "src/config/test12.txt",
+  "algorithm":"A*",
   "heuristic": "DISTANCE",
   "forbidden_points": true,
-  "output": "solucion",
+  "output": "12_distance",
   "realistic": true
 }
