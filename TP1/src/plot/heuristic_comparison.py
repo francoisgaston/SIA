@@ -1,6 +1,5 @@
 import pandas as pd
 import sys
-import plotly.express as px
 import plotly.graph_objects as go
 
 if __name__ == "__main__":

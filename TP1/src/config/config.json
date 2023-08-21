@@ -1,8 +1,8 @@
 {
-  "map": "src/config/test14.txt",
+  "map": "src/config/test9.txt",
   "algorithm":"A*",
-  "heuristic": "PATH",
+  "heuristic": "DISTANCE",
   "forbidden_points": true,
-  "output": "14_PATH",
+  "output": "solucion",
   "realistic": true
 }
