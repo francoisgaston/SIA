@@ -1,0 +1,18 @@
+{
+    "maps": [
+      ["src/config/test1.txt", 17],
+      ["src/config/test3.txt", 57],
+      ["src/config/test5.txt", 34],
+      ["src/config/test6.txt",78],
+      ["src/config/test7.txt", 16],
+      ["src/config/test9.txt", 155],
+      ["src/config/test10.txt", 32],
+      ["src/config/test11.txt", 21]
+    ],
+    "algorithm": ["BFS"],
+    "heuristic": ["DISTANCE"],
+    "repetitions": 1,
+    "forbidden_points": false,
+    "output": "src/results/cruncher/forbidden_points_NO_bfs"
+  }
+  
