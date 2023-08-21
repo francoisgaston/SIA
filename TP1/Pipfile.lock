@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "976da4ce9310d3e814587b35486b68b83f45111662a8cc825cc077e84f01809a"
+            "sha256": "cdc0cec48fdd77d7aaf1e2f48e479c9f98d4a73351ad6ff39f9d1cb2fefbdd27"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,14 +16,6 @@
         ]
     },
     "default": {
-        "imageio": {
-            "hashes": [
-                "sha256:4106fb395ef7f8dc0262d6aa1bb03daba818445c381ca8b7d5dfc7a2089b04df",
-                "sha256:f8436a02af02fd63f272dab50f7d623547a38f0e04a4a73e2b02ae1b8b180f27"
-            ],
-            "index": "pypi",
-            "version": "==2.31.1"
-        },
         "numpy": {
             "hashes": [
                 "sha256:0d60fbae8e0019865fc4784745814cff1c421df5afee233db6d88ab4f14655a2",
@@ -153,7 +145,7 @@
                 "sha256:f88a0b92277de8e3ca715a0d79d68dc82807457dae3ab8699c758f07c20b3c51",
                 "sha256:faaf07ea35355b01a35cb442dd950d8f1bb5b040a7787791a535de13db15ed90"
             ],
-            "markers": "python_version >= '3.8'",
+            "index": "pypi",
             "version": "==10.0.0"
         },
         "plotly": {

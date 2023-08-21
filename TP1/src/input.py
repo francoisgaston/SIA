@@ -49,7 +49,7 @@ def read_input(input):
             raise Exception("Player not found")
 
         forbidden_points = set()
-        # Agregampos los puntos donde si va una caja el juego no sigue
+        # Agregamos los puntos donde si va una caja el juego no sigue
         # Es un poco costoso, pero solo se hace al principio
         for row in range(pos_y):
             for col in range(max_pos_x):

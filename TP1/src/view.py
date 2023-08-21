@@ -4,7 +4,7 @@ environ["SDL_VIDEODRIVER"] = "dummy"
 
 import pygame
 from data_structures.SokobanState import SokobanState
-import imageio
+from PIL import Image
 
 scale = 50
 
@@ -16,7 +16,7 @@ def draw(screen, element, x, y):
 def print_state(state, filename):
     # init
     pygame.init()
-    
+
     #display
     screen = pygame.display.set_mode((SokobanState.max_cols * scale, SokobanState.max_rows * scale))
 
@@ -55,5 +55,5 @@ def print_state(state, filename):
 def create_gif(filenames, output):
     images = []
     for filename in filenames:
-        images.append(imageio.imread(filename))
-    imageio.mimsave(output, images)
+        images.append(Image.open(filename))
+    images[0].save(output, save_all=True, append_images=images[1:], duration=100, loop=0)
