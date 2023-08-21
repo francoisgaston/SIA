@@ -1,0 +1,17 @@
+{
+  "maps": [
+    ["src/config/test1.txt", 28],
+    ["src/config/test3.txt", 57],
+    ["src/config/test5.txt", 34],
+    ["src/config/test6.txt", 78],
+    ["src/config/test7.txt", 16],
+    ["src/config/test9.txt", 12],
+    ["src/config/test10.txt", 32],
+    ["src/config/test11.txt", 21]
+  ],
+  "algorithm": ["BFS", "DFS"],
+  "heuristic": ["DISTANCE"],
+  "repetitions": 5,
+  "forbidden_points": false,
+  "output": "src/results/cruncher/BFSvsDFS"
+}

@@ -16,4 +16,6 @@ class Algorithm:
                 return BFS
             case "DFS":
                 return DFS
+            case _:
+                return BFS
 
