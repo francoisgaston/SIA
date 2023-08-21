@@ -1,6 +1,6 @@
 {
   "map": "src/config/test5.txt",
-  "algorithm":"GREEDY",
+  "algorithm":"DFS",
   "heuristic": "DISTANCE",
   "forbidden_points": true,
   "output": "solucion",
