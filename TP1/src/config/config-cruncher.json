@@ -1,16 +1,19 @@
 {
   "maps": [
-    ["src/config/test1.txt", 1],
-    ["src/config/test3.txt", 2],
-    ["src/config/test4.txt", 3],
-    ["src/config/test5.txt", 4],
-    ["src/config/test6.txt", 5],
-    ["src/config/test9.txt", 7],
-    ["src/config/test11.txt", 8]
+    ["src/config/test1.txt", 28],
+    ["src/config/test3.txt", 57],
+    ["src/config/test4.txt", 93],
+    ["src/config/test5.txt", 34],
+    ["src/config/test6.txt", 78],
+    ["src/config/test7.txt", 16],
+    ["src/config/test9.txt", 155],
+    ["src/config/test10.txt", 32],
+    ["src/config/test11.txt", 21],
+    ["src/config/test12.txt", 18]
   ],
-  "algorithm": ["A*", "GREEDY"],
-  "heuristic": ["DISTANCE", "COSINE"],
-  "repetitions": 5,
+  "algorithm": ["DFS", "GREEDY"],
+  "heuristic": ["DISTANCE"],
+  "repetitions": 10,
   "forbidden_points": true,
-  "output": "src/results/cruncher/greedy_vs_astar"
+  "output": "src/results/cruncher/dfs_vs_greedy/dfs_vs_greedy"
 }
