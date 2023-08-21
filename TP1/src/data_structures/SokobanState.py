@@ -47,8 +47,6 @@ class SokobanState:
                 #     ans += 'O'
                 # elif p in SokobanState.forbidden_points and p in SokobanState.map_limits:
                 #     ans += 'A'
-                elif p in SokobanState.forbidden_points:
-                    ans += 'X'
                 elif p in SokobanState.goal_points:
                     ans += '.'
                 elif p in SokobanState.map_limits:
@@ -57,6 +55,8 @@ class SokobanState:
                     ans += '$'
                 elif p == self.player_coord:
                     ans += '@'
+                elif p in SokobanState.forbidden_points:
+                    ans += 'X'
                 else:
                     ans += ' '
                 ans += ' '
