@@ -21,6 +21,8 @@ df['End State Steps'] = pd.to_numeric(df['End State Steps'], errors='coerce')
 df['Algorithm_Heuristic'] = df.apply(lambda row: row['Algorithm'] if row['Algorithm'] in ['BFS', 'DFS']
                                       else f"{row['Algorithm']} ({row['Heuristic']})", axis=1)
 
+df = df.sort_values(by='Steps')
+
 # Function to plot the graph
 def plot_graph(y_column, y_label, error_bars=False):
     # Group by Mapa and Algoritmo
@@ -65,7 +67,7 @@ def plot_graph(y_column, y_label, error_bars=False):
                 arrayminus=filtered_data['Bottom Error Bar']
             )
 
-        fig.add_trace(go.Scatter(
+        fig.add_trace(go.Bar(
             x=filtered_data['Mapa'],
             y=filtered_data[y_label],
             error_y=error_y_dict,
@@ -79,6 +81,8 @@ def plot_graph(y_column, y_label, error_bars=False):
         xaxis_title='Mapa Probado',
         yaxis_title=y_label
     )
+
+    fig.update_yaxes(type='log', title_text=y_label)
 
     fig.show()
 
