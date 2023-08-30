@@ -1,0 +1,17 @@
+{
+  "max_generations": 10,
+  "population_0_count": 100,
+  "stop_condition": "max_generations",
+  "class" : "WARRIOR",
+  "A": 0.5,
+  "selection_1": "ELITE",
+  "selection_2": "ROULETTE",
+  "boltzmann": {
+    "tc": 0,
+    "t0": 0,
+    "k": 1
+  },
+  "deter_tournament": {
+    "m": 5
+  }
+}
