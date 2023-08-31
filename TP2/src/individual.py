@@ -58,7 +58,7 @@ class Individual:
     @staticmethod
     def crossover(individual_1, individual_2):
         # crossover of properties
-        ans1, ans2 = Individual.CROSSOVER_FUNCTION(individual_1, individual_2)
+        ans1, ans2 = Individual.CROSSOVER_FUNCTION(individual_1.properties, individual_2.properties, Individual.MAX_PROPS)
         ans1 = Individual.__normalize(ans1)
         ans2 = Individual.__normalize(ans2)
         return Individual(ans1), Individual(ans2)
