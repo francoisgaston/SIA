@@ -41,6 +41,11 @@ class Individual:
         propierties.append(random.uniform(1.3, 2.0))
         return propierties
 
+    #habria que seleccionar un elemento del arreglo y modificarlo con un random
+    #o por ahi setearlo random y re-normalizar
+    def mutate_gen(index):
+        return
+
     '''
     def __generate_items():
         dirichlet_samples = np.random.dirichlet(np.ones(5), size=1)[0]

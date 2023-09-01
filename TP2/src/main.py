@@ -36,7 +36,7 @@ if __name__ == '__main__':
                 new_people = Crossover.from_string(config["crossover"])(selected[1], selected[0])
 
                 # MUTACION
-                new_people = MutationEngine.from_string(config["mutation"])(new_people)
+                new_people = MutationEngine.from_string(config["mutation"])(new_people, generations, config["max_generations"])
 
                 # SELECCION
                 selected_individuals_1 = NaturalSelectionEngine.from_string(selection_method_1)(population, population_size * A, t=config["boltzmann"]["t"], m=config["deter_tournament"]["m"])
