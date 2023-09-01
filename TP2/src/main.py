@@ -1,6 +1,7 @@
 import sys
 import json
 from fitness import Fitness
+from mutation import MutationEngine
 from individual import Individual
 from crossover import Crossover
 from algorithm import generate_initial_population, select_individuals, replace_individuals
@@ -35,13 +36,14 @@ if __name__ == '__main__':
                 new_people = Crossover.from_string(config["crossover"])(selected[1], selected[0])
 
                 # MUTACION
-
+                new_people = MutationEngine.from_string(config["mutation"])(new_people)
 
                 # SELECCION
                 selected_individuals_1 = NaturalSelectionEngine.from_string(selection_method_1)(population, population_size * A, t=config["boltzmann"]["t"], m=config["deter_tournament"]["m"])
                 selected_individuals_2 = NaturalSelectionEngine.from_string(selection_method_2)(population, population_size * (1-A), t=config["boltzmann"]["t"], m=config["deter_tournament"]["m"])
                 selected_individuals = selected_individuals_1 + selected_individuals_2
             
+                # REEMPLAZO DE POBLACION
                 population = replace_individuals(population, new_people)
 
                 generations += 1
