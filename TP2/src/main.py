@@ -112,17 +112,17 @@ if __name__ == '__main__':
         # Output a salida estandar
         print("De nuestra poblacion final, nuestro individuo con mayor fitness presenta un desempeno de %f y el menor "
               "de %f\n\n", max_fitness_value, min_fitness_value)
-        print("Nuestro desempeno promedio de la poblacion final tiene un valor de %f\n", fitness_avg)
+        print("Nuestro desempeno promedio de la poblacion final tiene un valor de %f\n\n", fitness_avg)
         print("Al analizar mas en detalle los datos, podemos observar que\n")
-        print("- Un %f% de la poblacion es igual o mas alta que el individuo optimo",
+        print("- Un %f% de la poblacion es igual o mas alta que el individuo optimo\n",
               height_count / population_size * 100)
-        print("- Un %f% de la poblacion tiene igual o mas fuerza que el individuo optimo",
+        print("- Un %f% de la poblacion tiene igual o mas fuerza que el individuo optimo\n",
               strength_count / population_size * 100)
-        print("- Un %f% de la poblacion tiene igual o mas vida que el individuo optimo",
+        print("- Un %f% de la poblacion tiene igual o mas vida que el individuo optimo\n",
               life_count / population_size * 100)
-        print("- Un %f% de la poblacion tiene igual o mas pericia que el individuo optimo",
+        print("- Un %f% de la poblacion tiene igual o mas pericia que el individuo optimo\n",
               expertise_count / population_size * 100)
-        print("- Un %f% de la poblacion tiene igual o mas agilidad que el individuo optimo",
+        print("- Un %f% de la poblacion tiene igual o mas agilidad que el individuo optimo\n",
               agility_count / population_size * 100)
-        print("- Un %f% de la poblacion tiene igual o mas resistencia que el individuo optimo",
+        print("- Un %f% de la poblacion tiene igual o mas resistencia que el individuo optimo\n",
               resistance_count / population_size * 100)
