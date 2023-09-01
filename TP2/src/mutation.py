@@ -48,7 +48,7 @@ class MutationEngine:
 
     @staticmethod
     def multi_gen_non_uniform_mutation(individuals, generation, max_generations):
-        if(generation == None or max_generations == None):
+        if generation == None or max_generations == None:
             raise ValueError("wrong values to mutation")
 
         return MutationEngine._multi_gen_mutation(individuals, MutationEngine.MUTATION_PROBABILITY * (1 - generation / max_generations))
