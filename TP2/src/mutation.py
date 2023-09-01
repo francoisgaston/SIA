@@ -11,7 +11,7 @@ class MutationEngine:
     def _gen_mutation(individuals, mutation_probability):
         mutated_individuals = []
         for individual in individuals:
-            if random.random() < MutationEngine.MUTATION_PROBABILITY:
+            if random.random() < mutation_probability:
                 mutated_individuals.append(individual.mutate_gen(random.uniform(0, Individual.MAX_PROPS)))
             else:
                 mutated_individuals.append(individual)
@@ -24,6 +24,9 @@ class MutationEngine:
 
     @staticmethod
     def gen_non_uniform_mutation(individuals, generation, max_generations):
+        if(generation == None or max_generations == None):
+            raise ValueError("wrong values to mutation")
+
         return MutationEngine._gen_mutation(individuals, MutationEngine.MUTATION_PROBABILITY * (1- generation / max_generations))
     
     @staticmethod
@@ -45,6 +48,9 @@ class MutationEngine:
 
     @staticmethod
     def multi_gen_non_uniform_mutation(individuals, generation, max_generations):
+        if(generation == None or max_generations == None):
+            raise ValueError("wrong values to mutation")
+
         return MutationEngine._multi_gen_mutation(individuals, MutationEngine.MUTATION_PROBABILITY * (1 - generation / max_generations))
 
     @staticmethod
