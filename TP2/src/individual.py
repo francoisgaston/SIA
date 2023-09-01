@@ -35,16 +35,21 @@ class Individual:
     @staticmethod
     def __generate_items():
         item_count = len(ItemProp) - 1
-        propierties = [] * item_count
+        propierties = [0] * item_count
         for i in range(item_count):
-            propierties[i] = random.uniform(0, 150)
+            propierties[i] = random.uniform(0, 150-1)
         propierties.append(random.uniform(1.3, 2.0))
         return propierties
 
     #habria que seleccionar un elemento del arreglo y modificarlo con un random
     #o por ahi setearlo random y re-normalizar
-    def mutate_gen(index):
-        return
+    def mutate_gen(index, individual):
+        if index == ItemProp.HEIGHT.value:
+            individual.properties[index] = random.uniform(1.3, 2.0)
+        else:
+            # TODO
+            individual.properties[index] = individual.properties[index]
+        return individual
 
     '''
     def __generate_items():
@@ -55,15 +60,15 @@ class Individual:
     @staticmethod
     def __normalize(vector):
         # Normalizes values for all properties except height
-        total = sum(vector[:int(ItemProp.HEIGHT)])
-        for i in range(0, int(ItemProp.HEIGHT)):
+        total = sum(vector[:ItemProp.HEIGHT.value])
+        for i in range(0, ItemProp.HEIGHT.value):
             vector[i] = (vector[i]/total) * Individual.MAX_ITEM
         return vector
 
     @staticmethod
     def crossover(individual_1, individual_2):
         # crossover of properties
-        ans1, ans2 = Individual.CROSSOVER_FUNCTION(individual_1.properties, individual_2.properties, Individual.MAX_PROPS)
+        ans1, ans2, man = Individual.CROSSOVER_FUNCTION(individual_1.properties, individual_2.properties, Individual.MAX_PROPS)
         ans1 = Individual.__normalize(ans1)
         ans2 = Individual.__normalize(ans2)
         return Individual(ans1), Individual(ans2)

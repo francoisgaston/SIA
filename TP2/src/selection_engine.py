@@ -1,7 +1,7 @@
 import math
 import random
 from math import exp
-from src.individual import Individual
+from individual import Individual
 
 
 class NaturalSelectionEngine:

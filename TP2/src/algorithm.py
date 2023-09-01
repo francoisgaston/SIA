@@ -1,6 +1,6 @@
 import time
 import json
-from src.individual import Individual, ItemProp
+from individual import Individual, ItemProp
 from enum import Enum
 
 

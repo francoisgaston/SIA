@@ -12,7 +12,7 @@ class MutationEngine:
         mutated_individuals = []
         for individual in individuals:
             if random.random() < mutation_probability:
-                mutated_individuals.append(individual.mutate_gen(random.uniform(0, Individual.MAX_PROPS)))
+                mutated_individuals.append(individual.mutate_gen(random.uniform(0, Individual.MAX_PROPS), individual))
             else:
                 mutated_individuals.append(individual)
 
@@ -36,7 +36,7 @@ class MutationEngine:
             mutated_individual = individual
             for gene in individual.properties: # encapsulacion modo python
                 if random.random() < mutation_probability:
-                    mutated_individual = individual.mutate_gen(gene)
+                    mutated_individual = individual.mutate_gen(gene, individual)
             mutated_individuals.append(mutated_individual)
 
         return mutated_individuals
@@ -57,12 +57,12 @@ class MutationEngine:
     def from_string(string, generation=None, max_generations=None):
         match string.upper():
             case "GEN_UNIFORM":
-                return lambda individuals: MutationEngine.gen_uniform_mutation(individuals)
+                return MutationEngine.gen_uniform_mutation
             case "GEN_NON_UNIFORM":
-                return lambda individuals: MutationEngine.gen_non_uniform_mutation(individuals, generation, max_generations)
+                return MutationEngine.gen_non_uniform_mutation
             case "MULTI_GEN_UNIFORM":
-                return lambda individuals: MutationEngine.multi_gen_uniform_mutation(individuals)
+                return MutationEngine.multi_gen_uniform_mutation
             case "MULTI_GEN_NON_UNIFORM":
-                return lambda individuals: MutationEngine.multi_gen_non_uniform_mutation(individuals, generation, max_generations)
+                return MutationEngine.multi_gen_non_uniform_mutation
             case _:
                 return None

@@ -11,6 +11,8 @@
     "t0": 0,
     "k": 1
   },
+  "crossover" : "SINGLE_POINT",
+  "mutation" : "GEN_NON_UNIFORM",
   "deter_tournament": {
     "m": 5
   }

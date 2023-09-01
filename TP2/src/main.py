@@ -2,10 +2,10 @@ import sys
 import json
 from fitness import Fitness
 from mutation import MutationEngine
-from individual import Individual
+from individual import Individual, ItemProp
 from crossover import Crossover
 from algorithm import generate_initial_population, select_individuals, replace_individuals
-from src.selection_engine import NaturalSelectionEngine
+from selection_engine import NaturalSelectionEngine
 
 if __name__ == '__main__':
     if len(sys.argv) <= 1:
@@ -36,8 +36,10 @@ if __name__ == '__main__':
 
                 # RECOMBINACION
                 new_people = []
-                for i in range(population_size/2):
-                    new_people.append = Crossover.from_string(config["crossover"])(population[i], population[i*2])
+                for i in range(int(population_size/2)):
+                    new_individual_1, new_individual_2 = Individual.crossover(population[i], population[i*2])
+                    new_people.append(new_individual_1)
+                    new_people.append(new_individual_2)
 
                 # MUTACION
                 population_mutation = MutationEngine.from_string(config["mutation"])(population, generations, config["max_generations"])
