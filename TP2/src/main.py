@@ -26,10 +26,10 @@ if __name__ == '__main__':
         # primera implementacion que tiene limite de generaciones
         # crear mas implementaciones que permitan otros tipos de corte
         if config["stop_condition"] == "max_generations":
-
+            # generation_state = GenerationState(config["stop_condition"], sys.argv[2])
             # CONDICION DE CORTE
             while generations < config["max_generations"]:
-            # while stop_condition():
+            # while generation_state.stop_condition():
 
                 # RECOMBINACION
                 new_people = Crossover.from_string(config["crossover"])(selected[1], selected[0])
