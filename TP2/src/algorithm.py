@@ -22,10 +22,28 @@ def replace_individuals(population, new_people):
     return population
 
 
-
 def stop_condition():
     return True
 
+
+def max_generations():
+    return True
+
+
+def max_time():
+    return True
+
+
+def acceptable_solution():
+    return True
+
+
+def check_structure():
+    return True
+
+
+def check_content():
+    return True
 
 '''
 def genetic_algorithm():
