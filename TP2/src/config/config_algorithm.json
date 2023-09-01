@@ -1,0 +1,5 @@
+{
+  "max_generations": 10,
+  "max_time": 10,
+  "acceptable_solution": 1
+}
