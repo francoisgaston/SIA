@@ -13,7 +13,7 @@ def read_config(config_file_path):
 
 class GenerationState:
 
-    def __int__(self, method, config_file_path):
+    def __init__(self, method, config_file_path):
         self.check_condition = self.condition_from_string(method)
         self.max_gen, _max_time = read_config(config_file_path)
         self.target_time = time.time() + _max_time

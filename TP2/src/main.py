@@ -4,7 +4,7 @@ from fitness import Fitness
 from mutation import MutationEngine
 from individual import Individual, ItemProp
 from crossover import Crossover
-from algorithm import generate_initial_population, select_individuals, replace_individuals
+from algorithm import generate_initial_population, select_individuals, replace_individuals, GenerationState
 from selection_engine import NaturalSelectionEngine
 
 if __name__ == '__main__':
@@ -30,69 +30,68 @@ if __name__ == '__main__':
 
         # primera implementacion que tiene limite de generaciones
         # crear mas implementaciones que permitan otros tipos de corte
-        if config["stop_condition"] == "max_generations":
-            # generation_state = GenerationState(config["stop_condition"], sys.argv[2])
-            # CONDICION DE CORTE
-            while generations < config["max_generations"]:
-                # while generation_state.stop_condition():
-                # SELECCION
-                # A ambos metodos le doy toda la poblacion, me quedo con A*K de uno y (1-A)*K del otro
-                # len(selected_individual_1 + selected_individual_2) = K
-                selected_individuals_1 = selection_method_1(population, int(K * A))
-                selected_individuals_2 = selection_method_2(population, int(K * (1 - A)))
-                k_selected = selected_individuals_1 + selected_individuals_2
+        generation_state = GenerationState(config["stop_condition"], sys.argv[2])
+        # CONDICION DE CORTE
+        # while generations < config["max_generations"]:
+        while generation_state.stop_condition():
+            # SELECCION
+            # A ambos metodos le doy toda la poblacion, me quedo con A*K de uno y (1-A)*K del otro
+            # len(selected_individual_1 + selected_individual_2) = K
+            selected_individuals_1 = selection_method_1(population, int(K * A))
+            selected_individuals_2 = selection_method_2(population, int(K * (1 - A)))
+            k_selected = selected_individuals_1 + selected_individuals_2
 
-                # CROSSOVER
-                # Obtengo K hijos
-                # TODO: ver que hacemos con K impar
-                new_people = []
-                for i in range(int(len(k_selected)/2)):
-                    new_individual_1, new_individual_2 = Individual.crossover(k_selected[i], k_selected[i*2])
-                    new_people.append(new_individual_1)
-                    new_people.append(new_individual_2)
-
-
-                # MUTACION
-                # Muto solo a los hijos (sentido natural)
-                population_mutation = mutation_method(new_people, generations, config["max_generations"])
-
-                # REMPLAZO
-                # unimos a los hijos con los padres
-                # TODO: por ahora agarra N del vector, cambiarlo para que funcione con
-                population = new_people + population
-                population = replace_individuals(population, population_size)
+            # CROSSOVER
+            # Obtengo K hijos
+            # TODO: ver que hacemos con K impar
+            new_people = []
+            for i in range(int(len(k_selected)/2)):
+                new_individual_1, new_individual_2 = Individual.crossover(k_selected[i], k_selected[i*2])
+                new_people.append(new_individual_1)
+                new_people.append(new_individual_2)
 
 
-                # --------
+            # MUTACION
+            # Muto solo a los hijos (sentido natural)
+            population_mutation = mutation_method(new_people, generations, config["max_generations"])
+
+            # REMPLAZO
+            # unimos a los hijos con los padres
+            # TODO: por ahora agarra N del vector, cambiarlo para que funcione con
+            population = new_people + population
+            population = replace_individuals(population, population_size)
 
 
-                # # RECOMBINACION
-                # new_people = []
-                # for i in range(int(population_size/2)):
-                #     new_individual_1, new_individual_2 = Individual.crossover(population[i], population[i*2])
-                #     new_people.append(new_individual_1)
-                #     new_people.append(new_individual_2)
-                #
-                # # MUTACION
-                # population_mutation = MutationEngine.from_string(config["mutation"])(population, generations, config["max_generations"])
-                # population = population + population_mutation
-                #
-                # # SELECCION
-                # # Agrego los hijos a la generación
-                # population = population + new_people
-                #
-                # # Selecciono los individuos
-                # population_1 = random.sample(population, len(population) * A)
-                # population_2 = population - population_1
-                #
-                # selected_individuals_1 = NaturalSelectionEngine.from_string(selection_method_1)(population_1, len(population_1) * A, t=config["boltzmann"]["t"], m=config["deter_tournament"]["m"])
-                # selected_individuals_2 = NaturalSelectionEngine.from_string(selection_method_2)(population_2, len(population_2) * (1-A), t=config["boltzmann"]["t"], m=config["deter_tournament"]["m"])
-                # selected_individuals = selected_individuals_1 + selected_individuals_2
-                #
-                # # REEMPLAZO DE POBLACION
-                # population = replace_individuals(selected_individuals, new_people, population_size)
+            # --------
 
-                generations += 1
+
+            # # RECOMBINACION
+            # new_people = []
+            # for i in range(int(population_size/2)):
+            #     new_individual_1, new_individual_2 = Individual.crossover(population[i], population[i*2])
+            #     new_people.append(new_individual_1)
+            #     new_people.append(new_individual_2)
+            #
+            # # MUTACION
+            # population_mutation = MutationEngine.from_string(config["mutation"])(population, generations, config["max_generations"])
+            # population = population + population_mutation
+            #
+            # # SELECCION
+            # # Agrego los hijos a la generación
+            # population = population + new_people
+            #
+            # # Selecciono los individuos
+            # population_1 = random.sample(population, len(population) * A)
+            # population_2 = population - population_1
+            #
+            # selected_individuals_1 = NaturalSelectionEngine.from_string(selection_method_1)(population_1, len(population_1) * A, t=config["boltzmann"]["t"], m=config["deter_tournament"]["m"])
+            # selected_individuals_2 = NaturalSelectionEngine.from_string(selection_method_2)(population_2, len(population_2) * (1-A), t=config["boltzmann"]["t"], m=config["deter_tournament"]["m"])
+            # selected_individuals = selected_individuals_1 + selected_individuals_2
+            #
+            # # REEMPLAZO DE POBLACION
+            # population = replace_individuals(selected_individuals, new_people, population_size)
+
+            generations += 1
 
         # else other conditions
 
