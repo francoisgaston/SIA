@@ -6,12 +6,15 @@
   "A": 0.5,
   "B": 0.5,
   "K": 20,
-  "selection_1": "ELITE",
-  "selection_2": "ROULETTE",
-  "boltzmann": {
-    "tc": 0,
-    "t0": 0,
-    "k": 1
+  "selection_1": {
+    "name": "DETER_TOURNAMENT",
+    "m": 5
+  },
+  "selection_2": {
+    "name": "BOLTZMANN",
+    "tc": 10,
+    "t0": 50,
+    "c": 1
   },
   "crossover" : "SINGLE_POINT",
   "mutation" : "GEN_NON_UNIFORM",
