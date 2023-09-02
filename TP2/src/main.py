@@ -5,7 +5,7 @@ from mutation import MutationEngine
 from individual import Individual, ItemProp
 from crossover import Crossover
 from algorithm import generate_initial_population, select_individuals, replace_individuals, GenerationState
-from selection_engine import NaturalSelectionEngine
+from selection import Selection
 
 if __name__ == '__main__':
     if len(sys.argv) <= 1:
@@ -18,8 +18,8 @@ if __name__ == '__main__':
         Individual.FITNESS_FUNCTION = Fitness.from_string(config["class"])
         Individual.CROSSOVER_FUNCTION = Crossover.from_string(config["crossover"])
         population_size = config["population_0_count"]
-        selection_method_1 = NaturalSelectionEngine.from_string(config["selection_1"])
-        selection_method_2 = NaturalSelectionEngine.from_string(config["selection_2"])
+        selection_method_1 = Selection.get_selection_method(config["selection_1"])
+        selection_method_2 = Selection.get_selection_method(config["selection_2"])
         mutation_method = MutationEngine.from_string(config["mutation"])
         K = config["K"]
         A = config["A"]
@@ -37,8 +37,8 @@ if __name__ == '__main__':
             # SELECCION
             # A ambos metodos le doy toda la poblacion, me quedo con A*K de uno y (1-A)*K del otro
             # len(selected_individual_1 + selected_individual_2) = K
-            selected_individuals_1 = selection_method_1(population, int(K * A))
-            selected_individuals_2 = selection_method_2(population, int(K * (1 - A)))
+            selected_individuals_1 = selection_method_1.select(population, int(K * A))
+            selected_individuals_2 = selection_method_2.select(population, int(K * (1 - A)))
             k_selected = selected_individuals_1 + selected_individuals_2
 
             # CROSSOVER
