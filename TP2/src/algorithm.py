@@ -2,6 +2,7 @@ import time
 import json
 from individual import Individual, ItemProp
 from enum import Enum
+import random
 
 
 def read_config(config_file_path):
@@ -75,7 +76,7 @@ def select_individuals(population):
     return population
 
 
-def replace_individuals(population, new_people, population_size):
+def replace_individuals(population, population_size):
     return random.sample(population, population_size)
 
 

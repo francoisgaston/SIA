@@ -1,9 +1,11 @@
 {
-  "max_generations": 10,
-  "population_0_count": 100,
+  "max_generations": 1000,
+  "population_0_count": 1000,
   "stop_condition": "max_generations",
   "class" : "WARRIOR",
   "A": 0.5,
+  "B": 0.5,
+  "K": 20,
   "selection_1": "ELITE",
   "selection_2": "ROULETTE",
   "boltzmann": {

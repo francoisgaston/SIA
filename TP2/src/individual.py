@@ -5,11 +5,11 @@ import random
 
 
 class ItemProp(Enum):
-    STRENGTH = 0,
-    AGILITY = 1,
-    EXPERTISE = 2,
-    RESISTANCE = 3,
-    LIFE = 4,
+    STRENGTH = 0
+    AGILITY = 1
+    EXPERTISE = 2
+    RESISTANCE = 3
+    LIFE = 4
     HEIGHT = 5
 
 
@@ -19,6 +19,7 @@ class Individual:
     CROSSOVER_FUNCTION = None
     MAX_ITEM = 150.0
     MAX_PROPS = 6
+    DELTA_PERCENTAGE = 0.2
 
     # Recibe el arreglo de propiedades
     # No deben sumar 150 o cumplir con las restricciones de altura
@@ -43,13 +44,13 @@ class Individual:
 
     #habria que seleccionar un elemento del arreglo y modificarlo con un random
     #o por ahi setearlo random y re-normalizar
-    def mutate_gen(index, individual):
+    def mutate_gen(self, index):
         if index == ItemProp.HEIGHT.value:
-            individual.properties[index] = random.uniform(1.3, 2.0)
+            self.properties[index] = random.uniform(1.3, 2.0)
         else:
-            # TODO
-            individual.properties[index] = individual.properties[index]
-        return individual
+            delta = self.properties[index] * Individual.DELTA_PERCENTAGE
+            self.properties[index] = random.uniform(max(0, self.properties[index]-delta),min(150, self.properties[index]+delta))
+        return
 
     '''
     def __generate_items():
@@ -73,11 +74,28 @@ class Individual:
         ans2 = Individual.__normalize(ans2)
         return Individual(ans1), Individual(ans2)
 
+    def normalize(self):
+        self.properties = Individual.__normalize(self.properties)
+
     @staticmethod
     def clone(individual):
         if isinstance(individual, Individual):
             return deepcopy(individual)
         raise Exception("obj is not an individual")
+
+    def __eq__(self, other):
+        if isinstance(other, Individual):
+            return self.properties == other.properties
+        return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __lt__(self, other):
+        return self.fitness() < other.fitness()
+
+    def height(self):
+        return self.properties[ItemProp.HEIGHT.value]
 
     def fitness(self):
         return Individual.FITNESS_FUNCTION(self.attack(),self.defense())
@@ -89,24 +107,24 @@ class Individual:
         return (self.resistance() + self.expertise()) * self.life() * self.DEM()
 
     def strength(self):
-        return 100*math.tanh(0.01 * self.properties[ItemProp.STRENGTH])
+        return 100*math.tanh(0.01 * self.properties[ItemProp.STRENGTH.value])
 
     def agility(self):
-        return math.tanh(0.01 * self.properties[ItemProp.AGILITY])
+        return math.tanh(0.01 * self.properties[ItemProp.AGILITY.value])
 
     def expertise(self):
-        return 0.6 * math.tanh(0.01 * self.properties[ItemProp.EXPERTISE])
+        return 0.6 * math.tanh(0.01 * self.properties[ItemProp.EXPERTISE.value])
 
     def resistance(self):
-        return 100 * math.tanh(0.01 * self.properties[ItemProp.RESISTANCE])
+        return 100 * math.tanh(0.01 * self.properties[ItemProp.RESISTANCE.value])
 
     def life(self):
-        return 100 * math.tanh(0.01 * self.properties[ItemProp.LIFE])
+        return 100 * math.tanh(0.01 * self.properties[ItemProp.LIFE.value])
 
     def ATM(self):
-        height = self.properties[ItemProp.HEIGHT]
+        height = self.properties[ItemProp.HEIGHT.value]
         return 0.5 - math.pow((3*height)-5,4) + math.pow((3*height)-5,2) + height/2
 
     def DEM(self):
-        height = self.properties[ItemProp.HEIGHT]
+        height = self.properties[ItemProp.HEIGHT.value]
         return 2 + math.pow(3 * height - 5, 4) - math.pow(3 * height - 5, 2) - height/2.0

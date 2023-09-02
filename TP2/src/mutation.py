@@ -1,4 +1,4 @@
-import random
+from random import randint, random
 
 from individual import Individual
 
@@ -9,14 +9,12 @@ class MutationEngine:
 
     @staticmethod
     def _gen_mutation(individuals, mutation_probability):
-        mutated_individuals = []
         for individual in individuals:
-            if random.random() < mutation_probability:
-                mutated_individuals.append(individual.mutate_gen(random.uniform(0, Individual.MAX_PROPS), individual))
-            else:
-                mutated_individuals.append(individual)
-
-        return mutated_individuals
+            if random() < mutation_probability:
+                individual.mutate_gen(randint(0, Individual.MAX_PROPS-1))
+        #     Normalizar
+            individual.normalize()
+        return
 
     @staticmethod
     def gen_uniform_mutation(individuals):
@@ -31,15 +29,12 @@ class MutationEngine:
     
     @staticmethod
     def _multi_gen_mutation(individuals, mutation_probability):
-        mutated_individuals = []
         for individual in individuals:
-            mutated_individual = individual
-            for gene in individual.properties: # encapsulacion modo python
-                if random.random() < mutation_probability:
-                    mutated_individual = individual.mutate_gen(gene, individual)
-            mutated_individuals.append(mutated_individual)
-
-        return mutated_individuals
+            for gene in range(0, Individual.MAX_PROPS):
+                if random() < mutation_probability:
+                    individual.mutate_gen(gene)
+            individual.normalize()
+        return
 
 
     @staticmethod
