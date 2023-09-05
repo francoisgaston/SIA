@@ -76,10 +76,6 @@ def select_individuals(population):
     return population
 
 
-def replace_individuals(population, population_size):
-    return random.sample(population, population_size)
-
-
 
 
 

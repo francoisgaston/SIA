@@ -20,5 +20,7 @@
   "mutation" : "GEN_NON_UNIFORM",
   "deter_tournament": {
     "m": 5
-  }
+  },
+  "replace" : "TRADICIONAL", 
+  "g" : 0.1
 }

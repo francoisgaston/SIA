@@ -4,8 +4,9 @@ from fitness import Fitness
 from mutation import MutationEngine
 from individual import Individual, ItemProp
 from crossover import Crossover
-from algorithm import generate_initial_population, select_individuals, replace_individuals, GenerationState
+from algorithm import generate_initial_population, select_individuals, GenerationState
 from selection import Selection
+from replace import Replace
 
 if __name__ == '__main__':
     if len(sys.argv) <= 1:
@@ -56,15 +57,12 @@ if __name__ == '__main__':
             population_mutation = mutation_method(new_people, generations, config["max_generations"])
 
             # REMPLAZO
-            # unimos a los hijos con los padres
-            # TODO: por ahora agarra N del vector, cambiarlo para que funcione con
-            population = new_people + population
-            population = replace_individuals(population, population_size)
+            #population = new_people + population
+            population = Replace.from_string(config["replace"])(population, new_people, population_size, config["g"])
 
 
+            generations += 1
             # --------
-
-
             # # RECOMBINACION
             # new_people = []
             # for i in range(int(population_size/2)):
@@ -90,8 +88,6 @@ if __name__ == '__main__':
             #
             # # REEMPLAZO DE POBLACION
             # population = replace_individuals(selected_individuals, new_people, population_size)
-
-            generations += 1
 
         # else other conditions
 
