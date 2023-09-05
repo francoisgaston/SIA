@@ -1,3 +1,4 @@
+import csv
 import sys
 import json
 from fitness import Fitness
@@ -46,20 +47,18 @@ if __name__ == '__main__':
             # Obtengo K hijos
             # TODO: ver que hacemos con K impar
             new_people = []
-            for i in range(int(len(k_selected)/2)):
-                new_individual_1, new_individual_2 = Individual.crossover(k_selected[i], k_selected[i*2])
+            for i in range(int(len(k_selected) / 2)):
+                new_individual_1, new_individual_2 = Individual.crossover(k_selected[i], k_selected[i * 2])
                 new_people.append(new_individual_1)
                 new_people.append(new_individual_2)
-
 
             # MUTACION
             # Muto solo a los hijos (sentido natural)
             population_mutation = mutation_method(new_people, generations, config["max_generations"])
 
             # REMPLAZO
-            #population = new_people + population
+            # population = new_people + population
             population = Replace.from_string(config["replace"])(population, new_people, population_size, config["g"])
-
 
             generations += 1
             # --------
@@ -91,7 +90,19 @@ if __name__ == '__main__':
 
         # else other conditions
 
-        # encuentro el individuo con mejor desempeno
+        # encuentro el individuo con mejor desempeno y agrego todos los valores a un csv. value1 = height,
+        # value2 = agility_items, value3= agility_calculated, value4 = strength_items, value5 = strength_calculated,
+        # value6 = resistance_items, value7 = resistance_calculated, value8 = expertise_items,
+        # value9 = expertise_calculated, value10 = life_items, value11 = life_calculated
+
+        file = open("data.csv", 'w', newline='')
+        writer = csv.writer(file)
+
+        header = ["height", "agility_items", "agility_calculated", "strength_items", "strength_calculated",
+                  "resistance_items", "resistance_calculated", "expertise_items", "expertise_calculated", "life_items",
+                  "life_calculated"]
+        writer.writerow(header)
+
         max_fitness_individual = None
         max_fitness_value = 0
         min_fitness_individual = None
@@ -100,12 +111,23 @@ if __name__ == '__main__':
         for individual in population:
             ind_fitness = individual.fitness()
             fitness_sum += ind_fitness
+
+            individual_attr = [individual.height(), individual.properties[ItemProp.AGILITY.value], individual.agility(),
+                               individual.properties[ItemProp.STRENGTH.value],
+                               individual.strength(), individual.properties[ItemProp.RESISTANCE.value],
+                               individual.resistance(),
+                               individual.properties[ItemProp.EXPERTISE.value], individual.expertise(),
+                               individual.properties[ItemProp.LIFE.value], individual.life()]
+            writer.writerow(individual_attr)
+
             if ind_fitness > max_fitness_value:
                 max_fitness_individual = individual
                 max_fitness_value = ind_fitness
             if min_fitness_value is None or ind_fitness < min_fitness_value:
                 min_fitness_individual = individual
                 min_fitness_value = ind_fitness
+
+        file.close()
 
         # comparar el fitness con respecto a la poblacion
         fitness_avg = fitness_sum / population_size
@@ -125,6 +147,8 @@ if __name__ == '__main__':
         max_fitness_individual_strength = max_fitness_individual.strength()
         max_fitness_individual_agility = max_fitness_individual.agility()
 
+        # TODO: decidir si comparo valores de items o propiedades del character
+
         for individual in population:
             if individual != max_fitness_individual:
                 if individual.expertise() >= max_fitness_individual_expertise:
@@ -140,13 +164,23 @@ if __name__ == '__main__':
                 if individual.resistance() >= max_fitness_individual_resistance:
                     resistance_count += 1
 
+        # TODO: decidir si quiero buscar otros individuos que tengan EXACTAMENTE los mismos numero o quiero mostrar
+        #  los iguales o mejor
+
         # Output a salida estandar
-        print(f"De nuestra poblacion final, nuestro individuo con mayor fitness presenta un desempeno de {max_fitness_value} y el menor de {min_fitness_value}\n\n")
+        print(
+            f"De nuestra poblacion final, nuestro individuo con mayor fitness presenta un desempeno de {max_fitness_value} y el menor de {min_fitness_value}\n\n")
         print(f"Nuestro desempeno promedio de la poblacion final tiene un valor de {fitness_avg}\n\n")
         print(f"Al analizar mas en detalle los datos, podemos observar que\n")
-        print(f"- Un {height_count / population_size * 100}% de la poblacion es igual o mas alta que el individuo optimo\n")
-        print(f"- Un {strength_count / population_size * 100}% de la poblacion tiene igual o mas fuerza que el individuo optimo\n")
-        print(f"- Un {life_count / population_size * 100}% de la poblacion tiene igual o mas vida que el individuo optimo\n")
-        print(f"- Un {expertise_count / population_size * 100}% de la poblacion tiene igual o mas pericia que el individuo optimo\n")
-        print(f"- Un {agility_count / population_size * 100}% de la poblacion tiene igual o mas agilidad que el individuo optimo\n")
-        print(f"- Un {resistance_count / population_size * 100}% de la poblacion tiene igual o mas resistencia que el individuo optimo\n")
+        print(
+            f"- Un {height_count / population_size * 100}% de la poblacion es igual o mas alta que el individuo optimo\n")
+        print(
+            f"- Un {strength_count / population_size * 100}% de la poblacion tiene igual o mas fuerza que el individuo optimo\n")
+        print(
+            f"- Un {life_count / population_size * 100}% de la poblacion tiene igual o mas vida que el individuo optimo\n")
+        print(
+            f"- Un {expertise_count / population_size * 100}% de la poblacion tiene igual o mas pericia que el individuo optimo\n")
+        print(
+            f"- Un {agility_count / population_size * 100}% de la poblacion tiene igual o mas agilidad que el individuo optimo\n")
+        print(
+            f"- Un {resistance_count / population_size * 100}% de la poblacion tiene igual o mas resistencia que el individuo optimo\n")
