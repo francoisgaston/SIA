@@ -11,8 +11,8 @@ from selection import Selection
 from replace import Replace
 
 if __name__ == '__main__':
-    if len(sys.argv) <= 1:
-        print("Por favor ingrese el archivo de configuración")
+    if len(sys.argv) <= 2:
+        print("Por favor ingrese los archivos de configuración")
         exit(1)
 
     with open(f"{sys.argv[1]}", "r") as file:
