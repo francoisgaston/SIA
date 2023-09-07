@@ -39,9 +39,20 @@ class Roulette:
 
 
 class Selection(ABC):
+    REPEAT_IN_SELECTION = True
+
     @abstractmethod
     def select(self, population, k):
         pass
+
+    @staticmethod
+    def get_both_populations(population, K, A, method_1, method_2):
+        size_1 = math.ceil(K * A)
+        selected_individuals_1 = method_1.select(population, size_1)
+        non_repeated_individuals = [individual for individual in population if individual not in selected_individuals_1]
+        population_2 = population if (Selection.REPEAT_IN_SELECTION or len(non_repeated_individuals) < K - size_1) else non_repeated_individuals
+        selected_individuals_2 = method_2.select(population_2, K - size_1)
+        return selected_individuals_1 + selected_individuals_2
 
     @staticmethod
     def get_selection_method(selection_data):

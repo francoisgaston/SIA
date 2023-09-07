@@ -1,7 +1,8 @@
 import csv
 import sys
 import json
-import math
+import os
+from datetime import datetime
 from fitness import Fitness
 from mutation import MutationEngine
 from individual import Individual, ItemProp
@@ -16,8 +17,8 @@ from replace import Replace
 # Return: lista de tuplas con todos los valores relevantes
 
 def run_genetic(individual_class="WARRIOR", crossover="ANULAR", population_0_count=100,
-                selection_1=None, selection_2=None, replace_1=None,
-                replace_2=None, replace="SESGO", mutation="MULTI_GEN_UNIFORM",
+                selection_1=None, selection_2=None, replace_1=None, repeat_in_selection=False,
+                replace_2=None, replace="SESGO", mutation="MULTI_GEN_UNIFORM", max_generations=10,
                 stop_condition="max_generations", stop_condition_options=None,
                 mutation_probability=0.5, K=100, A=0.5, B=0.5, last_generation_count=3, id=1):
     # Defaults para objetos (estan aca porque si no se queja de que el default es mutable)
@@ -61,38 +62,29 @@ def run_genetic(individual_class="WARRIOR", crossover="ANULAR", population_0_cou
     replace_method = Replace.from_string(replace)
     mutation_method = MutationEngine.from_string(mutation)
     MutationEngine.MUTATION_PROBABILITY = mutation_probability
+    Selection.REPEAT_IN_SELECTION = repeat_in_selection
     generation_state = GenerationState(stop_condition, stop_condition_options)
-    #     Run algorithm
-    # Genero la generacion 0
+    # Generacion 0
     population = generate_initial_population(population_size)
     generations = 0
-
-    # primera implementacion que tiene limite de generaciones
-    # crear mas implementaciones que permitan otros tipos de corte
-
-    # CONDICION DE CORTE
-    # while generations < config["max_generations"]:
-    while generation_state.stop_condition():
+    while generation_state.stop_condition(population):
         # SELECCION
         # A ambos metodos le doy toda la poblacion, me quedo con A*K de uno y (1-A)*K del otro
         # len(selected_individual_1 + selected_individual_2) = K
-        selected_individuals_1 = selection_method_1.select(population, math.ceil(K * A))
-        selected_individuals_2 = selection_method_2.select(population, math.floor(K * (1 - A)))
-        k_selected = selected_individuals_1 + selected_individuals_2
+        k_selected = Selection.get_both_populations(population, K, A, selection_method_1, selection_method_2)
 
         # CROSSOVER
         # Obtengo K hijos
         # TODO: ver que hacemos con K impar
         new_people = []
-        dim = len(k_selected) - 1
         for i in range(0, len(k_selected), 2):
-            new_individual_1, new_individual_2 = Individual.crossover(k_selected[i], k_selected[i + 1])
+            new_individual_1, new_individual_2 = Individual.crossover(k_selected[i], k_selected[i+1])
             new_people.append(new_individual_1)
             new_people.append(new_individual_2)
 
         # MUTACION
         # Muto solo a los hijos (sentido natural)
-        new_people = mutation_method(new_people, generations, config["max_generations"])
+        new_people = mutation_method(new_people, generations, max_generations)
 
         # REMPLAZO
         # population = new_people + population
@@ -132,7 +124,7 @@ def run_genetic(individual_class="WARRIOR", crossover="ANULAR", population_0_cou
             min_fitness_individual = individual
             min_fitness_value = ind_fitness
     return ans
-
+#     TODO: si sirven las otras estadísticas, traerlas aca
 
 if __name__ == '__main__':
     if len(sys.argv) <= 1:
@@ -146,9 +138,12 @@ if __name__ == '__main__':
                           replace_2=config["replace_2"], replace=config["replace"],
                           mutation=config["mutation"], mutation_probability=config["mutation_probability"],
                           stop_condition=config["stop_condition"], stop_condition_options=config["stop_condition_options"],
-                          K=config["K"], A=config["A"], B=config["B"])
+                          K=config["K"], A=config["A"], B=config["B"], last_generation_count=10)
 
-        file = open("data.csv", 'w', newline='')
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        CSV = config["output"] + "_" + timestamp + ".csv"
+        os.makedirs(os.path.dirname(CSV), exist_ok=True)
+        file = open(CSV, 'w', newline='')
         writer = csv.writer(file)
 
         header = ["height", "agility_items", "agility_calculated", "strength_items", "strength_calculated",

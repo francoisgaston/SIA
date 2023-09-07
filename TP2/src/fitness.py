@@ -1,5 +1,5 @@
 def warrior_fitness(attack, defense):
-    return 0.4 * attack + 0.6 * defense
+    return 0.6 * attack + 0.4 * defense
 
 
 def archer_fitness(attack, defense):
