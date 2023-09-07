@@ -42,7 +42,7 @@ if __name__ == '__main__':
         generation_state = GenerationState(config["stop_condition"], sys.argv[2])
         # CONDICION DE CORTE
         # while generations < config["max_generations"]:
-        while generation_state.stop_condition():
+        while generation_state.stop_condition(population):
             # SELECCION
             # A ambos metodos le doy toda la poblacion, me quedo con A*K de uno y (1-A)*K del otro
             k_selected = Selection.get_both_populations(population, K, A, selection_method_1, selection_method_2)

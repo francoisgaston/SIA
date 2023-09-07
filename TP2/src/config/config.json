@@ -2,7 +2,7 @@
   "output": "src/results/out",
   "max_generations": 10,
   "population_0_count": 100,
-  "stop_condition": "max_generations",
+  "stop_condition": "ACCEPTABLE_SOLUTION",
   "class" : "WARRIOR",
   "A": 0.8,
   "B": 0.5,
