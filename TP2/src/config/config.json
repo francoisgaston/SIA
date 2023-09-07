@@ -1,11 +1,12 @@
 {
+  "output": "src/results/out",
   "max_generations": 10,
   "population_0_count": 100,
   "stop_condition": "max_generations",
   "class" : "WARRIOR",
-  "A": 0.5,
+  "A": 0.8,
   "B": 0.5,
-  "K": 100,
+  "K": 28,
   "selection_1": {
     "name": "ROULETTE",
     "m": 5
@@ -16,14 +17,14 @@
     "t0": 50,
     "c": 1
   },
+  "repeat_in_selection": true,
   "crossover" : "ANULAR",
   "mutation" : "MULTI_GEN_UNIFORM",
   "mutation_probability": 1,
   "deter_tournament": {
     "m": 5
   },
-  "replace" : "SESGO", 
-  "g" : 0.1,
+  "replace" : "SESGO",
   "replace_1": {
     "name": "ELITE",
     "m": 5

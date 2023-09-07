@@ -1,12 +1,13 @@
 import csv
 import sys
 import json
-import math
+import os
+from datetime import datetime
 from fitness import Fitness
 from mutation import MutationEngine
 from individual import Individual, ItemProp
 from crossover import Crossover
-from algorithm import generate_initial_population, select_individuals, GenerationState
+from algorithm import generate_initial_population, GenerationState
 from selection import Selection
 from replace import Replace
 
@@ -30,8 +31,7 @@ if __name__ == '__main__':
         K = config["K"]
         A = config["A"]
         B = config["B"]
-
-
+        Selection.REPEAT_IN_SELECTION = config["repeat_in_selection"]
         
         # Genero la generacion 0
         population = generate_initial_population(population_size)
@@ -45,17 +45,13 @@ if __name__ == '__main__':
         while generation_state.stop_condition():
             # SELECCION
             # A ambos metodos le doy toda la poblacion, me quedo con A*K de uno y (1-A)*K del otro
-            # len(selected_individual_1 + selected_individual_2) = K
-            selected_individuals_1 = selection_method_1.select(population, math.ceil(K * A))
-            selected_individuals_2 = selection_method_2.select(population, math.floor(K * (1 - A)))
-            k_selected = selected_individuals_1 + selected_individuals_2
+            k_selected = Selection.get_both_populations(population, K, A, selection_method_1, selection_method_2)
 
             # CROSSOVER
             # Obtengo K hijos
             # TODO: ver que hacemos con K impar
             new_people = []
-            dim = len(k_selected) -1
-            for i in range(0,len(k_selected), 2):
+            for i in range(0, len(k_selected), 2):
                 new_individual_1, new_individual_2 = Individual.crossover(k_selected[i], k_selected[i+1])
                 new_people.append(new_individual_1)
                 new_people.append(new_individual_2)
@@ -78,7 +74,10 @@ if __name__ == '__main__':
         # value6 = resistance_items, value7 = resistance_calculated, value8 = expertise_items,
         # value9 = expertise_calculated, value10 = life_items, value11 = life_calculated
 
-        file = open("data.csv", 'w', newline='')
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        CSV = config["output"] + "_" + timestamp + ".csv"
+        os.makedirs(os.path.dirname(CSV), exist_ok=True)
+        file = open(CSV, 'w', newline='')
         writer = csv.writer(file)
 
         header = ["height", "agility_items", "agility_calculated", "strength_items", "strength_calculated",
