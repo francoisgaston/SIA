@@ -2,6 +2,11 @@
   "max_generations": 10,
   "population_0_count": 100,
   "stop_condition": "max_generations",
+  "stop_condition_options": {
+    "max_generations": 1000,
+    "max_time": 0.1,
+    "acceptable_solution": 1
+  },
   "class" : "WARRIOR",
   "A": 0.5,
   "B": 0.5,

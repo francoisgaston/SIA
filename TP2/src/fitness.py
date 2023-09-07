@@ -17,6 +17,7 @@ def infiltrate_fitness(attack, defense):
 
 class Fitness:
 
+    @staticmethod
     def from_string(string):
         match string.upper():
             case "WARRIOR":

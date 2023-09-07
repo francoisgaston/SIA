@@ -13,9 +13,10 @@ def read_config(config_file_path):
 
 class GenerationState:
 
-    def __init__(self, method, config_file_path):
+    def __init__(self, method, options):
         self.check_condition = self.condition_from_string(method)
-        self.max_gen, _max_time = read_config(config_file_path)
+
+        self.max_gen, _max_time = options["max_generations"], options["max_time"]
         self.target_time = time.time() + _max_time
         self.current_gen = 0
 
