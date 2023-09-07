@@ -6,8 +6,8 @@ def single_point_crossover(in_1, in_2, lenght):
     num = randint(0, lenght - 1)
     vec1 = in_1[:num] + in_2[num:]
     vec2 = in_2[:num] + in_1[num:]
-    return vec1, vec2, num
-    # return vec1, vec2
+    # return vec1, vec2, num
+    return vec1, vec2
 
 
 def two_point_crossover(in_1, in_2, lenght):
@@ -17,8 +17,8 @@ def two_point_crossover(in_1, in_2, lenght):
     min_num = min(num1, num2)
     vec1 = in_1[:min_num] + in_2[min_num:max_num] + in_1[max_num:]
     vec2 = in_2[:min_num] + in_1[min_num:max_num] + in_2[max_num:]
-    return vec1,vec2,min_num,max_num
-    # return vec1, vec2
+    # return vec1,vec2,min_num,max_num
+    return vec1, vec2
 
 
 def uniform_point_crossover(in_1, in_2, lenght):
@@ -43,13 +43,13 @@ def anular_crossover(in_1, in_2, length):
         dif = (num + len_from) % length
         vec1 = in_1[:dif] + in_2[dif:num] + in_1[num:]
         vec2 = in_2[:dif] + in_1[dif:num] + in_2[num:]
-        return vec1,vec2,num,len_from
-        # return vec1, vec2
+        # return vec1,vec2,num,len_from
+        return vec1, vec2
     else:
         vec1 = in_1[:num] + in_2[num:num + len_from] + in_1[num + len_from:]
         vec2 = in_2[:num] + in_1[num:num + len_from] + in_2[num + len_from:]
-        return vec1, vec2, num, len_from
-        # return  vec1, vec2
+        # return vec1, vec2, num, len_from
+        return  vec1, vec2
 
 class Crossover:
     @staticmethod

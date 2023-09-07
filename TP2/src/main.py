@@ -1,6 +1,7 @@
 import csv
 import sys
 import json
+import math
 from fitness import Fitness
 from mutation import MutationEngine
 from individual import Individual, ItemProp
@@ -22,10 +23,16 @@ if __name__ == '__main__':
         population_size = config["population_0_count"]
         selection_method_1 = Selection.get_selection_method(config["selection_1"])
         selection_method_2 = Selection.get_selection_method(config["selection_2"])
+        replace_method_1 = Selection.get_selection_method(config["replace_1"])
+        replace_method_2 = Selection.get_selection_method(config["replace_2"])
         mutation_method = MutationEngine.from_string(config["mutation"])
+        MutationEngine.MUTATION_PROBABILITY = config["mutation_probability"]
         K = config["K"]
         A = config["A"]
         B = config["B"]
+
+
+        
         # Genero la generacion 0
         population = generate_initial_population(population_size)
         generations = 0
@@ -39,54 +46,30 @@ if __name__ == '__main__':
             # SELECCION
             # A ambos metodos le doy toda la poblacion, me quedo con A*K de uno y (1-A)*K del otro
             # len(selected_individual_1 + selected_individual_2) = K
-            selected_individuals_1 = selection_method_1.select(population, int(K * A))
-            selected_individuals_2 = selection_method_2.select(population, int(K * (1 - A)))
+            selected_individuals_1 = selection_method_1.select(population, math.ceil(K * A))
+            selected_individuals_2 = selection_method_2.select(population, math.floor(K * (1 - A)))
             k_selected = selected_individuals_1 + selected_individuals_2
 
             # CROSSOVER
             # Obtengo K hijos
             # TODO: ver que hacemos con K impar
             new_people = []
-            for i in range(int(len(k_selected) / 2)):
-                new_individual_1, new_individual_2 = Individual.crossover(k_selected[i], k_selected[i * 2])
+            dim = len(k_selected) -1
+            for i in range(0,len(k_selected), 2):
+                new_individual_1, new_individual_2 = Individual.crossover(k_selected[i], k_selected[i+1])
                 new_people.append(new_individual_1)
                 new_people.append(new_individual_2)
 
+
             # MUTACION
             # Muto solo a los hijos (sentido natural)
-            population_mutation = mutation_method(new_people, generations, config["max_generations"])
-
+            new_people = mutation_method(new_people, generations, config["max_generations"])
+    
             # REMPLAZO
             # population = new_people + population
-            population = Replace.from_string(config["replace"])(population, new_people, population_size, config["g"])
-
+            population = Replace.from_string(config["replace"])(population, new_people, population_size, replace_method_1, replace_method_2, B)
+    
             generations += 1
-            # --------
-            # # RECOMBINACION
-            # new_people = []
-            # for i in range(int(population_size/2)):
-            #     new_individual_1, new_individual_2 = Individual.crossover(population[i], population[i*2])
-            #     new_people.append(new_individual_1)
-            #     new_people.append(new_individual_2)
-            #
-            # # MUTACION
-            # population_mutation = MutationEngine.from_string(config["mutation"])(population, generations, config["max_generations"])
-            # population = population + population_mutation
-            #
-            # # SELECCION
-            # # Agrego los hijos a la generación
-            # population = population + new_people
-            #
-            # # Selecciono los individuos
-            # population_1 = random.sample(population, len(population) * A)
-            # population_2 = population - population_1
-            #
-            # selected_individuals_1 = NaturalSelectionEngine.from_string(selection_method_1)(population_1, len(population_1) * A, t=config["boltzmann"]["t"], m=config["deter_tournament"]["m"])
-            # selected_individuals_2 = NaturalSelectionEngine.from_string(selection_method_2)(population_2, len(population_2) * (1-A), t=config["boltzmann"]["t"], m=config["deter_tournament"]["m"])
-            # selected_individuals = selected_individuals_1 + selected_individuals_2
-            #
-            # # REEMPLAZO DE POBLACION
-            # population = replace_individuals(selected_individuals, new_people, population_size)
 
         # else other conditions
 
@@ -108,7 +91,12 @@ if __name__ == '__main__':
         min_fitness_individual = None
         min_fitness_value = None
         fitness_sum = 0
-        for individual in population:
+        sorted_population = sorted(population, reverse=True)
+        for individual in sorted_population:
+            print("fitness", individual.fitness())
+            print("attack", individual.attack())
+            print("defense", individual.defense())
+            print('-------------')
             ind_fitness = individual.fitness()
             fitness_sum += ind_fitness
 

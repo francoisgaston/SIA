@@ -69,7 +69,8 @@ class Individual:
     @staticmethod
     def crossover(individual_1, individual_2):
         # crossover of properties
-        ans1, ans2, man = Individual.CROSSOVER_FUNCTION(individual_1.properties, individual_2.properties, Individual.MAX_PROPS)
+        # ans1, ans2, man = Individual.CROSSOVER_FUNCTION(individual_1.properties, individual_2.properties, Individual.MAX_PROPS)
+        ans1, ans2 = Individual.CROSSOVER_FUNCTION(individual_1.properties, individual_2.properties, Individual.MAX_PROPS)
         ans1 = Individual.__normalize(ans1)
         ans2 = Individual.__normalize(ans2)
         return Individual(ans1), Individual(ans2)
@@ -116,15 +117,16 @@ class Individual:
         return 0.6 * math.tanh(0.01 * self.properties[ItemProp.EXPERTISE.value])
 
     def resistance(self):
-        return 100 * math.tanh(0.01 * self.properties[ItemProp.RESISTANCE.value])
+        return math.tanh(0.01 * self.properties[ItemProp.RESISTANCE.value])
 
     def life(self):
         return 100 * math.tanh(0.01 * self.properties[ItemProp.LIFE.value])
 
     def ATM(self):
         height = self.properties[ItemProp.HEIGHT.value]
-        return 0.5 - math.pow((3*height)-5,4) + math.pow((3*height)-5,2) + height/2
+        return 0.5 - math.pow((3*height)-5,4) + math.pow((3*height)-5,2) + height/2.0
 
     def DEM(self):
         height = self.properties[ItemProp.HEIGHT.value]
         return 2 + math.pow(3 * height - 5, 4) - math.pow(3 * height - 5, 2) - height/2.0
+

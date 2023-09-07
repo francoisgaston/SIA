@@ -4,7 +4,7 @@ from individual import Individual
 
 class MutationEngine:
 
-    MUTATION_PROBABILITY = 0.5
+    MUTATION_PROBABILITY = None
 
 
     @staticmethod
@@ -14,10 +14,10 @@ class MutationEngine:
                 individual.mutate_gen(randint(0, Individual.MAX_PROPS-1))
         #     Normalizar
             individual.normalize()
-        return
+        return individuals
 
     @staticmethod
-    def gen_uniform_mutation(individuals):
+    def gen_uniform_mutation(individuals, generation, max_generations):
         return MutationEngine._gen_mutation(individuals, MutationEngine.MUTATION_PROBABILITY)
 
     @staticmethod
@@ -34,11 +34,11 @@ class MutationEngine:
                 if random() < mutation_probability:
                     individual.mutate_gen(gene)
             individual.normalize()
-        return
+        return individuals
 
 
     @staticmethod
-    def multi_gen_uniform_mutation(individuals):
+    def multi_gen_uniform_mutation(individuals, generation, max_generations):
         return MutationEngine._multi_gen_mutation(individuals, MutationEngine.MUTATION_PROBABILITY)
 
     @staticmethod
