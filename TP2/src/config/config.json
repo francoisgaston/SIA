@@ -1,11 +1,12 @@
 {
   "output": "src/results/out",
   "population_0_count": 100,
-  "stop_condition": "MAX_GENERATIONS",
+  "stop_condition": "CHECK_CONTENT",
   "stop_condition_options": {
     "max_generations": 1000,
-    "max_time": 0.1,
-    "acceptable_solution": 1
+    "max_time": 5,
+    "acceptable_solution": 1,
+    "limit_generations": 10
   },
   "class" : "WARRIOR",
   "A": 0.8,

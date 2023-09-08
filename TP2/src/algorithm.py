@@ -8,7 +8,7 @@ import random
 def read_config(config_file_path):
     with open(f"{config_file_path}", "r") as file:
         config = json.load(file)
-        return config["max_generations"], config["max_time"], config["acceptable_solution"]
+        return config["max_generations"], config["max_time"], config["acceptable_solution"], config["limit_generations"]
 
 
 class GenerationState:
@@ -16,9 +16,10 @@ class GenerationState:
     def __init__(self, method, options):
         self.check_condition = self.condition_from_string(method)
 
-        self.max_gen, _max_time, self.target_fitness = options["max_generations"], options["max_time"], options["acceptable_solution"]
+        self.max_gen, _max_time, self.target_fitness, self.limit_generations = options["max_generations"], options["max_time"], options["acceptable_solution"], options["limit_generations"]
         self.target_time = time.time() + _max_time
         self.current_gen = 0
+        self.max_fitness = 0
 
     def condition_from_string(self, method):
         match method.upper():
@@ -59,8 +60,17 @@ class GenerationState:
         return True
 
     def check_content(self, population):
-        return True
+        for individual in population:
+            if individual.fitness() > self.max_fitness:
+                self.max_fitness = individual.fitness()
+                self.repeated_generations = 0
+                return True
 
+        if self.repeated_generations > self.limit_generations:
+            return False
+        
+        self.repeated_generations += 1
+        return True
 
 
 
