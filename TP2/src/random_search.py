@@ -88,16 +88,16 @@ config_template = {
 
 # Parameter space for random search
 param_space = {
-    "population_0_count": [50, 100, 150],
+    "population_0_count": [50, 100, 150, 200],
     "stop_condition": ["MAX_GENERATIONS", "MAX_TIME", "ACCEPTABLE_SOLUTION", "CHECK_CONTENT"],
-    "class": ["WARRIOR", "MAGE"],
+    "class": ["WARRIOR"],
     "A": [0.1, 0.5, 0.8],
     "B": [0.1, 0.3, 0.5],
     "K": [16, 28, 40],
     "repeat_in_selection": [True, False],
     "crossover": ["SINGLE_POINT", "TWO_POINT", "UNIFORM_POINT", "ANULAR"],
     "mutation": ["GEN_UNIFORM", "GEN_NON_UNIFORM", "MULTI_GEN_UNIFORM", "MULTI_GEN_NON_UNIFORM"],
-    "mutation_probability": [0.5, 1, 1.5],
+    "mutation_probability": [0.5, 1, 0.9, 0.2],
     "replace": ["TRADICIONAL", "SESGO"],
     "selection_1": {
         "name": ["ROULETTE", "UNIVERSAL", "ELITE"],
@@ -125,7 +125,7 @@ param_space = {
 }
 
 # Initialize search
-max_evals = 10
+max_evals = 20
 start_time = datetime.now()
 best_config = None
 best_performance = float('-inf')
@@ -154,7 +154,7 @@ for eval_num in range(max_evals):
         best_config = merged_config
 
     # Stop condition based on time
-    if datetime.now() - start_time > timedelta(minutes=60):  # 60 minutes
+    if datetime.now() - start_time > timedelta(minutes=10):
         break
 
 # Output the best configuration
