@@ -138,7 +138,7 @@ if __name__ == '__main__':
                           replace_2=config["replace_2"], replace=config["replace"],
                           mutation=config["mutation"], mutation_probability=config["mutation_probability"],
                           stop_condition=config["stop_condition"], stop_condition_options=config["stop_condition_options"],
-                          K=config["K"], A=config["A"], B=config["B"], last_generation_count=10)
+                          K=config["K"], A=config["A"], B=config["B"], last_generation_count=config["population_0_count"])
 
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         CSV = config["output"] + "_" + timestamp + ".csv"
