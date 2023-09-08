@@ -114,7 +114,7 @@ def run_genetic(individual_class="WARRIOR", crossover="ANULAR", population_0_cou
                            individual.properties[ItemProp.LIFE.value], individual.life(),
                            individual_class, crossover, population_0_count, selection_1["name"], selection_2["name"],
                            replace_1["name"], replace_2["name"], replace, mutation, mutation_probability, stop_condition,
-                           K, A, B, id)
+                           K, A, B, id, ind_fitness)
         ans.append(individual_attr)
 
         if ind_fitness > max_fitness_value:

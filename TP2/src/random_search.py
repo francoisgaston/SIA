@@ -1,5 +1,5 @@
 import json
-from src.main import run_genetic 
+from main import run_genetic 
 import random
 from datetime import datetime, timedelta
 
@@ -34,6 +34,14 @@ def evaluate_model(config):
         last_generation_count=config["population_0_count"]
     )
 
+    # Extract the last value (fitness) of each tuple
+    fitness_values = [x[-1] for x in ans]
+    
+    # Calculate the summary statistics
+    mean_fitness = sum(fitness_values) / len(fitness_values) if len(fitness_values) > 0 else 0
+
+    return mean_fitness
+    
 
 # Default configuration template
 config_template = {
@@ -87,7 +95,7 @@ param_space = {
     "class": ["WARRIOR", "MAGE"],
     "A": [0.1, 0.5, 0.8],
     "B": [0.1, 0.3, 0.5],
-    "K": [15, 28, 40],
+    "K": [16, 28, 40],
     "repeat_in_selection": [True, False],
     "crossover": ["SINGLE_POINT", "TWO_POINT", "UNIFORM_POINT", "ANULAR"],
     "mutation": ["GEN_UNIFORM", "GEN_NON_UNIFORM", "MULTI_GEN_UNIFORM", "MULTI_GEN_NON_UNIFORM"],
@@ -107,11 +115,11 @@ param_space = {
         "m": [3, 5, 7]
     },
     "replace_1": {
-        "name": ["ELITE", "BOLTZMANN"],
+        "name": ["ELITE"],
         "m": [3, 5, 7]
     },
     "replace_2": {
-        "name": ["ELITE", "BOLTZMANN"],
+        "name": ["BOLTZMANN"],
         "tc": [5, 10],
         "t0": [25, 50],
         "c": [0.5, 1]
@@ -119,7 +127,7 @@ param_space = {
 }
 
 # Initialize search
-max_evals = 100
+max_evals = 10
 start_time = datetime.now()
 best_config = None
 best_performance = float('-inf')
