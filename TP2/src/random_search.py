@@ -3,7 +3,6 @@ from main import run_genetic
 import random
 from datetime import datetime, timedelta
 
-# Mockup of evaluate_model function
 def evaluate_model(config):
     """
     Evaluate the performance of the Genetic Algorithm based on the given configuration.
@@ -14,7 +13,6 @@ def evaluate_model(config):
     Returns:
         dict: A dictionary containing performance metrics such as mean_fitness, max_fitness, and min_fitness.
     """
-    # Run the Genetic Algorithm using the run_genetic function from your existing code
     ans = run_genetic(
         individual_class=config["class"],
         crossover=config["crossover"],

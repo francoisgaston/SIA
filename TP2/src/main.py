@@ -151,7 +151,7 @@ if __name__ == '__main__':
                   "life_calculated",
                   "individual_class", "crossover", "population_0_count", "selection_1", "selection_2",
                   "replace_1", "replace_2", "mutation", "mutation_probability", "stop_condition"
-                  "K", "A", "B", "id"]
+                  "K", "A", "B", "id", "fitness"]
         writer.writerow(header)
         writer.writerows(ans)
 
