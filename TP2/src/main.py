@@ -66,7 +66,8 @@ def run_genetic(individual_class="WARRIOR", crossover="ANULAR", population_0_cou
     # Generacion 0
     population = generate_initial_population(population_size)
     generations = 0
-    while generation_state.stop_condition(population):
+    old_population = []
+    while generation_state.stop_condition(population, old_population):
         # SELECCION
         # A ambos metodos le doy toda la poblacion, me quedo con A*K de uno y (1-A)*K del otro
         # len(selected_individual_1 + selected_individual_2) = K
@@ -85,12 +86,17 @@ def run_genetic(individual_class="WARRIOR", crossover="ANULAR", population_0_cou
         # Muto solo a los hijos (sentido natural)
         new_people = mutation_method(new_people, generations, max_generations)
 
+        # CONDICION DE CORTE
+        # Mantengo un registro de la poblacion previa para la condicion estructural
+        old_population = list(population)
+
         # REMPLAZO
         # population = new_people + population
         population = replace_method(population, new_people, population_size, replace_method_1,
                                     replace_method_2, B)
 
         generations += 1
+        print("Generacion -> " + str(generations))
 
     max_fitness_individual = None
     max_fitness_value = 0

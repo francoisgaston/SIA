@@ -84,6 +84,9 @@ class Individual:
             return deepcopy(individual)
         raise Exception("obj is not an individual")
 
+    def __hash__(self):
+        return hash(tuple(self.properties))
+
     def __eq__(self, other):
         if isinstance(other, Individual):
             return self.properties == other.properties
