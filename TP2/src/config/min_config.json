@@ -1,30 +1,27 @@
 {
   "output": "src/results/out",
-  "population_0_count": 100,
+  "population_0_count": 75,
   "stop_condition": "CHECK_CONTENT",
   "stop_condition_options": {
-    "max_generations": 1000,
+    "max_generations": 100,
     "max_time": 5,
     "acceptable_solution": 1,
     "limit_generations": 10
   },
-  "class" : "WARRIOR",
-  "A": 0.8,
-  "B": 0.5,
-  "K": 28,
+  "class" : "INFILTRATE",
+  "A": 0.4,
+  "B": 0.1,
+  "K": 20,
   "selection_1": {
     "name": "ROULETTE",
     "m": 5
   },
   "selection_2": {
-    "name": "UNIVERSAL",
-    "tc": 10,
-    "t0": 50,
-    "c": 1
+    "name": "PROBA_TOURNAMENT"
   },
-  "crossover" : "ANULAR",
+  "crossover" : "UNIFORM_POINT",
   "mutation" : "MULTI_GEN_UNIFORM",
-  "mutation_probability": 1,
+  "mutation_probability": 0.2,
   "deter_tournament": {
     "m": 5
   },
@@ -34,9 +31,6 @@
     "m": 5
   },
   "replace_2": {
-    "name": "BOLTZMANN",
-    "tc": 10,
-    "t0": 50,
-    "c": 1
+    "name": "UNIVERSAL"
   }
 }
