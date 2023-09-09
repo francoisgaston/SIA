@@ -149,11 +149,7 @@ class DeterministicTournamentSelection(Selection):
         selected = []
         for _ in range(k):
             random_individuals = sorted(random.sample(population, self.m), reverse=True)
-            selected_individual = random_individuals[0]
-            # Filtramos para que no se repitan los individuos
-            # Es decir, actualizamos la poblacion a considerar para la proxima iteracion de seleccion
-            # removiendo al individuo seleccionado
-            population = list(filter(lambda ind: ind != selected_individual, population))
+            selected_individual = Individual.clone(random_individuals[0])
             selected.append(selected_individual)
         return selected
 
@@ -167,12 +163,8 @@ class ProbabilisticTournamentSelection(Selection):
             r = random.uniform(0.0, 1.0)
             selected_individual = None
             if r < threshold:
-                selected_individual = random_pair[0]
+                selected_individual = Individual.clone(random_pair[0])
             else:
-                selected_individual = random_pair[1]
-            # Filtramos para que no se repitan los individuos
-            # Es decir, actualizamos la poblacion a considerar para la proxima iteracion de seleccion
-            # removiendo al individuo seleccionado
-            population = list(filter(lambda ind: ind != selected_individual, population))
+                selected_individual = Individual.clone(random_pair[1])
             selected.append(selected_individual)
         return selected
