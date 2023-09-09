@@ -64,6 +64,7 @@ class Individual:
         total = sum(vector[:ItemProp.HEIGHT.value])
         for i in range(0, ItemProp.HEIGHT.value):
             vector[i] = (vector[i]/total) * Individual.MAX_ITEM
+            # vector[i] = round((vector[i]/total) * Individual.MAX_ITEM, 1)
         return vector
 
     @staticmethod
@@ -83,6 +84,9 @@ class Individual:
         if isinstance(individual, Individual):
             return deepcopy(individual)
         raise Exception("obj is not an individual")
+
+    def __hash__(self):
+        return hash(tuple(self.properties))
 
     def __eq__(self, other):
         if isinstance(other, Individual):
