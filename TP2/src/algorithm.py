@@ -21,6 +21,7 @@ class GenerationState:
         self.current_gen = 0
         self.max_fitness = 0
         self.repeated_generations = 0
+        self.initial_time = time.time()
 
     def condition_from_string(self, method):
         match method.upper():
@@ -91,6 +92,9 @@ class GenerationState:
         
         self.repeated_generations += 1
         return True
+
+    def calculate_time(self):
+        return time.time() - self.initial_time
 
 
 
