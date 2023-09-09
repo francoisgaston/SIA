@@ -4,13 +4,6 @@ import json
 import os
 from main import run_genetic
 from datetime import datetime
-from fitness import Fitness
-from mutation import MutationEngine
-from individual import Individual, ItemProp
-from crossover import Crossover
-from algorithm import generate_initial_population, GenerationState
-from selection import Selection
-from replace import Replace
 
 
 if __name__ == '__main__':
@@ -21,7 +14,7 @@ if __name__ == '__main__':
     ans = []
     id = 0
     counter_args = 0
-    iterations_for_error = 2
+    iterations_for_error = 5
 
     for context in sys.argv:
 
@@ -33,19 +26,19 @@ if __name__ == '__main__':
         id += 1
         with open(f"{context}", "r") as file:
             config = json.load(file)
-            for method in ["UNIFORM_POINT", "ANULAR", "SINGLE_POINT", "TWO_POINT"]:
+            for mutation in ["GEN_UNIFORM", "GEN_NON_UNIFORM", "MULTI_GEN_UNIFORM", "MULTI_GEN_NON_UNIFORM"]:
                 for i in range(iterations_for_error):
-                    ans += run_genetic(individual_class=config["class"], crossover=method,
+                    ans += run_genetic(individual_class=config["class"], 
                                 population_0_count=config["population_0_count"],
                                 selection_1=config["selection_1"], selection_2=config["selection_2"],
                                 replace_1=config["replace_1"],
                                 replace_2=config["replace_2"], replace=config["replace"],
-                                mutation=config["mutation"], mutation_probability=config["mutation_probability"],
+                                mutation=mutation, mutation_probability=config["mutation_probability"],
                                 stop_condition=config["stop_condition"],
                                 stop_condition_options=config["stop_condition_options"],
                                 K=config["K"], A=config["A"], B=config["B"],
-                                last_generation_count=config["population_0_count"], id = id)
-                    print(f'ready {i} {method} {context}')
+                                last_generation_count=1, id = id)
+                    print(f'ready {i} {mutation} {context}')
 
 
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
