@@ -22,3 +22,9 @@ def bar_normalize_plot(csv, variable, normalizador, title, xaxis, yaxis):
     plot.show()
 
     return ans
+
+
+def line_plot(csv, title):
+
+    fig = px.line(csv, x="A", y="fitness", title=title)
+    fig.show()

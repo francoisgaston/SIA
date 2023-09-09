@@ -21,7 +21,7 @@ if __name__ == '__main__':
     ans = []
     id = 0
     counter_args = 0
-    iterations_for_error = 5
+    iterations_for_error = 2
 
     for context in sys.argv:
 
@@ -44,7 +44,7 @@ if __name__ == '__main__':
                                 stop_condition=config["stop_condition"],
                                 stop_condition_options=config["stop_condition_options"],
                                 K=config["K"], A=config["A"], B=config["B"],
-                                last_generation_count=1, id = id)
+                                last_generation_count=config["population_0_count"], id = id)
                     print(f'ready {i} {method} {context}')
 
 
