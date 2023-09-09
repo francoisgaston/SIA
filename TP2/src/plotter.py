@@ -24,7 +24,22 @@ def bar_normalize_plot(csv, variable, normalizador, title, xaxis, yaxis):
     return ans
 
 
-def line_plot(csv, title):
+def line_plot(csv, variable, colors, title):
 
-    fig = px.line(csv, x="A", y="fitness", title=title)
+    fig = px.line(csv, x=variable, y="fitness", title=title)
     fig.show()
+
+
+def multiple_lines_plot(csv, variable, colors, title):
+
+    # Crear una figura de Plotly
+    fig = px.line(csv, x=variable, y="fitness", color=colors,
+                    title=title)
+
+    # Personalizar la figura (opcional)
+    fig.update_traces(marker=dict(size=8),
+                    selector=dict(mode='markers+lines'))
+
+    # Mostrar la figura
+    fig.show()
+

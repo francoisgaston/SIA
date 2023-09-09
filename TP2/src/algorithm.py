@@ -65,10 +65,10 @@ class GenerationState:
         # difference_ratio = 2 - (len(union_set) / len(population))
 
         similitud = (- len(union_set) + len(population) + len(population_set)) / len(population)
-        print("     Similitud -> " + str(similitud) + " vs " + str(self.structure_ratio))
+        # print("     Similitud -> " + str(similitud) + " vs " + str(self.structure_ratio))
         
-        print("         union set -> " + str(len(union_set)) )
-        print("         population set -> " + str(len(population_set)) )
+        # print("         union set -> " + str(len(union_set)) )
+        # print("         population set -> " + str(len(population_set)) )
         
 
         if similitud >= self.structure_ratio:

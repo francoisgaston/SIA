@@ -10,7 +10,7 @@ if __name__ == "__main__":
 
     csv = pd.read_csv(sys.argv[1])
 
-    ans = line_plot(csv, "Variacionde fitness en funcion de variación de A")
+    ans = line_plot(csv, "A", "Variacionde fitness en funcion de variación de A")
 
     print(ans)
 
