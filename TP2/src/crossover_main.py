@@ -33,13 +33,13 @@ if __name__ == '__main__':
         id += 1
         with open(f"{context}", "r") as file:
             config = json.load(file)
-            for method in ["SESGO", "TRADICIONAL"]:
+            for method in ["UNIFORM_POINT", "ANULAR", "SINGLE_POINT", "TWO_POINT"]:
                 for i in range(iterations_for_error):
-                    ans += run_genetic(individual_class=config["class"], crossover=config["crossover"],
+                    ans += run_genetic(individual_class=config["class"], crossover=method,
                                 population_0_count=config["population_0_count"],
                                 selection_1=config["selection_1"], selection_2=config["selection_2"],
                                 replace_1=config["replace_1"],
-                                replace_2=config["replace_2"], replace=method,
+                                replace_2=config["replace_2"], replace=config["replace"],
                                 mutation=config["mutation"], mutation_probability=config["mutation_probability"],
                                 stop_condition=config["stop_condition"],
                                 stop_condition_options=config["stop_condition_options"],
