@@ -96,7 +96,7 @@ def run_genetic(individual_class="WARRIOR", crossover="ANULAR", population_0_cou
                                     replace_method_2, B)
 
         generations += 1
-        print("Generacion -> " + str(generations))
+        #print("Generacion -> " + str(generations))
 
     max_fitness_individual = None
     max_fitness_value = 0

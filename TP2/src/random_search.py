@@ -46,12 +46,13 @@ config_template = {
     "output": "src/results/out",
     "population_0_count": 100,
     "stop_condition": "CHECK_CONTENT",
-    "stop_condition_options": {
-        "max_generations": 1000,
-        "max_time": 5,
-        "acceptable_solution": 1,
-        "limit_generations": 10
-    },
+  "stop_condition_options": {
+    "max_generations": 1000,
+    "max_time": 5,
+    "acceptable_solution": 1,
+    "limit_generations": 10,
+    "structure_ratio": 0.85
+  },
     "class": "WARRIOR",
     "A": 0.8,
     "B": 0.5,
@@ -88,15 +89,16 @@ config_template = {
 
 # Parameter space for random search
 param_space = {
-    "population_0_count": [50, 100, 150, 200, 225],
-    "stop_condition": ["MAX_GENERATIONS", "MAX_TIME", "ACCEPTABLE_SOLUTION", "CHECK_CONTENT", "CHECK_STRUCTURE"],
+    "population_0_count": [50, 100, 150, 200],
+    "stop_condition": ["MAX_GENERATIONS", "MAX_TIME", "ACCEPTABLE_SOLUTION", "CHECK_CONTENT"],
+    "class": ["WARRIOR", "MAGE"],
     "A": [0.1, 0.5, 0.8],
     "B": [0.1, 0.3, 0.5],
     "K": [16, 28, 40],
     "repeat_in_selection": [True, False],
     "crossover": ["SINGLE_POINT", "TWO_POINT", "UNIFORM_POINT", "ANULAR"],
     "mutation": ["GEN_UNIFORM", "GEN_NON_UNIFORM", "MULTI_GEN_UNIFORM", "MULTI_GEN_NON_UNIFORM"],
-    "mutation_probability": [0.5, 1, 0.9, 0.95],
+    "mutation_probability": [0.5, 1, 0.9, 0.2],
     "replace": ["TRADICIONAL", "SESGO"],
     "selection_1": {
         "name": ["ROULETTE", "UNIVERSAL", "ELITE"],
@@ -113,7 +115,7 @@ param_space = {
     },
     "replace_1": {
         "name": ["ELITE"],
-        "m": [3, 5, 7, 11, 15]
+        "m": [3, 5, 7]
     },
     "replace_2": {
         "name": ["BOLTZMANN"],
@@ -124,7 +126,7 @@ param_space = {
 }
 
 # Initialize search
-max_evals = 50
+max_evals = 10
 start_time = datetime.now()
 best_config = None
 best_performance = float('-inf')
