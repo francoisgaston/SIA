@@ -60,14 +60,18 @@ class GenerationState:
     def check_structure(self, population, old_population):
         
         union_set = set(population).union(old_population)
+        population_set = set(population)
 
-        difference_ratio = 2 - (len(union_set) / len(population))
+        # difference_ratio = 2 - (len(union_set) / len(population))
 
-        print("     Ratio de diferencia -> " + str(difference_ratio) + " vs " + str(self.structure_ratio))
-        # print("union -> " + str(len(union_set)))
-        # print("pop -> " + str(len(population)))
+        similitud = (- len(union_set) + len(population) + len(population_set)) / len(population)
+        print("     Similitud -> " + str(similitud) + " vs " + str(self.structure_ratio))
+        
+        print("         union set -> " + str(len(union_set)) )
+        print("         population set -> " + str(len(population_set)) )
+        
 
-        if difference_ratio >= self.structure_ratio:
+        if similitud >= self.structure_ratio:
             self.repeated_generations += 1
             if self.repeated_generations >= self.limit_generations:
                 return False

@@ -64,6 +64,7 @@ class Individual:
         total = sum(vector[:ItemProp.HEIGHT.value])
         for i in range(0, ItemProp.HEIGHT.value):
             vector[i] = (vector[i]/total) * Individual.MAX_ITEM
+            # vector[i] = round((vector[i]/total) * Individual.MAX_ITEM, 1)
         return vector
 
     @staticmethod
