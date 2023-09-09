@@ -36,15 +36,22 @@ if __name__ == '__main__':
     with (open(f"{sys.argv[1]}", "r") as config_file, open(f"{sys.argv[2]}", "r") as csv_file):
         config = json.load(config_file)
         csv = pd.read_csv(csv_file)
-        csv["id_config"] = csv["id_config"].astype(str)
+        csv["id_config"] = 'Test #' + csv["id_config"].astype(str)
+        ans = csv.groupby(["id_config", "generations", "id"]).first().reset_index()
+        range_y = [-5.0, 150.0]
+        if config["attribute"] == "fitness":
+            range_y = [-5.0, 60.0]
+        elif config["attribute"] == "height":
+            range_y = [1.2, 2.2]
         fig = px.scatter(
-            csv,
+            ans,
             x="id",
             y=config["attribute"],
             animation_frame="generations",
             color="id_config",
             symbol="id_config",
-            range_y=[1.3, 2.0] if config["attribute"] == "height" else [0.0, 60.0] if config["attribute"] == "fitness" else [0.0, 150.0],
+            range_y=range_y,
+            labels={"id_config": "Tests"},
         )
         fig.update_layout(
             title=f"Convergencia de {config['attribute']} a lo largo de las generaciones"
@@ -52,15 +59,17 @@ if __name__ == '__main__':
             xaxis=dict(title="n-ésimo individuo con mayor fitness"),
             yaxis=dict(title=config["attribute"]),
         )
-        fig.update_yaxes(
-            dtick = 0.05
-        )
-        fig.update_xaxes(
-            dtick = 5
-        )
+        if config["attribute"] == "height":
+            fig.update_yaxes(
+                dtick = 0.05
+            )
+        else:
+            fig.update_yaxes(
+                dtick = 5
+            )
         fig.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 300
         fig.layout.updatemenus[0].buttons[0].args[1]['transition']['duration'] = 300
-        #generate_gif(fig, config["output"])
-        fig.show()
+        generate_gif(fig, config["output"])
+
 
 

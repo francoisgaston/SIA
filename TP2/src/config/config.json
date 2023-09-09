@@ -25,7 +25,7 @@
   },
   "crossover" : "ANULAR",
   "mutation" : "MULTI_GEN_UNIFORM",
-  "mutation_probability": 1,
+  "mutation_probability": 0.5,
   "deter_tournament": {
     "m": 5
   },
@@ -35,7 +35,7 @@
     "m": 5
   },
   "replace_2": {
-    "name": "BOLTZMANN",
+    "name": "ROULETTE",
     "tc": 10,
     "t0": 50,
     "c": 1
