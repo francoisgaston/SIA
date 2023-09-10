@@ -55,8 +55,8 @@ if __name__ == '__main__':
         )
         fig.update_layout(
             title=f"Convergencia de {config['attribute']} a lo largo de las generaciones"
-                  f"<br><sup>Los individuos se muestran ordenados por fitness, de mayor a menor.</sup>",
-            xaxis=dict(title="n-ésimo individuo con mayor fitness"),
+                  f"<br><sup>Los {config['class']} se muestran ordenados por fitness, de mayor a menor.</sup>",
+            xaxis=dict(title=f"n-ésimo {config['class']} con mayor fitness"),
             yaxis=dict(title=config["attribute"]),
         )
         fig.update_xaxes(

@@ -19,6 +19,11 @@ def bar_normalize_plot(csv, variable, title, xaxis):
                 name=replace_type, 
                 x=data[variable], 
                 y=data["mean"],
+                text=[f"{round(x, 2)}" for x in data["mean"]],
+                textfont=dict(
+                    size=18,
+                    color="black"
+                ),
                 error_y=dict(
                     type="data",
                     symmetric=False,
