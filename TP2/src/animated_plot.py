@@ -27,7 +27,8 @@ def generate_gif(fig, output):
     )
     fig.layout.sliders[0].update(active=0)
 
-
+# La idea de este codigo es generar el gift de comparacion entre combergencias
+# Ej: python3 src/animated_plot.py src/config/animated_plot_config.json src/results/outfulldata_20230909231520 
 if __name__ == '__main__':
     if len(sys.argv) <= 2:
         print("Por favor ingrese el archivo de configuración y el csv de entrada")
@@ -37,7 +38,7 @@ if __name__ == '__main__':
         config = json.load(config_file)
         csv = pd.read_csv(csv_file)
         csv["id_config"] = 'Test #' + csv["id_config"].astype(str)
-        ans = csv.groupby(["id_config", "generations", "id"]).first().reset_index()
+        ans = csv[csv['class'] == config["class"]].groupby(["id_config", "generations", "id"]).first().reset_index()
         range_y = [-5.0, 150.0]
         if config["attribute"] == "fitness":
             range_y = [-5.0, 60.0]

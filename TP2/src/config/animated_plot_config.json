@@ -1,4 +1,5 @@
 {
   "attribute": "height",
+  "class": "WARRIOR",
   "output": "src/results/height"
 }

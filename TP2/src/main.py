@@ -87,6 +87,7 @@ def run_genetic(individual_class="WARRIOR", crossover="ANULAR", population_0_cou
                 aux.append(j)
                 aux.append(generations)
                 aux.append(id)
+                aux.append(individual_class)
                 propierties_fulldata.append(aux)
         
 
@@ -204,7 +205,7 @@ if __name__ == '__main__':
 
         header = ["AGILITY", "STRENGTH", "RESISTANCE", "EXPERTISE", "LIFE", "height",
                   "fitness", "id", "generations",
-                  "id_config"]
+                  "id_config", "class"]
 
         writer.writerow(header)
         writer.writerows(propierties_fulldata)
