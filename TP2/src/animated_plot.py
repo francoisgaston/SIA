@@ -21,13 +21,13 @@ def generate_gif(fig, output):
         GIF,
         save_all=True,
         append_images=frames[1:],
-        duration=200,
+        duration=300,
         loop=0,
         optimize=True,
     )
     fig.layout.sliders[0].update(active=0)
 
-# La idea de este codigo es generar el gift de comparacion entre combergencias
+# La idea de este codigo es generar el gif de comparacion entre convergencias
 # Ej: python3 src/animated_plot.py src/config/animated_plot_config.json src/results/outfulldata_20230909231520 
 if __name__ == '__main__':
     if len(sys.argv) <= 2:
@@ -37,7 +37,6 @@ if __name__ == '__main__':
     with (open(f"{sys.argv[1]}", "r") as config_file, open(f"{sys.argv[2]}", "r") as csv_file):
         config = json.load(config_file)
         csv = pd.read_csv(csv_file)
-        csv["id_config"] = 'Test #' + csv["id_config"].astype(str)
         ans = csv[csv['class'] == config["class"]].groupby(["id_config", "generations", "id"]).first().reset_index()
         range_y = [-5.0, 150.0]
         if config["attribute"] == "fitness":
@@ -60,6 +59,9 @@ if __name__ == '__main__':
             xaxis=dict(title="n-ésimo individuo con mayor fitness"),
             yaxis=dict(title=config["attribute"]),
         )
+        fig.update_xaxes(
+            dtick=5
+        )
         if config["attribute"] == "height":
             fig.update_yaxes(
                 dtick = 0.05
@@ -70,7 +72,23 @@ if __name__ == '__main__':
             )
         fig.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 300
         fig.layout.updatemenus[0].buttons[0].args[1]['transition']['duration'] = 300
-        generate_gif(fig, config["output"])
+        fig.layout.sliders[0].currentvalue = {
+            "font": {"size": 20},
+            "prefix": "Generación: ",
+            "visible": True,
+            "xanchor": "right"
+        }
+        if config["generate_output"]:
+            fig.layout.updatemenus = [
+                {
+                    "buttons": None
+                }
+            ]
+            print("Generating gif...")
+            generate_gif(fig, config["output"])
+            print("Done!")
+        else:
+            fig.show()
 
 
 

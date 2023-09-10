@@ -48,7 +48,7 @@ if __name__ == '__main__':
                                                                 A=config["A"],
                                                                 B=config["B"],
                                                                 last_generation_count=1,
-                                                                id=context_count,
+                                                                id=context.split("/")[-1].split(".")[0],
                                                                 fulldata=True)
                     ans += aux_ans
                     properties_fulldata += aux_properties_fulldata

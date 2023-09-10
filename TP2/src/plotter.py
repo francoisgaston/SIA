@@ -8,7 +8,6 @@ def bar_normalize_plot(csv, variable, title, xaxis):
     # Calculate and add the ratios Visited Count / base as a new column
     plot = go.Figure()
 
-    csv["id"] = "Test #" + csv["id"].astype(str)
     aux = csv.groupby(["id", variable])
     ans = aux["fitness"].agg(["min", "max", "mean"]).reset_index()
     final = csv.drop_duplicates(subset=["id"])
@@ -30,9 +29,9 @@ def bar_normalize_plot(csv, variable, title, xaxis):
             )
         )
     plot.update_layout(title=f"{title}"
-                             f"<br><sup>Fitness obtenido por test para cada clase promediado a 5 tests</sup>",
-                       xaxis=dict(title=xaxis),
-                       yaxis=dict(title= "Fitness promedio"),
+                             f"<br><sup>Fitness obtenido para cada clase, promediado a partir de 5 ejecuciones por test</sup>",
+                       xaxis=dict(title="Clase"),
+                       yaxis=dict(title="Fitness promedio"),
                        legend_title="Tests")
     plot.show()
 
@@ -47,5 +46,5 @@ if __name__ == "__main__":
         sys.exit(1)
 
     csv = pd.read_csv(sys.argv[1])
-    ans = bar_normalize_plot(csv, "individual_class", "Fitness promedio vs Test por clase", "Class")
+    ans = bar_normalize_plot(csv, "individual_class", "Fitness promedio por clase entre tests", "Class")
     print(ans)
