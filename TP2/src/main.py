@@ -74,15 +74,16 @@ def run_genetic(individual_class="WARRIOR", crossover="ANULAR", population_0_cou
     while generation_state.stop_condition(population, old_population):
 
         if fulldata:
+            sorted_population = sorted(population, reverse=True)
             for j in range(len(population)):
                 aux = []
-                aux.append(population[j].properties[ItemProp.AGILITY.value])
-                aux.append(population[j].properties[ItemProp.STRENGTH.value])
-                aux.append(population[j].properties[ItemProp.RESISTANCE.value])
-                aux.append(population[j].properties[ItemProp.EXPERTISE.value])
-                aux.append(population[j].properties[ItemProp.LIFE.value])
-                aux.append(population[j].height())
-                aux.append(population[j].fitness())
+                aux.append(sorted_population[j].properties[ItemProp.AGILITY.value])
+                aux.append(sorted_population[j].properties[ItemProp.STRENGTH.value])
+                aux.append(sorted_population[j].properties[ItemProp.RESISTANCE.value])
+                aux.append(sorted_population[j].properties[ItemProp.EXPERTISE.value])
+                aux.append(sorted_population[j].properties[ItemProp.LIFE.value])
+                aux.append(sorted_population[j].height())
+                aux.append(sorted_population[j].fitness())
                 aux.append(j)
                 aux.append(generations)
                 aux.append(id)
