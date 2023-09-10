@@ -20,7 +20,7 @@ def run_genetic(individual_class="WARRIOR", crossover="ANULAR", population_0_cou
                 selection_1=None, selection_2=None, replace_1=None,
                 replace_2=None, replace="SESGO", mutation="MULTI_GEN_UNIFORM", max_generations=10,
                 stop_condition="max_generations", stop_condition_options=None,
-                mutation_probability=0.5, K=100, A=0.5, B=0.5, last_generation_count=3, id=1):
+                mutation_probability=0.5, K=100, A=0.5, B=0.5, last_generation_count=3, id=1, fulldata=False):
     # Defaults para objetos (estan aca porque si no se queja de que el default es mutable)
     if replace_2 is None:
         replace_2 = {
@@ -72,19 +72,21 @@ def run_genetic(individual_class="WARRIOR", crossover="ANULAR", population_0_cou
 
     propierties_fulldata = []
     while generation_state.stop_condition(population, old_population):
-        for j in range(len(population)):
-            aux = []
-            aux.append(population[j].properties[ItemProp.AGILITY.value])
-            aux.append(population[j].properties[ItemProp.STRENGTH.value])
-            aux.append(population[j].properties[ItemProp.RESISTANCE.value])
-            aux.append(population[j].properties[ItemProp.EXPERTISE.value])
-            aux.append(population[j].properties[ItemProp.LIFE.value])
-            aux.append(population[j].height())
-            aux.append(population[j].fitness())
-            aux.append(j)
-            aux.append(generations)
-            aux.append(id)
-            propierties_fulldata.append(aux)
+
+        if fulldata:
+            for j in range(len(population)):
+                aux = []
+                aux.append(population[j].properties[ItemProp.AGILITY.value])
+                aux.append(population[j].properties[ItemProp.STRENGTH.value])
+                aux.append(population[j].properties[ItemProp.RESISTANCE.value])
+                aux.append(population[j].properties[ItemProp.EXPERTISE.value])
+                aux.append(population[j].properties[ItemProp.LIFE.value])
+                aux.append(population[j].height())
+                aux.append(population[j].fitness())
+                aux.append(j)
+                aux.append(generations)
+                aux.append(id)
+                propierties_fulldata.append(aux)
         
 
         
@@ -149,7 +151,11 @@ def run_genetic(individual_class="WARRIOR", crossover="ANULAR", population_0_cou
         if min_fitness_value is None or ind_fitness < min_fitness_value:
             min_fitness_individual = individual
             min_fitness_value = ind_fitness
-    return ans, propierties_fulldata
+    
+    if fulldata:
+        return ans, propierties_fulldata
+    
+    return ans
 
 
 #     TODO: si sirven las otras estadísticas, traerlas aca
