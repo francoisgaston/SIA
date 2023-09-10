@@ -6,7 +6,8 @@
     "max_generations": 100,
     "max_time": 5,
     "acceptable_solution": 1,
-    "limit_generations": 10
+    "limit_generations": 10,
+    "structure_ratio": 0.85
   },
   "class" : "INFILTRATE",
   "A": 0.4, 0.7,

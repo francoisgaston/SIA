@@ -120,7 +120,7 @@ def run_genetic(individual_class="WARRIOR", crossover="ANULAR", population_0_cou
                            individual_class, crossover, population_0_count, selection_1["name"], selection_2["name"],
                            replace_1["name"], replace_2["name"], replace, mutation, mutation_probability,
                            stop_condition,
-                           K, A, B, id)
+                           K, A, B, id, ind_fitness) #no borren el ind_fitness sino no funca el random search
         ans.append(individual_attr)
 
         if ind_fitness > max_fitness_value:
@@ -162,7 +162,7 @@ if __name__ == '__main__':
                   "resistance_items", "expertise_items", "life_items",
                   "individual_class", "crossover", "population_0_count", "selection_1", "selection_2",
                   "replace_1", "replace_2","replace_type", "mutation", "mutation_probability", "stop_condition",
-                                                                                "K", "A", "B", "id"]
+                                                                                "K", "A", "B", "id", "ind_fitness"] #idem
         writer.writerow(header)
         writer.writerows(ans)
 

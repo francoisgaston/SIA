@@ -91,7 +91,7 @@ config_template = {
 param_space = {
     "population_0_count": [50, 100, 150, 200],
     "stop_condition": ["MAX_GENERATIONS", "MAX_TIME", "ACCEPTABLE_SOLUTION", "CHECK_CONTENT"],
-    "class": ["WARRIOR", "MAGE"],
+    "class": ["MAGE"],
     "A": [0.1, 0.5, 0.8],
     "B": [0.1, 0.3, 0.5],
     "K": [16, 28, 40],
@@ -126,7 +126,7 @@ param_space = {
 }
 
 # Initialize search
-max_evals = 10
+max_evals = 100
 start_time = datetime.now()
 best_config = None
 best_performance = float('-inf')
