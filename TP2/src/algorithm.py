@@ -59,6 +59,8 @@ class GenerationState:
         return True
 
     def check_structure(self, population, old_population):
+        if not old_population:
+            return True
         
         union_set = set(population).union(old_population)
         population_set = set(population)
@@ -70,7 +72,6 @@ class GenerationState:
         
         # print("         union set -> " + str(len(union_set)) )
         # print("         population set -> " + str(len(population_set)) )
-        
 
         if similitud >= self.structure_ratio:
             self.repeated_generations += 1
