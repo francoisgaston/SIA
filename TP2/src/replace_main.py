@@ -19,9 +19,10 @@ if __name__ == '__main__':
         exit(1)
 
     ans = []
+    propierties_fulldata = []
     id = 0
     counter_args = 0
-    iterations_for_error = 2
+    iterations_for_error = 1
 
     for context in sys.argv:
 
@@ -35,7 +36,7 @@ if __name__ == '__main__':
             config = json.load(file)
             for method in ["SESGO", "TRADICIONAL"]:
                 for i in range(iterations_for_error):
-                    ans += run_genetic(individual_class=config["class"], crossover=config["crossover"],
+                    aux_ans, aux_propierties_fulldata = run_genetic(individual_class=config["class"], crossover=config["crossover"],
                                 population_0_count=config["population_0_count"],
                                 selection_1=config["selection_1"], selection_2=config["selection_2"],
                                 replace_1=config["replace_1"],
@@ -45,6 +46,8 @@ if __name__ == '__main__':
                                 stop_condition_options=config["stop_condition_options"],
                                 K=config["K"], A=config["A"], B=config["B"],
                                 last_generation_count=config["population_0_count"], id = id)
+                    ans += aux_ans
+                    propierties_fulldata += aux_propierties_fulldata
                     print(f'ready {i} {method} {context}')
 
 
@@ -61,5 +64,19 @@ if __name__ == '__main__':
                                                                             "K", "A", "B", "id"]
     writer.writerow(header)
     writer.writerows(ans)
+
+    file.close()
+
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    CSV = config["output"] + "fulldata_" + timestamp + ".csv"
+    os.makedirs(os.path.dirname(CSV), exist_ok=True)
+    file = open(CSV, 'w', newline='')
+    writer = csv.writer(file)
+
+
+    header = ["AGILITY", "STRENGTH", "RESISTANCE", "EXPERTISE", "LIFE", "height", "fitness", "id", "generations","id_config"]
+
+    writer.writerow(header)
+    writer.writerows(propierties_fulldata)
 
     file.close()

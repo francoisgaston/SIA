@@ -67,7 +67,27 @@ def run_genetic(individual_class="WARRIOR", crossover="ANULAR", population_0_cou
     population = generate_initial_population(population_size)
     generations = 0
     old_population = []
+
+
+
+    propierties_fulldata = []
     while generation_state.stop_condition(population, old_population):
+        for j in range(len(population)):
+            aux = []
+            aux.append(population[j].properties[ItemProp.AGILITY.value])
+            aux.append(population[j].properties[ItemProp.STRENGTH.value])
+            aux.append(population[j].properties[ItemProp.RESISTANCE.value])
+            aux.append(population[j].properties[ItemProp.EXPERTISE.value])
+            aux.append(population[j].properties[ItemProp.LIFE.value])
+            aux.append(population[j].height())
+            aux.append(population[j].fitness())
+            aux.append(j)
+            aux.append(generations)
+            aux.append(id)
+            propierties_fulldata.append(aux)
+        
+
+        
         # SELECCION
         # A ambos metodos le doy toda la poblacion, me quedo con A*K de uno y (1-A)*K del otro
         # len(selected_individual_1 + selected_individual_2) = K
@@ -129,7 +149,7 @@ def run_genetic(individual_class="WARRIOR", crossover="ANULAR", population_0_cou
         if min_fitness_value is None or ind_fitness < min_fitness_value:
             min_fitness_individual = individual
             min_fitness_value = ind_fitness
-    return ans
+    return ans, propierties_fulldata
 
 
 #     TODO: si sirven las otras estadísticas, traerlas aca
@@ -141,7 +161,7 @@ if __name__ == '__main__':
 
     with open(f"{sys.argv[1]}", "r") as file:
         config = json.load(file)
-        ans = run_genetic(individual_class=config["class"], crossover=config["crossover"],
+        ans, propierties_fulldata = run_genetic(individual_class=config["class"], crossover=config["crossover"],
                           population_0_count=config["population_0_count"],
                           selection_1=config["selection_1"], selection_2=config["selection_2"],
                           replace_1=config["replace_1"],
@@ -167,3 +187,20 @@ if __name__ == '__main__':
         writer.writerows(ans)
 
         file.close()
+
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        CSV = config["output"] + "fulldata_" + timestamp + ".csv"
+        os.makedirs(os.path.dirname(CSV), exist_ok=True)
+        file = open(CSV, 'w', newline='')
+        writer = csv.writer(file)
+
+
+        header = ["AGILITY", "STRENGTH", "RESISTANCE", "EXPERTISE", "LIFE", "height",
+                  "fitness", "id", "generations",
+                  "id_config"]
+
+        writer.writerow(header)
+        writer.writerows(propierties_fulldata)
+
+        file.close()
+
