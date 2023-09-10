@@ -31,10 +31,14 @@ class Roulette:
             raise Exception("qi_array and population must have the same length")
         individuals = []
         for rj in rj_array:
+            selected = False
             for i, qi in enumerate(qi_array):
                 if qi > rj:
+                    selected = True
                     individuals.append(Individual.clone(population[i]))
                     break
+            if not selected:
+                individuals.append(Individual.clone(population[-1]))
         return individuals
 
 
