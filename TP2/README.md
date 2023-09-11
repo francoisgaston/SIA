@@ -102,7 +102,7 @@ Para graficar los resultados obtenidos es necesario previamente correr `src/main
 #### Comparación de Fitness
 Para obtener el grafico de comparación de fitness es necesario correr
 ````sh
-python3 src/plotter.py src/results/[csv file]
+pipenv run python src/plotter.py src/results/[csv file]
 ````
 <img src="src/docs/fitness_bars.png" width="400" alt="Graphic bars of 3 tests displaying the average of the individual with most fitness">
 
@@ -110,7 +110,7 @@ python3 src/plotter.py src/results/[csv file]
 #### Comparación de convergencia
 Para obtener el grafico de comparación de convergencia es necesario correr
 ````sh
-python3 src/animated_plot.py src/config/animated_plot_config.json src/results/[csv file]
+pipenv run python src/animated_plot.py src/config/animated_plot_config.json src/results/[csv file]
 ````
 donde el archivo csv es el obtenido al ejecutar `src/run_configs.py` (el csv con todas las generaciones).
 <img src="src/docs/convergence.gif" width="400" alt="Convergence of Archer's agility between 3 tests">
