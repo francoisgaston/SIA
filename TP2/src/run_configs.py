@@ -30,7 +30,7 @@ if __name__ == '__main__':
         context_count += 1
         with open(f"{context}", "r") as file:
             config = json.load(file)
-            for classs in ["WARRIOR","ARCHER", "INFILTRATE", "DEFENDER"]:
+            for classs in ["INFILTRATE"]:
                 for i in range(iterations_for_error):
                     aux_ans, aux_properties_fulldata = run_genetic(individual_class=classs,
                                                                 crossover=config["crossover"],
