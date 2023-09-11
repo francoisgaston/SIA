@@ -27,7 +27,7 @@ pipenv install
 para instalar las dependencias necesarias en el ambiente virtual.
 
 ## Ejecución
-### `src/main.py'
+### `src/main.py`
 El programa `src/main.py` ejecuta el algoritmo genético para calcular el mejor fitness a partir de la configuración recibida por argumentos.
 Se ejecuta con el siguiente comando:
 ````sh
@@ -41,7 +41,7 @@ El programa devuelve un archivo CSV con los resultados obtenidos para los indivi
 ````
 
 
-### `src/run_configs.py'
+### `src/run_configs.py`
 El programa `src/run_configs.py` ejecuta el algoritmo genético para calcular el mejor fitness a partir de las configuraciones recibidas por argumento y el detalle de cada generación´.
 Se ejecuta con el siguiente comando:
 ````sh
