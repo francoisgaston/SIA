@@ -43,66 +43,59 @@ def evaluate_model(config):
 
 # Default configuration template
 config_template = {
-    "output": "src/results/out",
-    "population_0_count": 100,
-    "stop_condition": "CHECK_CONTENT",
+  "output": "src/results/out",
+  "population_0_count": 100,
+  "stop_condition": "CHECK_STRUCTURE2",
   "stop_condition_options": {
     "max_generations": 1000,
-    "max_time": 5,
+    "max_time": 3,
     "acceptable_solution": 1,
     "limit_generations": 10,
-    "structure_ratio": 0.85
+    "structure_ratio" : 0.85
   },
-    "class": "WARRIOR",
-    "A": 0.8,
-    "B": 0.5,
-    "K": 28,
-    "selection_1": {
-        "name": "ROULETTE",
-        "m": 5
-    },
-    "selection_2": {
-        "name": "UNIVERSAL",
-        "tc": 10,
-        "t0": 50,
-        "c": 1
-    },
-    "repeat_in_selection": True,
-    "crossover": "ANULAR",
-    "mutation": "MULTI_GEN_UNIFORM",
-    "mutation_probability": 1,
-    "deter_tournament": {
-        "m": 5
-    },
-    "replace": "SESGO",
-    "replace_1": {
-        "name": "ELITE",
-        "m": 5
-    },
-    "replace_2": {
-        "name": "BOLTZMANN",
-        "tc": 10,
-        "t0": 50,
-        "c": 1
-    }
+  "class" : "WARRIOR",
+  "A": 0.5,
+  "B": 0.3,
+  "K": 28,
+  "selection_1": {
+    "name": "ELITE",
+    "m": 5
+  },
+  "selection_2": {
+    "name": "UNIVERSAL",
+    "tc": 10,
+    "t0": 50,
+    "c": 1
+  },
+  "crossover" : "ANULAR",
+  "mutation" : "MULTI_GEN_UNIFORM",
+  "mutation_probability": 0.3,
+  "deter_tournament": {
+    "m": 5
+  },
+  "replace" : "TRADICIONAL",
+  "replace_1": {
+    "name": "ELITE",
+    "m": 5
+  },
+  "replace_2": {
+    "name": "UNIVERSAL"
+  }
 }
 
 # Parameter space for random search
 param_space = {
-    "population_0_count": [50, 100, 150, 200],
-    "stop_condition": ["MAX_GENERATIONS", "MAX_TIME", "ACCEPTABLE_SOLUTION", "CHECK_CONTENT"],
-    "class": ["MAGE"],
-    "A": [0.1, 0.5, 0.8],
-    "B": [0.1, 0.3, 0.5],
-    "K": [16, 28, 40],
-    "repeat_in_selection": [True, False],
+    "population_0_count": [10, 50, 100, 150, 200],
+    "A": [0.1, 0.5, 0.8, 0.2],
+    "B": [0.1, 0.3, 0.5, 0.6, 0,7],
+    "K": [16, 28, 32, 40, 36],
     "crossover": ["SINGLE_POINT", "TWO_POINT", "UNIFORM_POINT", "ANULAR"],
     "mutation": ["GEN_UNIFORM", "GEN_NON_UNIFORM", "MULTI_GEN_UNIFORM", "MULTI_GEN_NON_UNIFORM"],
-    "mutation_probability": [0.5, 1, 0.9, 0.2],
+    "mutation_probability": [0.5, 1, 0.14, 0.23, 0.94, 0.85, 0.24, 0.55, 0.9, 0.2, 0.4, 0.3],
     "replace": ["TRADICIONAL", "SESGO"],
     "selection_1": {
         "name": ["ROULETTE", "UNIVERSAL", "ELITE"],
-        "m": [3, 5, 7]
+        "m": [3, 5, 7, 11, 15]
     },
     "selection_2": {
         "name": ["ROULETTE", "UNIVERSAL", "ELITE"],
@@ -114,7 +107,7 @@ param_space = {
         "m": [3, 5, 7]
     },
     "replace_1": {
-        "name": ["ELITE"],
+        "name": ["ELITE", "ROULETTE", "UNIVERSAL"],
         "m": [3, 5, 7]
     },
     "replace_2": {
@@ -147,7 +140,9 @@ for eval_num in range(max_evals):
     merged_config = {**config_template, **current_config}
 
     # Evaluate the current configuration
+    last_time = datetime.now()
     current_performance = evaluate_model(merged_config)
+    print(f"iteration: {eval_num}, fitness: {current_performance}, class: {merged_config.get('class')}, time: {datetime.now() - last_time}")
 
     # Update the best configuration
     if current_performance > best_performance:

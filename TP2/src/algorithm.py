@@ -33,6 +33,8 @@ class GenerationState:
                 return self.acceptable_solution
             case "CHECK_STRUCTURE":
                 return self.check_structure
+            case "CHECK_STRUCTURE2":             #ippo la agregue sino el random_search tardaba mucho
+                return self.check_structure2
             case "CHECK_CONTENT":
                 return self.check_content
             case _:
@@ -57,6 +59,9 @@ class GenerationState:
             if individual.fitness() >= self.target_fitness:
                 return False
         return True
+
+    def check_structure2(self, population, old_population):
+        return self.check_structure(population, old_population) and self.max_time(population, old_population) 
 
     def check_structure(self, population, old_population):
         if not old_population:
