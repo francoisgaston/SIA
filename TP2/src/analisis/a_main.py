@@ -21,7 +21,7 @@ if __name__ == '__main__':
     ans = []
     id = 0
     counter_args = 0
-    iterations_for_error = 5
+    iterations_for_error = 1
 
     for context in sys.argv:
 
@@ -33,19 +33,19 @@ if __name__ == '__main__':
         id += 1
         with open(f"{context}", "r") as file:
             config = json.load(file)
-            for method in ["SESGO", "TRADICIONAL"]:
+            for method in range(0, 100, 15):
                 for i in range(iterations_for_error):
                     ans += run_genetic(individual_class=config["class"], crossover=config["crossover"],
                                 population_0_count=config["population_0_count"],
                                 selection_1=config["selection_1"], selection_2=config["selection_2"],
                                 replace_1=config["replace_1"],
-                                replace_2=config["replace_2"], replace=method,
+                                replace_2=config["replace_2"], replace=config["replace"],
                                 mutation=config["mutation"], mutation_probability=config["mutation_probability"],
                                 stop_condition=config["stop_condition"],
                                 stop_condition_options=config["stop_condition_options"],
-                                K=config["K"], A=config["A"], B=config["B"],
+                                K=config["K"], A=method/100.0, B=config["B"],
                                 last_generation_count=1, id = id)
-                    print(f'ready {i} {method} {context}')
+                    print(f'ready {i} {method/100.0} {context}')
 
 
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")

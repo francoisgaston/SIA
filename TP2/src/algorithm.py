@@ -21,6 +21,7 @@ class GenerationState:
         self.current_gen = 0
         self.max_fitness = 0
         self.repeated_generations = 0
+        self.initial_time = time.time()
 
     def condition_from_string(self, method):
         match method.upper():
@@ -58,6 +59,8 @@ class GenerationState:
         return True
 
     def check_structure(self, population, old_population):
+        if not old_population:
+            return True
         
         union_set = set(population).union(old_population)
         population_set = set(population)
@@ -65,11 +68,10 @@ class GenerationState:
         # difference_ratio = 2 - (len(union_set) / len(population))
 
         similitud = (- len(union_set) + len(population) + len(population_set)) / len(population)
-        print("     Similitud -> " + str(similitud) + " vs " + str(self.structure_ratio))
+        # print("     Similitud -> " + str(similitud) + " vs " + str(self.structure_ratio))
         
-        print("         union set -> " + str(len(union_set)) )
-        print("         population set -> " + str(len(population_set)) )
-        
+        # print("         union set -> " + str(len(union_set)) )
+        # print("         population set -> " + str(len(population_set)) )
 
         if similitud >= self.structure_ratio:
             self.repeated_generations += 1
@@ -91,6 +93,9 @@ class GenerationState:
         
         self.repeated_generations += 1
         return True
+
+    def calculate_time(self):
+        return time.time() - self.initial_time
 
 
 

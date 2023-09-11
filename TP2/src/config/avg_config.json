@@ -1,7 +1,7 @@
 {
   "output": "src/results/out",
   "population_0_count": 150,
-  "stop_condition": "CHECK_CONTENT",
+  "stop_condition": "MAX_GENERATIONS",
   "stop_condition_options": {
     "max_generations": 100,
     "max_time": 5,

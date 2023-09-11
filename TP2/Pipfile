@@ -7,6 +7,8 @@ name = "pypi"
 numpy = "*"
 plotly = "*"
 pandas = "*"
+pillow = "*"
+kaleido = "*"
 
 [dev-packages]
 

@@ -20,7 +20,7 @@ def run_genetic(individual_class="WARRIOR", crossover="ANULAR", population_0_cou
                 selection_1=None, selection_2=None, replace_1=None,
                 replace_2=None, replace="SESGO", mutation="MULTI_GEN_UNIFORM", max_generations=10,
                 stop_condition="max_generations", stop_condition_options=None,
-                mutation_probability=0.5, K=100, A=0.5, B=0.5, last_generation_count=3, id=1):
+                mutation_probability=0.5, K=100, A=0.5, B=0.5, last_generation_count=3, id=1, fulldata=False):
     # Defaults para objetos (estan aca porque si no se queja de que el default es mutable)
     if replace_2 is None:
         replace_2 = {
@@ -67,7 +67,31 @@ def run_genetic(individual_class="WARRIOR", crossover="ANULAR", population_0_cou
     population = generate_initial_population(population_size)
     generations = 0
     old_population = []
+
+
+
+    propierties_fulldata = []
     while generation_state.stop_condition(population, old_population):
+
+        if fulldata:
+            sorted_population = sorted(population, reverse=True)
+            for j in range(len(population)):
+                aux = []
+                aux.append(sorted_population[j].properties[ItemProp.AGILITY.value])
+                aux.append(sorted_population[j].properties[ItemProp.STRENGTH.value])
+                aux.append(sorted_population[j].properties[ItemProp.RESISTANCE.value])
+                aux.append(sorted_population[j].properties[ItemProp.EXPERTISE.value])
+                aux.append(sorted_population[j].properties[ItemProp.LIFE.value])
+                aux.append(sorted_population[j].height())
+                aux.append(sorted_population[j].fitness())
+                aux.append(j)
+                aux.append(generations)
+                aux.append(id)
+                aux.append(individual_class)
+                propierties_fulldata.append(aux)
+        
+
+        
         # SELECCION
         # A ambos metodos le doy toda la poblacion, me quedo con A*K de uno y (1-A)*K del otro
         # len(selected_individual_1 + selected_individual_2) = K
@@ -96,7 +120,7 @@ def run_genetic(individual_class="WARRIOR", crossover="ANULAR", population_0_cou
                                     replace_method_2, B)
 
         generations += 1
-        #print("Generacion -> " + str(generations))
+        # print("Generacion -> " + str(generations))
 
     max_fitness_individual = None
     max_fitness_value = 0
@@ -129,6 +153,10 @@ def run_genetic(individual_class="WARRIOR", crossover="ANULAR", population_0_cou
         if min_fitness_value is None or ind_fitness < min_fitness_value:
             min_fitness_individual = individual
             min_fitness_value = ind_fitness
+    
+    if fulldata:
+        return ans, propierties_fulldata
+    
     return ans
 
 
@@ -141,7 +169,7 @@ if __name__ == '__main__':
 
     with open(f"{sys.argv[1]}", "r") as file:
         config = json.load(file)
-        ans = run_genetic(individual_class=config["class"], crossover=config["crossover"],
+        ans, propierties_fulldata = run_genetic(individual_class=config["class"], crossover=config["crossover"],
                           population_0_count=config["population_0_count"],
                           selection_1=config["selection_1"], selection_2=config["selection_2"],
                           replace_1=config["replace_1"],
@@ -167,3 +195,20 @@ if __name__ == '__main__':
         writer.writerows(ans)
 
         file.close()
+
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        CSV = config["output"] + "fulldata_" + timestamp + ".csv"
+        os.makedirs(os.path.dirname(CSV), exist_ok=True)
+        file = open(CSV, 'w', newline='')
+        writer = csv.writer(file)
+
+
+        header = ["AGILITY", "STRENGTH", "RESISTANCE", "EXPERTISE", "LIFE", "height",
+                  "fitness", "id", "generations",
+                  "id_config", "class"]
+
+        writer.writerow(header)
+        writer.writerows(propierties_fulldata)
+
+        file.close()
+
