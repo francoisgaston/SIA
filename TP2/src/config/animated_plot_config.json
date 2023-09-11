@@ -1,6 +1,6 @@
 {
   "attribute": "fitness",
-  "class": "WARRIOR",
+  "class": "INFILTRATE",
   "generate_output": false,
   "output": "src/results/height"
 }
