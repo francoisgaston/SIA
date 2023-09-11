@@ -30,29 +30,29 @@ if __name__ == '__main__':
         context_count += 1
         with open(f"{context}", "r") as file:
             config = json.load(file)
-            for classs in ["WARRIOR","ARCHER", "INFILTRATE", "DEFENDER"]:
-                for i in range(iterations_for_error):
-                    aux_ans, aux_properties_fulldata = run_genetic(individual_class=classs,
-                                                                crossover=config["crossover"],
-                                                                population_0_count=config["population_0_count"],
-                                                                selection_1=config["selection_1"],
-                                                                selection_2=config["selection_2"],
-                                                                replace_1=config["replace_1"],
-                                                                replace_2=config["replace_2"],
-                                                                replace=config["replace"],
-                                                                mutation=config["mutation"],
-                                                                mutation_probability=config["mutation_probability"],
-                                                                stop_condition=config["stop_condition"],
-                                                                stop_condition_options=config["stop_condition_options"],
-                                                                K=config["K"],
-                                                                A=config["A"],
-                                                                B=config["B"],
-                                                                last_generation_count=1,
-                                                                id=" ".join(context.split("/")[-1].split(".")[0].split("_")).title(),
-                                                                fulldata=True)
-                    ans += aux_ans
-                    properties_fulldata += aux_properties_fulldata
-                    print(f'ready {i} {context} {classs}')
+            # for classs in ["WARRIOR","ARCHER", "INFILTRATE", "DEFENDER"]:
+            for i in range(iterations_for_error):
+                aux_ans, aux_properties_fulldata = run_genetic(individual_class=config["class"],
+                                                            crossover=config["crossover"],
+                                                            population_0_count=config["population_0_count"],
+                                                            selection_1=config["selection_1"],
+                                                            selection_2=config["selection_2"],
+                                                            replace_1=config["replace_1"],
+                                                            replace_2=config["replace_2"],
+                                                            replace=config["replace"],
+                                                            mutation=config["mutation"],
+                                                            mutation_probability=config["mutation_probability"],
+                                                            stop_condition=config["stop_condition"],
+                                                            stop_condition_options=config["stop_condition_options"],
+                                                            K=config["K"],
+                                                            A=config["A"],
+                                                            B=config["B"],
+                                                            last_generation_count=1,
+                                                            id=" ".join(context.split("/")[-1].split(".")[0].split("_")).title(),
+                                                            fulldata=True)
+                ans += aux_ans
+                properties_fulldata += aux_properties_fulldata
+                print(f'ready {i} {context}')
 
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
     CSV = config["output"] + "_" + timestamp + ".csv"

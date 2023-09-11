@@ -68,8 +68,6 @@ def run_genetic(individual_class="WARRIOR", crossover="ANULAR", population_0_cou
     generations = 0
     old_population = []
 
-
-
     propierties_fulldata = []
     while generation_state.stop_condition(population, old_population):
 
@@ -89,17 +87,13 @@ def run_genetic(individual_class="WARRIOR", crossover="ANULAR", population_0_cou
                 aux.append(id)
                 aux.append(individual_class)
                 propierties_fulldata.append(aux)
-        
 
-        
         # SELECCION
         # A ambos metodos le doy toda la poblacion, me quedo con A*K de uno y (1-A)*K del otro
-        # len(selected_individual_1 + selected_individual_2) = K
         k_selected = Selection.get_both_populations(population, K, A, selection_method_1, selection_method_2)
 
         # CROSSOVER
         # Obtengo K hijos
-        # TODO: ver que hacemos con K impar
         new_people = []
         for i in range(0, len(k_selected), 2):
             new_individual_1, new_individual_2 = Individual.crossover(k_selected[i], k_selected[i + 1])
@@ -115,12 +109,10 @@ def run_genetic(individual_class="WARRIOR", crossover="ANULAR", population_0_cou
         old_population = list(population)
 
         # REMPLAZO
-        # population = new_people + population
         population = replace_method(population, new_people, population_size, replace_method_1,
                                     replace_method_2, B)
 
         generations += 1
-        # print("Generacion -> " + str(generations))
 
     max_fitness_individual = None
     max_fitness_value = 0
@@ -144,7 +136,7 @@ def run_genetic(individual_class="WARRIOR", crossover="ANULAR", population_0_cou
                            individual_class, crossover, population_0_count, selection_1["name"], selection_2["name"],
                            replace_1["name"], replace_2["name"], replace, mutation, mutation_probability,
                            stop_condition,
-                           K, A, B, id, ind_fitness) #no borren el ind_fitness sino no funca el random search
+                           K, A, B, id, ind_fitness)
         ans.append(individual_attr)
 
         if ind_fitness > max_fitness_value:
@@ -153,14 +145,12 @@ def run_genetic(individual_class="WARRIOR", crossover="ANULAR", population_0_cou
         if min_fitness_value is None or ind_fitness < min_fitness_value:
             min_fitness_individual = individual
             min_fitness_value = ind_fitness
-    
+
     if fulldata:
         return ans, propierties_fulldata
-    
+
     return ans
 
-
-#     TODO: si sirven las otras estadísticas, traerlas aca
 
 if __name__ == '__main__':
     if len(sys.argv) <= 1:
@@ -169,7 +159,7 @@ if __name__ == '__main__':
 
     with open(f"{sys.argv[1]}", "r") as file:
         config = json.load(file)
-        ans, propierties_fulldata = run_genetic(individual_class=config["class"], crossover=config["crossover"],
+        ans = run_genetic(individual_class=config["class"], crossover=config["crossover"],
                           population_0_count=config["population_0_count"],
                           selection_1=config["selection_1"], selection_2=config["selection_2"],
                           replace_1=config["replace_1"],
@@ -189,26 +179,9 @@ if __name__ == '__main__':
         header = ["fitness", "attack", "defense", "height", "agility_items", "strength_items",
                   "resistance_items", "expertise_items", "life_items",
                   "individual_class", "crossover", "population_0_count", "selection_1", "selection_2",
-                  "replace_1", "replace_2","replace_type", "mutation", "mutation_probability", "stop_condition",
-                                                                                "K", "A", "B", "id", "ind_fitness"] #idem
+                  "replace_1", "replace_2", "replace_type", "mutation", "mutation_probability", "stop_condition",
+                  "K", "A", "B", "id", "ind_fitness"]  # idem
         writer.writerow(header)
         writer.writerows(ans)
 
         file.close()
-
-        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-        CSV = config["output"] + "fulldata_" + timestamp + ".csv"
-        os.makedirs(os.path.dirname(CSV), exist_ok=True)
-        file = open(CSV, 'w', newline='')
-        writer = csv.writer(file)
-
-
-        header = ["AGILITY", "STRENGTH", "RESISTANCE", "EXPERTISE", "LIFE", "height",
-                  "fitness", "id", "generations",
-                  "id_config", "class"]
-
-        writer.writerow(header)
-        writer.writerows(propierties_fulldata)
-
-        file.close()
-
