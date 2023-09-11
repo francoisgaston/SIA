@@ -18,7 +18,7 @@ if __name__ == '__main__':
     properties_fulldata = []
     context_count = 0
     counter_args = 0
-    iterations_for_error = 5
+    iterations_for_error = 3
 
     for context in sys.argv:
 
