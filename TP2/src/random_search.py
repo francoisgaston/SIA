@@ -86,35 +86,39 @@ config_template = {
 # Parameter space for random search
 param_space = {
     "population_0_count": [10, 50, 100, 150, 200],
-    "A": [0.1, 0.5, 0.8, 0.2],
-    "B": [0.1, 0.3, 0.5, 0.6, 0,7],
+    "A": [0.1, 0.5, 0.8, 0.2, 10, 15],
+    "B": [0.1, 0.3, 0.5, 0.6, 0.1, 7, 11, 100],
     "K": [16, 28, 32, 40, 36],
     "crossover": ["SINGLE_POINT", "TWO_POINT", "UNIFORM_POINT", "ANULAR"],
     "mutation": ["GEN_UNIFORM", "GEN_NON_UNIFORM", "MULTI_GEN_UNIFORM", "MULTI_GEN_NON_UNIFORM"],
     "mutation_probability": [0.5, 1, 0.14, 0.23, 0.94, 0.85, 0.24, 0.55, 0.9, 0.2, 0.4, 0.3],
     "replace": ["TRADICIONAL", "SESGO"],
     "selection_1": {
-        "name": ["ROULETTE", "UNIVERSAL", "ELITE"],
-        "m": [3, 5, 7, 11, 15]
+        "name": ["ROULETTE", "UNIVERSAL", "ELITE", "BOLTZMANN"],
+        "m": [3, 5, 7, 11, 15],
+        "tc": [5, 10, 15],
+        "t0": [25, 50, 150, 100],
+        "c": [0.5, 1, 0.7, 0.8]
     },
     "selection_2": {
         "name": ["ROULETTE", "UNIVERSAL", "ELITE"],
-        "tc": [5, 10],
-        "t0": [25, 50],
-        "c": [0.5, 1]
+        "m": [3, 5, 7, 11, 15],
+        "tc": [5, 10, 15],
+        "t0": [25, 50, 150, 100],
+        "c": [0.5, 1, 0.7, 0.8]
     },
     "deter_tournament": {
-        "m": [3, 5, 7]
+        "m": [3, 5, 7, 11, 15],
     },
     "replace_1": {
         "name": ["ELITE", "ROULETTE", "UNIVERSAL"],
-        "m": [3, 5, 7]
+        "m": [3, 5, 7, 11, 15]
     },
     "replace_2": {
         "name": ["BOLTZMANN"],
-        "tc": [5, 10],
-        "t0": [25, 50],
-        "c": [0.5, 1]
+        "tc": [5, 10, 15],
+        "t0": [25, 50, 150, 100],
+        "c": [0.5, 1, 0.7, 0.8]
     }
 }
 
