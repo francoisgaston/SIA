@@ -9,29 +9,29 @@
     "limit_generations": 10,
     "structure_ratio" : 0.85
   },
-  "class" : "WARRIOR",
+  "class" : "DEFENDER",
   "A": 0.8,
-  "B": 0.5,
-  "K": 28,
+  "B": 0.8,
+  "K": 80,
   "selection_1": {
-    "name": "ROULETTE",
+    "name": "PROBA_TOURNAMENT",
     "m": 5
   },
   "selection_2": {
-    "name": "UNIVERSAL",
+    "name": "RANKING",
     "tc": 10,
     "t0": 50,
     "c": 1
   },
-  "crossover" : "ANULAR",
+  "crossover" : "UNIFORM_POINT",
   "mutation" : "MULTI_GEN_UNIFORM",
   "mutation_probability": 0.5,
   "deter_tournament": {
     "m": 5
   },
-  "replace" : "SESGO",
+  "replace" : "TRADICIONAL",
   "replace_1": {
-    "name": "ELITE",
+    "name": "DETER_TOURNAMENT",
     "m": 5
   },
   "replace_2": {

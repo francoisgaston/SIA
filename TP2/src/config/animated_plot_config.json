@@ -1,6 +1,6 @@
 {
-  "attribute": "height",
-  "class": "WARRIOR",
+  "attribute": "fitness",
+  "class": "DEFENDER",
   "generate_output": true,
   "output": "src/results/height"
 }
