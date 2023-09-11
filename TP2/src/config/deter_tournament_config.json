@@ -1,5 +1,5 @@
 {
-  "output": "src/results/deter_tournament/deter_tournament_max-time",
+  "output": "src/results/deter_tournament/deter_tournament_check-structure",
   "m": {
     "start": 5,
     "end": 35,
@@ -7,12 +7,13 @@
   },
   "times": 5,
   "population_0_count": 75,
-  "stop_condition": "MAX_TIME",
+  "stop_condition": "CHECK_STRUCTURE",
   "stop_condition_options": {
     "max_generations": 100,
     "max_time": 1,
     "acceptable_solution": 1,
-    "limit_generations": 10
+    "limit_generations": 15,
+    "structure_ratio" : 0.9
   },
   "class" : "WARRIOR",
   "K": 20,

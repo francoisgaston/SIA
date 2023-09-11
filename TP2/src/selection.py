@@ -51,6 +51,8 @@ class Selection(ABC):
 
     @staticmethod
     def get_both_populations(population, K, A, method_1, method_2):
+        if A < 0.0 or A > 1.0:
+            raise Exception("A must be between 0 and 1")
         size_1 = math.ceil(K * A)
         selected_individuals_1 = method_1.select(population, size_1)
         non_repeated_individuals = [individual for individual in population if individual not in selected_individuals_1]

@@ -65,6 +65,7 @@ class GenerationState:
 
     def check_structure(self, population, old_population):
         if not old_population:
+            self.repeated_generations = 0
             return True
         
         union_set = set(population).union(old_population)

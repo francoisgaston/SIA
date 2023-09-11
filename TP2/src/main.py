@@ -49,8 +49,8 @@ def run_genetic(individual_class="WARRIOR", crossover="ANULAR", population_0_cou
         }
     if selection_1 is None:
         selection_1 = {"name": "ROULETTE", "m": 5}
-    if K % 2 != 0:  # TODO: cambiar si aceptamos que K sea impar
-        raise ValueError
+    if K % 2 != 0:
+        raise ValueError("K debe ser par")
 
     Individual.FITNESS_FUNCTION = Fitness.from_string(individual_class)
     Individual.CROSSOVER_FUNCTION = Crossover.from_string(crossover)

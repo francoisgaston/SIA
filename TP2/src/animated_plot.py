@@ -38,6 +38,8 @@ if __name__ == '__main__':
         config = json.load(config_file)
         csv = pd.read_csv(csv_file)
         ans = csv[csv['class'] == config["class"]].groupby(["id_config", "generations", "id"]).first().reset_index()
+        min_generations = ans.groupby(["id_config", "id"]).agg({"generations": "max"})["generations"].min()
+        ans = ans[ans["generations"] <= min_generations]
         range_y = [-5.0, 150.0]
         if config["attribute"] == "fitness":
             range_y = [-5.0, 60.0]

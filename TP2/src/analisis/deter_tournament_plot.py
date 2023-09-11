@@ -10,7 +10,7 @@ if __name__ == "__main__":
 
     csv = pd.read_csv(sys.argv[1])
     stop_condition = csv["stop_condition"].unique()[0]
-    stop_condition_str = "por contenido (10 generaciones)" if stop_condition == "CHECK_CONTENT" else "por 1 segundo" if stop_condition == "MAX_TIME" else "por 100 generaciones"
+    stop_condition_str = "por contenido (10 generaciones)" if stop_condition == "CHECK_CONTENT" else "por 1 segundo" if stop_condition == "MAX_TIME" else "por estructura, con una proporción de 0.9 durante 10 generaciones consecutivas"
     fitness_by_m = csv.groupby("id")["fitness"]
     ans = fitness_by_m.agg(["min", "max", "mean"]).reset_index()
     fig = go.Figure()
