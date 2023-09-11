@@ -1,7 +1,7 @@
 {
-  "output": "src/results/",
+  "output": "src/results/out",
   "population_0_count": 100,
-  "stop_condition": "MAX_GENERATIONS",
+  "stop_condition": "CHECK_STRUCTURE",
   "stop_condition_options": {
     "max_generations": 100,
     "max_time": 5,
@@ -10,11 +10,11 @@
     "structure_ratio" : 0.85
   },
   "class" : "WARRIOR",
-  "A": 0.8,
-  "B": 0.5,
+  "A": 0.5,
+  "B": 0.3,
   "K": 28,
   "selection_1": {
-    "name": "ROULETTE",
+    "name": "ELITE",
     "m": 5
   },
   "selection_2": {
@@ -25,19 +25,16 @@
   },
   "crossover" : "ANULAR",
   "mutation" : "MULTI_GEN_UNIFORM",
-  "mutation_probability": 0.5,
+  "mutation_probability": 0.3,
   "deter_tournament": {
     "m": 5
   },
-  "replace" : "SESGO",
+  "replace" : "TRADICIONAL",
   "replace_1": {
     "name": "ELITE",
     "m": 5
   },
   "replace_2": {
-    "name": "ROULETTE",
-    "tc": 10,
-    "t0": 50,
-    "c": 1
+    "name": "UNIVERSAL"
   }
 }

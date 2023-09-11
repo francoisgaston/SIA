@@ -18,7 +18,7 @@ from replace import Replace
 
 def run_genetic(individual_class="WARRIOR", crossover="ANULAR", population_0_count=100,
                 selection_1=None, selection_2=None, replace_1=None,
-                replace_2=None, replace="SESGO", mutation="MULTI_GEN_UNIFORM", max_generations=10,
+                replace_2=None, replace="SESGO", mutation="MULTI_GEN_UNIFORM", max_generations=100,
                 stop_condition="max_generations", stop_condition_options=None,
                 mutation_probability=0.5, K=100, A=0.5, B=0.5, last_generation_count=3, id=1, fulldata=False):
     # Defaults para objetos (estan aca porque si no se queja de que el default es mutable)
