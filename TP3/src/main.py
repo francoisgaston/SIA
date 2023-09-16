@@ -26,17 +26,17 @@ def initialize_w(dim=3, start_random=0, stop_random=1):
 # stop_random: fin para la determinación de los valores iniciales - Double
 # limit: Cantidad máxima de iteraciones del algoritmo - Integer
 # initial_error: Valor inicial del error - Double
-# data: es una lista de listas, data[i] es el i-esimo dato (debe ser una np.array) y
-#       data[i][j] es el valor de su j-esima variable.
+# results: es una lista de listas, results[i] es el i-esimo dato (debe ser una np.array) y
+#       results[i][j] es el valor de su j-esima variable.
 #       En la primera columna de cada dato debe haber un 1 - [[Double]]
 # expected: Es una lista de los valores esperados, expected[i] es el
-#           valor esperado para el i-esimo dato, data[i] - [double]
+#           valor esperado para el i-esimo dato, results[i] - [double]
 # condition: Clase con funciones para determinar el corte y cómo comparar valores
 #     check_stop(self, curr_error) -> Boolean - determina si se debe terminar el algoritmo en base al error
 #     check_replace(self, curr_error, new_error) -> Boolean - determina si se debe cambiar
 #       el valor de curr_error por new_error
 # error: Clase con función que calcula el error -
-#   compute(self, data, expected, w) -> Double
+#   compute(self, results, expected, w) -> Double
 # activation: Clase con funciones que calcula la activación
 #   eval(self, x) -> Double - evalúa la función de activación para un valor x
 #   diff(self, x) -> Double - evalúa la derivada de la función de activación para un valor x
@@ -56,23 +56,23 @@ def run_perceptron(**kwargs):
     error = kwargs['error']
     activation = kwargs['activation']
 
-    ans = [np.copy(w)]
+    ans = [w.tolist()]
 
     while not condition.check_stop(min_error) and i < kwargs['limit']:
         u = random.randint(0, len(data) - 1)
         h_u = np.dot(data[u][:len(data[u])], w)
         output_u = activation.eval(h_u)
-        # delta_w = compute_delta(expected[u], output_u, data[u], w)
+        # delta_w = compute_delta(expected[u], output_u, results[u], w)
         # TODO: creo que esta es una forma genérica de hacerlo
         delta_w = n * (expected[u] - output_u) * activation.diff(h_u) * data[u]
         w += delta_w
         new_error = error.compute(data, expected, w)
         if condition.check_replace(min_error, new_error):
             min_error = new_error
-
+            ans.append(w.tolist())
             # Si queremos que se muestre todo el recorrido y no los mejores, poner esto afuera del if
             w_min = w
-        ans.append(np.copy(w))
+
         i += 1
 
     return ans, w_min
@@ -108,7 +108,7 @@ if __name__ == "__main__":
             headers.append("w" + str(i))
 
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-        CSV = './data/' + config['output'] + "_" + timestamp + ".csv"
+        CSV = './results/' + config['output'] + "_" + timestamp + ".csv"
         os.makedirs(os.path.dirname(CSV), exist_ok=True)
         with open(CSV, "w", newline='') as output_file:
             csv_writer = csv.writer(output_file)
@@ -117,6 +117,7 @@ if __name__ == "__main__":
             for i in range(len(ans)):
                 # Los np.arrays son inmutables
                 ans[i] = np.insert(ans[i], 0, i)
+                # ans[i].append(1)
                 i += 1
             csv_writer.writerows(ans)
         # no hay que hacer output_file.close(), para eso usamos el with y lo cierra cuando sale del scope

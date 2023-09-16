@@ -8,7 +8,7 @@ class SumError:
 
     # Recibe:
     # w: np.array con los valores actuales de los w_i
-    # data: todos los datos analizados para el entrenamiento
+    # results: todos los datos analizados para el entrenamiento
     # expected: los resultados esperados para cada dato
     def compute(self, data, expected, w):
         ans = 0

@@ -1,5 +1,5 @@
 {
-  "data": "data.csv",
+  "data": "./data/data_1_AND.csv",
   "random_interval": [0,1.0],
   "initial_error": 0.5,
   "iteration_limit": 100000,
