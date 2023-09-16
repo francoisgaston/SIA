@@ -27,6 +27,7 @@ class AccuracyError:
         for i in range(len(data)):
             if self._activation_function(w.dot(data[i])) == expected[i]:
                 correct += 1
+        #   Devuelve un valor entre 0 y 1, si se quiere % multiplicar por 100 y tener cuidado con la condición
         return correct / len(data)
 
 

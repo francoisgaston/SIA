@@ -6,5 +6,6 @@
   "activation": "SIGN",
   "error":"SUM",
   "epsilon": 0.01,
+  "eta":1,
   "output": "ej1"
 }

@@ -1,4 +1,3 @@
-
 class Function:
 
     # Evaluates the function

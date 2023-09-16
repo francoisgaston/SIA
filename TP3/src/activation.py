@@ -10,13 +10,22 @@ class SignActivation(Function):
         return 1
 
 
+class LinearActivation(Function):
+    def eval(self, x):
+        return x
+
+    def diff(self, x):
+        # TODO: preguntar
+        return 1
+
+
 class SigmoidActivation(Function):
 
     def __init__(self, beta):
         self._beta = beta
 
     def eval(self, x):
-        return math.tanh(x)
+        return math.tanh(self._beta * x)
 
     def diff(self, x):
         return self._beta * (1 - math.pow(self.eval(x), 2))
@@ -38,6 +47,8 @@ def from_str(string, beta=1):
     match string.upper():
         case "SIGN":
             return SignActivation()
+        case "LINEAR":
+            return LinearActivation()
         case "SIGMOID":
             return SigmoidActivation(beta)
         case "LOGISTIC":

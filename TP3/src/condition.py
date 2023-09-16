@@ -18,12 +18,15 @@ class AccuracyCondition:
         self._epsilon = epsilon
 
     def check_stop(self, curr_error):
+        # El caso de 1 requiere el = (nunca va a ser mayor)
         return curr_error >= self._epsilon
 
     def check_replace(self, curr_error, new_error):
         return new_error > curr_error
 
+
 def from_str(string, epsilon):
     match string.upper():
+        case "NON_ACCURACY": return NonAccuracyCondition(epsilon=epsilon)
         case "ACCURACY": return AccuracyCondition(epsilon=epsilon)
         case _: return NonAccuracyCondition(epsilon=epsilon)

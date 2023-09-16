@@ -8,10 +8,10 @@ import sys
 import os
 from datetime import datetime
 
-
 from error import from_str as error_from_str
 from condition import from_str as condition_from_str
 from activation import from_str as activation_from_str
+
 
 # Crea los valores iniciales para cada w_i
 def initialize_w(dim=3, start_random=0, stop_random=1):
@@ -66,18 +66,19 @@ def run_perceptron(**kwargs):
         # TODO: creo que esta es una forma genérica de hacerlo
         delta_w = n * (expected[u] - output_u) * activation.diff(h_u) * data[u]
         w += delta_w
-        new_error = error.compute(data,expected,w)
+        new_error = error.compute(data, expected, w)
         if condition.check_replace(min_error, new_error):
             min_error = new_error
-            ans.append(np.copy(w))
+
             # Si queremos que se muestre todo el recorrido y no los mejores, poner esto afuera del if
             w_min = w
+        ans.append(np.copy(w))
         i += 1
 
     return ans, w_min
 
-if __name__ == "__main__":
 
+if __name__ == "__main__":
     with open(f"{sys.argv[1]}", "r") as file:
         config = json.load(file)
         data = []
@@ -92,14 +93,15 @@ if __name__ == "__main__":
                 for i in range(1, dim + 1):
                     auxdata.append(row["x" + str(i)])
                 data.append(np.array([1] + auxdata))
-                expected.append(row["expected"])
+                expected.append(row["y"])
 
         activation_function = activation_from_str(string=config['activation'])
         ans, last = run_perceptron(start_random=config['random_interval'][0], stop_random=config['random_interval'][1],
                                    limit=config['iteration_limit'], initial_error=config['initial_error'],
                                    data=data, expected=expected,
-                                   condition=condition_from_str(config['error'],config['epsilon']),error=error_from_str(config['error'],activation_function=activation_function),
-                                   activation=activation_function,n=1)
+                                   condition=condition_from_str(config['error'], config['epsilon']),
+                                   error=error_from_str(config['error'], activation_function=activation_function),
+                                   activation=activation_function, n=config['eta'])
 
         headers = ["Id"]
         for i in range(len(ans[0])):
