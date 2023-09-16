@@ -1,0 +1,10 @@
+{
+  "data": "data.csv",
+  "random_interval": [0,1.0],
+  "initial_error": 0.5,
+  "iteration_limit": 100000,
+  "activation": "SIGN",
+  "error":"SUM",
+  "epsilon": 0.01,
+  "output": "ej1"
+}
