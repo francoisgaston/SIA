@@ -69,10 +69,9 @@ def run_perceptron(**kwargs):
         new_error = error.compute(data, expected, w)
         if condition.check_replace(min_error, new_error):
             min_error = new_error
-            ans.append(w.tolist())
             # Si queremos que se muestre todo el recorrido y no los mejores, poner esto afuera del if
             w_min = w
-
+        ans.append(w.tolist())
         i += 1
 
     return ans, w_min

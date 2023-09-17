@@ -21,7 +21,7 @@ if __name__ == '__main__':
         # 0 = w2 * y + w1 * x + w0 -> y = (w1 * x + w0)/(-w2)
         ans = []
         for index, row in csv_data.iterrows():
-            for x in np.linspace(-1.2, 1.2, 100):
+            for x in np.linspace(-1.2, 1.2, 1000):
                 ans.append([row['Id'], x, (row['w1'] * x + row['w0'])/(-row['w2'])])
 
 
