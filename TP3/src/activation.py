@@ -1,6 +1,5 @@
 import math
-from utils import Function
-
+from utils.Function import Function
 
 class SignActivation(Function):
     def eval(self, x):
