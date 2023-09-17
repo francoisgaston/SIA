@@ -25,7 +25,7 @@ class AccuracyError:
     def compute(self, data, expected, w):
         correct = 0.0
         for i in range(len(data)):
-            if self._activation_function(w.dot(data[i])) == expected[i]:
+            if self._activation_function.eval(w.dot(data[i])) == expected[i]:
                 correct += 1
         #   Devuelve un valor entre 0 y 1, si se quiere % multiplicar por 100 y tener cuidado con la condición
         return correct / len(data)
@@ -39,7 +39,7 @@ class QuadraticError:
     def compute(self, data, expected, w):
         ans = 0
         for i in range(len(data)):
-            ans += math.pow((expected[i] - self._activation_function(w.dot(data[i]))), 2)
+            ans += math.pow((expected[i] - self._activation_function.eval(w.dot(data[i]))), 2)
         return ans/2.0
 
 
