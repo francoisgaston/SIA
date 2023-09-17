@@ -1,11 +1,12 @@
 {
-  "data": "./perceptron_data/data_1_AND.csv",
-  "random_interval": [0,1.0],
-  "initial_error": 0.5,
-  "iteration_limit": 100000,
-  "activation": "SIGN",
-  "error":"SUM",
-  "epsilon": 0.01,
-  "eta":1,
-  "output": "ej1"
+  "data": "./perceptron_data/TP3-ej2-conjunto.csv",
+  "random_interval": [0,100],
+  "initial_error": 100,
+  "iteration_limit": 1000000,
+  "activation": "LOGISTIC",
+  "beta": 0.005,
+  "error": "QUADRATIC",
+  "epsilon": 1100,
+  "eta": 100,
+  "output": "ej2"
 }
