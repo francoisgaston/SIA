@@ -66,7 +66,7 @@ def run_perceptron(**kwargs):
         new_error = error.compute(data, expected, w)
         if condition.check_replace(min_error, new_error):
             min_error = new_error
-            # print("min_error", min_error)
+            print("min_error", min_error)
             # Si queremos que se muestre todo el recorrido y no los mejores, poner esto afuera del if
             w_min = w
         ans.append(w.tolist())
@@ -95,14 +95,19 @@ if __name__ == "__main__":
         activation_function = activation_from_str(string=config['activation'], beta=config["beta"])
         # Si no es lineal, escalamos los datos de entrada
         activation_function.scale(expected)
-        ans, last = run_perceptron(start_random=config['random_interval'][0], stop_random=config['random_interval'][1],
-                                   limit=config['iteration_limit'], initial_error=config['initial_error'],
-                                   data=data, expected=expected,
-                                   condition=condition_from_str(config['error'], config['epsilon']),
-                                   error=error_from_str(config['error'], activation_function=activation_function),
-                                   activation=activation_function, n=config['eta'])
+        ans, last = run_perceptron(
+            start_random=config['random_interval'][0],
+            stop_random=config['random_interval'][1],
+            limit=config['iteration_limit'],
+            data=data,
+            expected=expected,
+            condition=condition_from_str(config['error'], config['epsilon']),
+            error=error_from_str(config['error'], activation_function=activation_function),
+            activation=activation_function,
+            n=config['eta']
+        )
 
-        filename = config['output'] + config['data'].split("/")[-1].split(".")[0]
+        filename = 'results/' + config['output'] + config['data'].split("/")[-1].split(".")[0]
         headers = ["Id"]
         for i in range(len(ans[0])):
             headers.append("w" + str(i))
