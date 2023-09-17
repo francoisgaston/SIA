@@ -28,6 +28,7 @@ def generate_gif(fig, output):
     )
     fig.layout.sliders[0].update(active=0)
 
+
 if __name__ == "__main__":
     # Aca vamos a graficar con el csv generado a partir de adapter
     if len(sys.argv) < 2:
@@ -36,6 +37,7 @@ if __name__ == "__main__":
 
     with open(f"{sys.argv[1]}", "r") as data_file, open(f"{sys.argv[2]}", "r") as dots_file:
         CSV = pd.read_csv(data_file)
+        CSV["Id"] = CSV["Id"].astype(int)
         dots_CSV = pd.read_csv(dots_file)
         colors = ['green' if y == 1 else 'red' for y in dots_CSV['y']]
         fig = px.scatter(
@@ -60,4 +62,13 @@ if __name__ == "__main__":
                 )
             ),
         )
-        generate_gif(fig, "./results/animation")
+        fig.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 300
+        fig.layout.updatemenus[0].buttons[0].args[1]['transition']['duration'] = 300
+        fig.layout.sliders[0].currentvalue = {
+            "font": {"size": 20},
+            "prefix": "Iteración: ",
+            "visible": True,
+            "xanchor": "right"
+        }
+        fig.show()
+        # generate_gif(fig, "./results/animation")
