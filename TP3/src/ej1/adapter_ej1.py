@@ -1,10 +1,9 @@
-import sys
 import pandas as pd
 import numpy as np
-import csv
-from datetime import datetime
 import sys
-import os
+from ..utils.write_csv import write_csv
+
+# Run the script: python -m src.ej1.adapter_ej1 [csv_file]
 
 if __name__ == '__main__':
     if len(sys.argv) < 1:
@@ -22,14 +21,8 @@ if __name__ == '__main__':
         ans = []
         for index, row in csv_data.iterrows():
             for x in np.linspace(-1.2, 1.2, 1000):
-                ans.append([row['Id'], x, (row['w1'] * x + row['w0'])/(-row['w2'])])
-
+                ans.append([row['Id'], x, (row['w1'] * x + row['w0']) / (-row['w2'])])
 
         headers = ["Id", "x", "y"]
-        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-        CSV = './results/' + "plotter_" + timestamp + ".csv"
-        os.makedirs(os.path.dirname(CSV), exist_ok=True)
-        with open(CSV, "w", newline='') as output_file:
-            csv_writer = csv.writer(output_file)
-            csv_writer.writerow(headers)
-            csv_writer.writerows(ans)
+        filename = "src/results/plotter_" + "_".join(sys.argv[1].split("/")[-1].split(".")[0].split("_")[:-1])
+        write_csv(filename, headers, ans)

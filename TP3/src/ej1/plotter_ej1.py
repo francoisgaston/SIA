@@ -35,7 +35,8 @@ if __name__ == "__main__":
         print("Por favor ingrese el csv de entrada y de datos")
         exit(1)
 
-    with open(f"{sys.argv[1]}", "r") as data_file, open(f"{sys.argv[2]}", "r") as dots_file:
+    with (open(f"{sys.argv[1]}", "r") as data_file):
+        operator = "AND" if "AND" in sys.argv[1].split("/")[-1].split(".")[0].upper().split("_") else "XOR"
         CSV = pd.read_csv(data_file)
         CSV["Id"] = CSV["Id"].astype(int)
         yrange = [CSV['y'].min(), CSV['y'].max()]
@@ -46,22 +47,23 @@ if __name__ == "__main__":
             animation_frame="Id",
             range_x=[-RANGE, RANGE],
             range_y=yrange,
+            title=f"Iteraciones del perceptrón para obtener los pesos w_i que resuelven el operador {operator}"
         )
         fig.update_layout(
             xaxis=dict(
                 range=[-RANGE, RANGE],
                 title=dict(
-                    text="X"
+                    text="x"
                 )
             ),
             yaxis=dict(
                 title=dict(
-                    text="Y"
+                    text="y = ((x * w1 + w0) / (-w2))"
                 )
             ),
         )
-        fig.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 300
-        fig.layout.updatemenus[0].buttons[0].args[1]['transition']['duration'] = 300
+        fig.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 500
+        fig.layout.updatemenus[0].buttons[0].args[1]['transition']['duration'] = 500
         fig.layout.sliders[0].currentvalue = {
             "font": {"size": 20},
             "prefix": "Iteración: ",
@@ -71,5 +73,7 @@ if __name__ == "__main__":
         fig.frames[-1].layout.update(
             yaxis_range=[-RANGE, RANGE]
         )
-        add_dots(fig, pd.read_csv(dots_file))
-        fig.write_html("./results/animation.html")
+        with open(f"{sys.argv[2]}", "r") as dots_file:
+            add_dots(fig, pd.read_csv(dots_file))
+        fig.write_html(f"{'/'.join(sys.argv[1].split('/')[:-1])}/plotter_{operator}.html")
+        # fig.show()
