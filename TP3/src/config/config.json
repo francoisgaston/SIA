@@ -6,7 +6,7 @@
   "activation": "LOGISTIC",
   "beta": 0.005,
   "error": "QUADRATIC",
-  "epsilon": 1100,
+  "epsilon": 0.01,
   "eta": 100,
   "output": "ej2"
 }

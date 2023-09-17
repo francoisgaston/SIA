@@ -9,6 +9,9 @@ class SignActivation(Function):
     def diff(self, x):
         return 1
 
+    def scale(self, expected):
+        return expected
+
 
 class LinearActivation(Function):
     def eval(self, x):
@@ -17,6 +20,9 @@ class LinearActivation(Function):
     def diff(self, x):
         # TODO: preguntar
         return 1
+
+    def scale(self, expected):
+        return expected
 
 
 class SigmoidActivation(Function):
@@ -30,6 +36,16 @@ class SigmoidActivation(Function):
     def diff(self, x):
         return self._beta * (1 - math.pow(self.eval(x), 2))
 
+    def scale(self, expected):
+#         Deben estar entre -1 y 1
+#         En min debe dar -1, en max debe dar 1
+        min_val = min(expected)
+        max_val = max(expected)
+        m = ((1-(-1))/(max_val-min_val))
+        b = 1 - m*max_val
+        for i in range(len(expected)):
+            expected[i] = m * expected[i] + b
+
 
 class LogisticActivation(Function):
 
@@ -42,6 +58,15 @@ class LogisticActivation(Function):
     def diff(self, x):
         return 2 * self._beta * self.eval(x) * (1 - self.eval(x))
 
+    def scale(self, expected):
+    #   Deben estar entre 0 y 1
+    #   en min debe dar 0, en max debe dar 1
+        min_val = min(expected)
+        max_val = max(expected)
+        m = (1/(max_val-min_val))
+        b = 1 - m*max_val
+        for i in range(len(expected)):
+            expected[i] = m*expected[i] + b
 
 def from_str(string, beta=1):
     match string.upper():

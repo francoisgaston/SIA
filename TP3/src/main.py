@@ -60,22 +60,15 @@ def run_perceptron(**kwargs):
 
     while not condition.check_stop(min_error) and i < kwargs['limit']:
         u = random.randint(0, len(data) - 1)
-        # print("data[u]", data[u])
-        # print("w", w)
         h_u = np.dot(data[u], w)
-        # print("h_u", h_u)
         output_u = activation.eval(h_u)
         # delta_w = compute_delta(expected[u], output_u, results[u], w)
         # TODO: creo que esta es una forma genérica de hacerlo
         delta_w = n * (expected[u] - output_u) * activation.diff(h_u) * data[u]
-        # print("data[u]", data[u])
-        # print("output_u", output_u)
         w += delta_w
-        # print("w", w)
         new_error = error.compute(data, expected, w)
         if condition.check_replace(min_error, new_error):
             min_error = new_error
-            print("min_error", min_error)
             # Si queremos que se muestre todo el recorrido y no los mejores, poner esto afuera del if
             w_min = w
         ans.append(w.tolist())
@@ -102,6 +95,8 @@ if __name__ == "__main__":
                 expected.append(row["y"])
 
         activation_function = activation_from_str(string=config['activation'], beta=config["beta"])
+        # Si no es lineal, escalamos los datos de entrada
+        activation_function.scale(expected)
         ans, last = run_perceptron(start_random=config['random_interval'][0], stop_random=config['random_interval'][1],
                                    limit=config['iteration_limit'], initial_error=config['initial_error'],
                                    data=data, expected=expected,
