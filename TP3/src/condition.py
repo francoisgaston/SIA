@@ -6,7 +6,7 @@ class NonAccuracyCondition:
         self._epsilon = epsilon
 
     def check_stop(self, curr_error):
-        return curr_error < self._epsilon
+        return curr_error <= self._epsilon
 
     def check_replace(self, curr_error, new_error):
         return new_error < curr_error

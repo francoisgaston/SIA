@@ -1,16 +1,13 @@
-import csv
 import random
 import pandas as pd
-
 import numpy as np
 import json
 import sys
-import os
-from datetime import datetime
 
 from error import from_str as error_from_str
 from condition import from_str as condition_from_str
 from activation import from_str as activation_from_str
+from utils.write_csv import write_csv
 
 
 # Crea los valores iniciales para cada w_i
@@ -69,6 +66,7 @@ def run_perceptron(**kwargs):
         new_error = error.compute(data, expected, w)
         if condition.check_replace(min_error, new_error):
             min_error = new_error
+            # print("min_error", min_error)
             # Si queremos que se muestre todo el recorrido y no los mejores, poner esto afuera del if
             w_min = w
         ans.append(w.tolist())
@@ -104,21 +102,11 @@ if __name__ == "__main__":
                                    error=error_from_str(config['error'], activation_function=activation_function),
                                    activation=activation_function, n=config['eta'])
 
+        filename = config['output'] + config['data'].split("/")[-1].split(".")[0]
         headers = ["Id"]
         for i in range(len(ans[0])):
             headers.append("w" + str(i))
-
-        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-        CSV = './results/' + config['output'] + "_" + timestamp + ".csv"
-        os.makedirs(os.path.dirname(CSV), exist_ok=True)
-        with open(CSV, "w", newline='') as output_file:
-            csv_writer = csv.writer(output_file)
-            csv_writer.writerow(headers)
-            i = 0
-            for i in range(len(ans)):
-                # Los np.arrays son inmutables
-                ans[i] = np.insert(ans[i], 0, i)
-                # ans[i].append(1)
-                i += 1
-            csv_writer.writerows(ans)
-        # no hay que hacer output_file.close(), para eso usamos el with y lo cierra cuando sale del scope
+        for i in range(len(ans)):
+            # Los np.arrays son inmutables
+            ans[i] = np.insert(ans[i], 0, i)
+        write_csv(filename, headers, ans)

@@ -1,9 +1,8 @@
 {
-  "data": "./perceptron_data/TP3-ej2-conjunto.csv",
-  "random_interval": [0,100],
-  "initial_error": 100,
-  "iteration_limit": 1000000,
-  "activation": "LOGISTIC",
+  "data": "src/perceptron_data/TP3_ej1_XOR.csv",
+  "random_interval": [0,1],
+  "iteration_limit": 10,
+  "activation": "SIGN",
   "beta": 0.005,
   "error": "QUADRATIC",
   "epsilon": 0.01,
