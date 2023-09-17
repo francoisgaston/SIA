@@ -1,32 +1,32 @@
 import sys
-import io
-import os
 import pandas as pd
 import plotly.express as px
-from PIL import Image
-from datetime import datetime
 
 RANGE = 1.1
 
-def generate_gif(fig, output):
-    frames = []
-    for s, fr in enumerate(fig.frames):
-        fig.update(data=fr.data)
-        fig.layout.sliders[0].update(active=s)
-        frames.append(Image.open(io.BytesIO(fig.to_image(format="png"))))
-
-    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-    GIF = output + "_" + timestamp + ".gif"
-    os.makedirs(os.path.dirname(GIF), exist_ok=True)
-    frames[0].save(
-        GIF,
-        save_all=True,
-        append_images=frames[1:],
-        duration=300,
-        loop=0,
-        optimize=True,
+def add_dots(fig, dots_CSV):
+    class_1_dots = dots_CSV[dots_CSV['y'] == 1]
+    class_minus_1_dots = dots_CSV[dots_CSV['y'] == -1]
+    fig.add_scatter(
+        x=class_1_dots['x1'],
+        y=class_1_dots['x2'],
+        name="Clase 1",
+        mode="markers",
+        marker=dict(
+            color="green",
+            size=10,
+        )
     )
-    fig.layout.sliders[0].update(active=0)
+    fig.add_scatter(
+        x=class_minus_1_dots['x1'],
+        y=class_minus_1_dots['x2'],
+        name="Clase -1",
+        mode="markers",
+        marker=dict(
+            color="red",
+            size=10,
+        )
+    )
 
 
 if __name__ == "__main__":
@@ -38,15 +38,14 @@ if __name__ == "__main__":
     with open(f"{sys.argv[1]}", "r") as data_file, open(f"{sys.argv[2]}", "r") as dots_file:
         CSV = pd.read_csv(data_file)
         CSV["Id"] = CSV["Id"].astype(int)
-        dots_CSV = pd.read_csv(dots_file)
-        colors = ['green' if y == 1 else 'red' for y in dots_CSV['y']]
+        yrange = [CSV['y'].min(), CSV['y'].max()]
         fig = px.scatter(
             CSV,
             x="x",
             y="y",
             animation_frame="Id",
             range_x=[-RANGE, RANGE],
-            range_y=[-RANGE, RANGE],
+            range_y=yrange,
         )
         fig.update_layout(
             xaxis=dict(
@@ -56,7 +55,6 @@ if __name__ == "__main__":
                 )
             ),
             yaxis=dict(
-                range=[-RANGE, RANGE],
                 title=dict(
                     text="Y"
                 )
@@ -70,5 +68,8 @@ if __name__ == "__main__":
             "visible": True,
             "xanchor": "right"
         }
-        fig.show()
-        # generate_gif(fig, "./results/animation")
+        fig.frames[-1].layout.update(
+            yaxis_range=[-RANGE, RANGE]
+        )
+        add_dots(fig, pd.read_csv(dots_file))
+        fig.write_html("./results/animation.html")
