@@ -1,0 +1,6 @@
+{
+    "input": "src/ej3/data/TP3-ej3-digitos.txt",
+    "input_lenght" : 35,
+    "perceptrons_for_layers": [35, 10, 10, 2],
+    "activation": "SIGMOID"
+}
