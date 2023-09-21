@@ -1,15 +1,24 @@
 import json
 import numpy as np
-
 import sys 
+from condition import condition_from_str
+from activation import activation_from_str
+from error import error_from_str 
+
+# def mapper(character):
+#     return 1 if character == '1' else 0
+
+# Recibe la data y lo transforma en np's arrays de cada numero
+def read_input(file, input_length):
+    file1 = open(file,"r+")
+    result = [(1 if character == '1' else 0 ) for character in file1.read().split()]
+    # result = list(map(mapper, file1.read().split()))
+    result = np.array_split(result, len(result)/input_length) 
+    return result
+
+
 # config:
-# start_random: inicio para la determinación de los valores iniciales - Double
-# stop_random: fin para la determinación de los valores iniciales - Double
 # limit: Cantidad máxima de iteraciones del algoritmo - Integer
-# initial_error: Valor inicial del error - Double
-# results: es una lista de listas, results[i] es el i-esimo dato (debe ser una np.array) y
-#       results[i][j] es el valor de su j-esima variable.
-#       En la primera columna de cada dato debe haber un 1 - [[Double]]
 # expected: Es una lista de los valores esperados, expected[i] es el
 #           valor esperado para el i-esimo dato, results[i] - [double]
 # condition: Clase con funciones para determinar el corte y cómo comparar valores
@@ -30,39 +39,50 @@ def train_perceptron(config, mlp, data, expected):
     n = config['n']
     # Auxiliar functions
     condition = condition_from_str(config['error'], config['epsilon'])
-    error = error_from_str(config['error'], activation_function=activation_function)
-    activation = kwargs['activation']
-    
+    activation_function = activation_from_str(config['activation'], beta=config["beta"])
+    error = error_from_str("QUADRATIC_MULTILAYER")
+    limit = config["limit"]
 
-# Recibe la data y lo transforma en np's arrays de cada numero
-def read_input(file, input_lenght):
-    file1 = open(file,"r+")
-    result = file1.read().split()
-    result = np.array_split(result, len(result)/input_lenght)
-    return results
+    while not condition.check_stop(min_error) and i < limit:
+        # TODO: hacer el batch 
+        u = random.randint(0, len(data) - 1)
+        
+        # Valoes de las neuronas de salida
+        values = mlp.forward(data[u])
+        
+        #expected = [0] * len(expected)
+        #expected[u] = 1
+        aux_error = np.array(values) - np.array(expected[u])
+    
+        mlp.backward(aux_error, data[u], n)
+
+        error = error.compute(data, mlp, expected)
+
+        if error < min_error:
+            min_error = error
+        
+        i += 1
+        
 
 
 
 if __name__ == "__main__":
-
-    data = read_input(config['input'], config['input_lenght'])
-
-    # Dividimos la entrada en 35 valores
-    with open(f"{sys.argv[1]}", "r") as config_file:
-        config = json.read
-
-    # metemos esa entrada en un perceptron
-    mlp = MultiLayerPerceptron(config['perceptrons_for_layers'], activation_function)
-    error = error_from_str(config['error'], activation_function=activation_function)
-    limit = config['iteration_limit']
-    condition=condition_from_str(config['error'], config['epsilon'])
+    if (len(sys.argv) < 1):
+        print("Por favor ingrese el archivo de configuración")
+        exit(1)
     
-    train_perceptron()
-     
-     
+    with open(f"{sys.argv[1]}", "r") as config_file:
+        config = json.load(config_file)
+        expected = np.array(config['expected'])
+        
+        data = read_input(config['input'], config['input_length'])
+        activation_function = activation_from_str(string=config['activation'], beta=config["beta"])
+        
+        mlp = MultiLayerPerceptron(config['perceptrons_for_layers'], activation_function)
+        
 
-
-    #joche va a la uade
+        train_perceptron(config, mlp, data, expected)
+     
 
 
     
