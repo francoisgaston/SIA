@@ -38,7 +38,7 @@ class Layer:
     # n: Tasa de aprendizaje
     # next_activations: Son los theta(h) de los nodos de la capa inferior, incluyendo el 1 para w_0
     def backward(self, d, prev_weights, n, next_activations):
-        pre_d = np.matmul(prev_weights, d)
+        pre_d = np.matmul(d, prev_weights) #TODO: revisar, en el mural esta al reves
         perceptrons_activation_diff = self.get_perceptrons_activation_diff()
         # Las siguientes dos lineas hacen lo siguiente:
         #   for index in range(len(perceptrons_activation_diff)):
@@ -46,7 +46,8 @@ class Layer:
         perceptrons_activation_diff_diagonal = np.diag(perceptrons_activation_diff)
         d = np.matmul(pre_d, perceptrons_activation_diff_diagonal)
         pre_delta_weights = n * d
-        delta_w = np.matmul(pre_delta_weights, next_activations)
+        # delta_w = np.matmul(pre_delta_weights, next_activations)
+        delta_w = np.matmul(np.split(pre_delta_weights,len(pre_delta_weights)),np.split(next_activations,1))
         return delta_w, d
     
     

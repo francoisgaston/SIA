@@ -42,7 +42,7 @@ class MultiLayerPerceptron:
         values = self.layers[len(self.layers)-1].get_perceptrons_activation()
 
         # n * d_i * V = delta_w
-        d_n = n * np.array(d)
+        d_n = n * d
 
         # Caso particular: Perceptron simple
         if len(self.layers) == 1:
@@ -50,19 +50,21 @@ class MultiLayerPerceptron:
             self.layers[0].add_perceptrons_delta_weights(delta_w)
             return
 
-        delta_w = np.matmul(d_n, values)
+        # delta_w = np.matmul(np.transpose(d_n), values)
+
+        delta_w = np.matmul(np.split(d_n, len(d_n)), np.split(values, 1))
 
         # Obtengo los W antes de actualizar
         olds_w = self.layers[len(self.layers)-1].get_perceptrons_weights()
         self.layers[len(self.layers)-1].add_perceptrons_delta_weights(delta_w)
 
         # Itero entre todas las capas
-        for index in self.layers[0:len(self.layers)-1:-1]:
+        for index in range(len(self.layers)-2, -1, -1):
             if index != 0:
-                values =  self.layers[index+1].get_perceptrons_activation()
+                values = self.layers[index+1].get_perceptrons_activation()
             else:
                 # Si estamos en la capa inferior de la red, utilizamos los datos de entrada
-                values = x
+                values = np.insert(x, 0, 1)
             # Calculamos el delta_w y los d_i de los nodos de la capa actual
             delta_w, d = self.layers[index].backward(d, olds_w, n, values)
 

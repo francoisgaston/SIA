@@ -44,14 +44,13 @@ class QuadraticError:
 
 
 class QuadraticErrorMultilayer:
-    # obtained: [[]] con los valores obtenidos para cada caso
     # expected: [[]] con los valores esperados para cada caso
-    def compute(self, data, mlp , expected):
+    def compute(self, data, mlp, expected):
         ans = 0
-        for i in range(len(data)):
-            obtained = mlp.foward(data[i])
-            for j in range(len(data[i])):
-                ans += (expected[i][j] - obtained[i][j]) ** 2
+        for i in range(len(expected)):
+            obtained = mlp.forward(data[i])
+            for j in range(len(expected[i])):
+                ans += (expected[i][j] - obtained[j]) ** 2
         return ans/2.0
 
 def from_str(string, activation_function=None):
