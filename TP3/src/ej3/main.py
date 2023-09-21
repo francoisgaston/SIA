@@ -51,7 +51,7 @@ def train_perceptron(config, mlp, data, expected):
 
         # expected = [0] * len(expected)
         # expected[u] = 1
-        aux_error = np.array(values) - np.array(expected[u])
+        aux_error =  np.array(expected[u]) - np.array(values)
 
         mlp.backward(aux_error, data[u], n)
 

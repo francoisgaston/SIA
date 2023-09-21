@@ -13,7 +13,7 @@ class Layer:
         self.activation_function = np.vectorize(activation_function.eval)
 
 
-    def create_weights_matriz(self):
+    def create_weights_matrix(self):
         weights_matriz = []
         for perceptron in self.perceptrons:
             # aca perceptron_weigths va a tener a [w0, w1, ..., wn] es decir tiene al umbral
@@ -26,7 +26,7 @@ class Layer:
     def forward(self, x):
         # x must be an np array
         x = np.insert(x, 0, 1)
-        matrix = self.create_weights_matriz()
+        matrix = self.create_weights_matrix()
         results = np.matmul(matrix, x) #h_i, entrada de la otra capa
         self.save_h(results)
         results = self.activation_function(results)
