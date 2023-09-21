@@ -1,7 +1,7 @@
 {
-    "input": "src/ej3/data/TP3-ej3-digitos.txt",
+    "input": "data/TP3-ej3-digitos.txt",
     "input_length" : 35,
-    "perceptrons_for_layers": [35, 10, 10, 2],
+    "perceptrons_for_layers": [35, 10, 10, 10],
     "activation": "LOGISTIC",
     "expected": [[1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -13,5 +13,10 @@
                 [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
-            ]
+            ],
+    "beta": 1, 
+    "n": 0.01,
+    "error": "QUADRATIC_MULTILAYER",
+    "epsilon": 0.015,
+    "limit": 1000000
 }

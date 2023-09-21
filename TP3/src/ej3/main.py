@@ -1,9 +1,11 @@
 import json
 import numpy as np
 import sys 
-from condition import condition_from_str
-from activation import activation_from_str
-from error import error_from_str 
+from condition import from_str as condition_from_str
+from activation import from_str as activation_from_str
+from error import from_str as  error_from_str 
+from multilayerPerceptron import MultiLayerPerceptron
+import random
 
 # def mapper(character):
 #     return 1 if character == '1' else 0
@@ -20,7 +22,7 @@ def read_input(file, input_length):
 # config:
 # limit: Cantidad máxima de iteraciones del algoritmo - Integer
 # expected: Es una lista de los valores esperados, expected[i] es el
-#           valor esperado para el i-esimo dato, results[i] - [double]
+#           valor esperado para el i-esimo dato, results[i] - [[Integer]]
 # condition: Clase con funciones para determinar el corte y cómo comparar valores
 #     check_stop(self, curr_error) -> Boolean - determina si se debe terminar el algoritmo en base al error
 #     check_replace(self, curr_error, new_error) -> Boolean - determina si se debe cambiar
@@ -30,7 +32,7 @@ def read_input(file, input_length):
 # activation: Clase con funciones que calcula la activación
 #   eval(self, x) -> Double - evalúa la función de activación para un valor x
 #   diff(self, x) -> Double - evalúa la derivada de la función de activación para un valor x
-# n: tasa de aprendizaje? TODO: preguntar
+# n: tasa de aprendizaje
 def train_perceptron(config, mlp, data, expected):
     i = 0
     if len(data) == 0:
@@ -58,7 +60,7 @@ def train_perceptron(config, mlp, data, expected):
 
         error = error.compute(data, mlp, expected)
 
-        if error < min_error:
+        if condition.check_replace(min_error, error):
             min_error = error
         
         i += 1
@@ -82,7 +84,8 @@ if __name__ == "__main__":
         
 
         train_perceptron(config, mlp, data, expected)
-     
+
+        
 
 
     

@@ -1,4 +1,4 @@
-from ej3.layer import Layer
+from layer import Layer
 import numpy as np
 
 class MultiLayerPerceptron:

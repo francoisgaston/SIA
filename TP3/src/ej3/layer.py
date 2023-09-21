@@ -1,4 +1,5 @@
 import numpy as np
+from perceptron import Perceptron
 
 class Layer:
 
@@ -50,7 +51,7 @@ class Layer:
     
     
     def save_h(self, hs):
-        for i in range(self.perceptrons):
+        for i in range(len(self.perceptrons)):
             self.perceptrons[i].h = hs[i]
 
     
