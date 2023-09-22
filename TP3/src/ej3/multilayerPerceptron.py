@@ -10,7 +10,7 @@ class MultiLayerPerceptron:
 
         # Genero los layers
         layers = []
-        for index in range(1,len(perceptrons_for_layers)):
+        for index in range(1, len(perceptrons_for_layers)):
             layers.append(Layer(perceptrons_for_layers[index], perceptrons_for_layers[index-1], activation_function))
         
         self.layers = layers
@@ -38,8 +38,8 @@ class MultiLayerPerceptron:
         d = np.matmul(error, activation_diff_diagonal)
 
 
-        # Obtengo los valores de salida de la ultima capa
-        values = self.layers[len(self.layers)-1].get_perceptrons_activation()
+        # Obtengo los valores de salida de la anteultima capa
+        values = self.layers[len(self.layers)-2].get_perceptrons_activation()
 
         # n * d_i * V = delta_w
         d_n = n * d
@@ -52,24 +52,25 @@ class MultiLayerPerceptron:
 
         # delta_w = np.matmul(np.transpose(d_n), values)
 
+        # TODO: esto esta mal, revisar para el caso de que la ultima sea 1
         delta_w = np.matmul(np.split(d_n, len(d_n)), np.split(values, 1))
 
         # Obtengo los W antes de actualizar
-        olds_w = self.layers[len(self.layers)-1].get_perceptrons_weights()
+        #olds_w = self.layers[len(self.layers)-1].get_perceptrons_weights()
+        olds_w = self.layers[len(self.layers)-1].get_perceptron_weights_transposed()
         self.layers[len(self.layers)-1].add_perceptrons_delta_weights(delta_w)
 
         # Itero entre todas las capas
         for index in range(len(self.layers)-2, -1, -1):
             if index != 0:
-                values = self.layers[index+1].get_perceptrons_activation()
+                values = self.layers[index-1].get_perceptrons_activation()
             else:
                 # Si estamos en la capa inferior de la red, utilizamos los datos de entrada
                 values = np.insert(x, 0, 1)
             # Calculamos el delta_w y los d_i de los nodos de la capa actual
             delta_w, d = self.layers[index].backward(d, olds_w, n, values)
-
             # Nos quedamos con una copia de los pesos viejos para la proxima capa
-            olds_w = self.layers[index].get_perceptrons_weights()
+            olds_w = self.layers[index].get_perceptron_weights_transposed()
             # Actualizamos los pesos de las neuronas de la capa actual
             self.layers[index].add_perceptrons_delta_weights(delta_w)
 

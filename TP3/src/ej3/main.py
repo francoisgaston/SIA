@@ -51,7 +51,7 @@ def train_perceptron(config, mlp, data, expected):
 
         # expected = [0] * len(expected)
         # expected[u] = 1
-        aux_error =  np.array(expected[u]) - np.array(values)
+        aux_error = np.array(expected[u]) - np.array(values)
 
         mlp.backward(aux_error, data[u], n)
 
@@ -79,3 +79,10 @@ if __name__ == "__main__":
         mlp = MultiLayerPerceptron(config['perceptrons_for_layers'], activation_function)
 
         train_perceptron(config, mlp, data, expected)
+
+        for i in range(len(data)):
+            print("expected: ", expected[i])
+            obtained = mlp.forward(data[i])
+            print("obtained: ", obtained)
+
+
