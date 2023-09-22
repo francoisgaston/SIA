@@ -24,7 +24,7 @@ class Layer:
     
     
     def forward(self, x):
-        # x must be an np array
+        # x must be a np array
         x = np.insert(x, 0, 1)
         matrix = self.create_weights_matrix()
         results = np.matmul(matrix, x) #h_i, entrada de la otra capa
@@ -38,7 +38,7 @@ class Layer:
     # n: Tasa de aprendizaje
     # next_activations: Son los theta(h) de los nodos de la capa inferior, incluyendo el 1 para w_0
     def backward(self, d, prev_weights, n, next_activations):
-        pre_d = np.matmul(d, prev_weights) #TODO: revisar, en el mural esta al reves
+        pre_d = np.matmul(prev_weights, d) #TODO: revisar, en el mural esta al reves
         perceptrons_activation_diff = self.get_perceptrons_activation_diff()
         # Las siguientes dos lineas hacen lo siguiente:
         #   for index in range(len(perceptrons_activation_diff)):
@@ -70,6 +70,10 @@ class Layer:
     def get_perceptrons_weights(self):
         weights = [perceptron.get_variable_weights() for perceptron in self.perceptrons]
         return np.array(weights)
+
+    def get_perceptron_weights_transposed(self):
+        aux = self.get_perceptrons_weights()
+        return np.transpose(aux)
 
     
     def add_perceptrons_delta_weights(self, delta_weights):
