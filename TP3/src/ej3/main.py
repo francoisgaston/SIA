@@ -43,10 +43,10 @@ def train_perceptron(config, mlp, data, expected):
     limit = config["limit"]
 
     while not condition.check_stop(min_error) and i < limit:
-        # TODO: hacer el batch 
+        # TODO: hacer el batch
         u = random.randint(0, len(data) - 1)
 
-        # Valoes de las neuronas de salida
+        # Valores de las neuronas de salida
         values = mlp.forward(data[u])
 
         # expected = [0] * len(expected)
@@ -79,6 +79,9 @@ if __name__ == "__main__":
         mlp = MultiLayerPerceptron(config['perceptrons_for_layers'], activation_function)
 
         train_perceptron(config, mlp, data, expected)
+
+        for weights in mlp.get_all_weights():
+            print(weights)
 
         for i in range(len(data)):
             print("expected: ", expected[i])
