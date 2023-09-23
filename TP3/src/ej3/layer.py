@@ -10,8 +10,8 @@ class Layer:
             perceptrons.append(Perceptron(numbers_weights, activation_function))
         
         self.perceptrons = perceptrons
-        # self.activation_function = np.vectorize(activation_function.eval)
-        self.activation_function = activation_function.eval
+        self.activation_function = np.vectorize(activation_function.eval)
+        # self.activation_function = activation_function.eval
 
 
     def create_weights_matrix(self):
@@ -27,15 +27,15 @@ class Layer:
     def forward(self, x):
         # x must be a np array
         x = np.insert(x, 0, 1)
-        results = []
-        for perceptron in self.perceptrons:
-            results.append(perceptron.weights.dot(x))
-        # matrix = self.create_weights_matrix()
-        # results = np.matmul(matrix, x) #h_i, entrada de la otra capa
+        # results = []
+        # for perceptron in self.perceptrons:
+        #     results.append(perceptron.weights.dot(x))
+        matrix = self.create_weights_matrix()
+        results = np.matmul(matrix, x) #h_i, entrada de la otra capa
         self.save_h(results)
-        # results = self.activation_function(results)
-        for i in range(len(results)):
-            results[i] = self.activation_function(results[i])
+        results = self.activation_function(results)
+        # for i in range(len(results)):
+        #     results[i] = self.activation_function(results[i])
         return results
 
     
@@ -44,19 +44,20 @@ class Layer:
     # n: Tasa de aprendizaje
     # next_activations: Son los theta(h) de los nodos de la capa inferior, incluyendo el 1 para w_0
     def backward(self, d, prev_weights, n, next_activations):
-        # pre_d = np.matmul(prev_weights, d) #TODO: revisar, en el mural esta al reves
-        pre_d = []
+        pre_d = np.matmul(prev_weights, d) #TODO: revisar, en el mural esta al reves
+        # pre_d = []
         # for j in range(len(d)):
         #     aux = 0
         #     for i in range(len(prev_weights)):
         #         aux += prev_weights[i][j] * d[j]
         #     pre_d.append(aux)
 
-        for j in range(len(prev_weights[0])):
-            aux = 0
-            for i in range(len(d)):
-                aux += d[i] * prev_weights[i][j] #todos los que llegan a la actual son estos
-            pre_d.append(aux)
+        # ESTE ES EL QUE VA
+        # for j in range(len(prev_weights[0])):
+        #     aux = 0
+        #     for i in range(len(d)):
+        #         aux += d[i] * prev_weights[i][j] #todos los que llegan a la actual son estos
+        #     pre_d.append(aux)
         # for i in range(len(prev_weights)):
         #     aux = 0
         #     for j in range(len(prev_weights[i])):
@@ -70,24 +71,24 @@ class Layer:
         #   for index in range(len(perceptrons_activation_diff)):
         #       d.append(pre_d[index] * perceptrons_activation_diff[index])
 
-        # perceptrons_activation_diff_diagonal = np.diag(perceptrons_activation_diff)
-        # d = np.matmul(pre_d, perceptrons_activation_diff_diagonal)
-        d = []
-        for i in range(len(pre_d)):
-            d.append(pre_d[i] * perceptrons_activation_diff[i])
+        perceptrons_activation_diff_diagonal = np.diag(perceptrons_activation_diff)
+        d = np.matmul(pre_d, perceptrons_activation_diff_diagonal)
+        #d = []
+        #for i in range(len(pre_d)):
+        #    d.append(pre_d[i] * perceptrons_activation_diff[i])
 
-        d_n = []
-        for d_i in d:
-            d_n.append(d_i * n)
-        # pre_delta_weights = n * d
+        #d_n = []
+        #for d_i in d:
+        #    d_n.append(d_i * n)
+        d_n = n * d
+
         # delta_w = np.matmul(pre_delta_weights, next_activations)
-
-        # delta_w = np.matmul(np.split(pre_delta_weights, len(pre_delta_weights)), np.split(next_activations, 1))
-        delta_w = []
-        for i in range(len(d_n)):
-            delta_w.append([])
-            for j in range(len(next_activations)):
-                delta_w[i].append(d_n[i] * next_activations[j])
+        delta_w = np.matmul(np.split(d_n, len(d_n)), np.split(next_activations, 1))
+        #delta_w = []
+        #for i in range(len(d_n)):
+        #    delta_w.append([])
+        #    for j in range(len(next_activations)):
+        #        delta_w[i].append(d_n[i] * next_activations[j])
 
         return np.array(delta_w), np.array(d)
     

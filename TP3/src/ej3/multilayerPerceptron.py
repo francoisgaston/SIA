@@ -36,48 +36,50 @@ class MultiLayerPerceptron:
         #for index in range(len(activation_diff)):
         #    delta.append(activation_diff[index]*error[index])
         # Calculamos el d_i para cada neurona de salida
-        d = []
-        for index in range(len(activation_diff)):
-            d_aux = activation_diff[index] * error[index]
-            d.append(d_aux)
-        # activation_diff_diagonal = np.diag(activation_diff)
-        # d = np.matmul(error, activation_diff_diagonal)
 
-        # n * d_i * V = delta_w
-        d_n = []
-        for d_i in d:
-            d_n.append(d_i * n)
+        #d = []
+        #for index in range(len(activation_diff)):
+        #    d_aux = activation_diff[index] * error[index]
+        #    d.append(d_aux)
+        activation_diff_diagonal = np.diag(activation_diff)
+        d = np.matmul(error, activation_diff_diagonal)
+
+        d_n = n * d
+        # d_n = []
+        # for d_i in d:
+        #    d_n.append(d_i * n)
 
         # Caso particular: Perceptron simple
-        # delta_w = np.matmul(d_n, x)
+
         delta_w = []
         if len(self.layers) == 1:
-            x = np.insert(x, 0,)
-            for j in range(len(d_n)):
-                delta_w.append([])
-                for k in range(len(x)):
-                    delta_w_aux = d_n[j] * x[k]
-                    delta_w[j].append(delta_w_aux)
+            x = np.insert(x, 0, 1)
+            delta_w = np.matmul(d_n, x)
+            #for j in range(len(d_n)):
+            #    delta_w.append([])
+            #    for k in range(len(x)):
+            #        delta_w_aux = d_n[j] * x[k]
+            #        delta_w[j].append(delta_w_aux)
             return [delta_w]
 
-        # delta_w = np.matmul(np.transpose(d_n), values)
-
         # Obtengo los valores de salida de la anteultima capa
-        values = self.layers[len(self.layers)-2].get_perceptrons_activation()
+        values = self.layers[len(self.layers) - 2].get_perceptrons_activation()
 
         # TODO: esto esta mal, revisar para el caso de que la ultima sea 1
-        for j in range(len(d_n)):
-            delta_w.append([])
-            for k in range(len(values)):
-                delta_w[j].append(d_n[j] * values[k])
-        # delta_w = np.matmul(np.split(d_n, len(d_n)), np.split(values, 1))
+        #for j in range(len(d_n)):
+        #    delta_w.append([])
+        #    for k in range(len(values)):
+        #        delta_w[j].append(d_n[j] * values[k])
+
+        delta_w = np.matmul(np.split(d_n, len(d_n)), np.split(values, 1))
+
         # print(delta_w)
         delta_w = np.array(delta_w)
         final_delta_w = [delta_w]
 
         # Obtengo los W antes de actualizar
-        olds_w = self.layers[len(self.layers)-1].get_perceptrons_weights()
-        # olds_w = self.layers[len(self.layers)-1].get_perceptron_weights_transposed()
+        #olds_w = self.layers[len(self.layers)-1].get_perceptrons_weights()
+        olds_w = self.layers[len(self.layers)-1].get_perceptron_weights_transposed()
 
         # Ahora hacemos desde mlp el add delta_weights
         #self.layers[len(self.layers)-1].add_perceptrons_delta_weights(delta_w)
@@ -92,8 +94,8 @@ class MultiLayerPerceptron:
             # Calculamos el delta_w y los d_i de los nodos de la capa actual
             delta_w, d = self.layers[index].backward(d, olds_w, n, values)
             # Nos quedamos con una copia de los pesos viejos para la proxima capa
-            # olds_w = self.layers[index].get_perceptron_weights_transposed()
-            olds_w = self.layers[index].get_perceptrons_weights()
+            olds_w = self.layers[index].get_perceptron_weights_transposed()
+            # olds_w = self.layers[index].get_perceptrons_weights()
 
             final_delta_w.append(delta_w)
 
