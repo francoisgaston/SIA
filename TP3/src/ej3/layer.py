@@ -71,6 +71,10 @@ class Layer:
         weights = [perceptron.get_variable_weights() for perceptron in self.perceptrons]
         return np.array(weights)
 
+    def get_perceptrons_weights_with_bias(self):
+        weights = [perceptron.get_variable_weights_with_bias() for perceptron in self.perceptrons]
+        return np.array(weights)
+
     def get_perceptron_weights_transposed(self):
         aux = self.get_perceptrons_weights()
         return np.transpose(aux)

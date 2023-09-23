@@ -26,5 +26,8 @@ class Perceptron:
     def get_variable_weights(self):
         return np.copy(self.weights[1:])
 
+    def get_variable_weights_with_bias(self):
+        return np.copy(self.weights)
+
     def get_h(self):
         return self.h

@@ -31,7 +31,7 @@ def read_input(file, input_length):
 #   eval(self, x) -> Double - evalúa la función de activación para un valor x
 #   diff(self, x) -> Double - evalúa la derivada de la función de activación para un valor x
 # n: tasa de aprendizaje
-def train_perceptron(config, mlp, data, expected):
+def train_perceptron(config, mlp, data, expected, perceptrons_per_layer):
     i = 0
     if len(data) == 0:
         return []
@@ -42,20 +42,29 @@ def train_perceptron(config, mlp, data, expected):
     error = error_from_str("QUADRATIC_MULTILAYER")
     limit = config["limit"]
 
+    batch = config["batch"] if config["batch"] <= len(data) else len(data)
+
     while not condition.check_stop(min_error) and i < limit:
-        # TODO: hacer el batch
-        u = random.randint(0, len(data) - 1)
+        final_delta_w = [np.zeros((perceptrons_per_layer[indx], perceptrons_per_layer[indx - 1] + 1)) for indx in
+                                  range(len(perceptrons_per_layer)-1, 0 , -1)]
+        u_arr = random.sample(range(len(data)), batch)
 
-        # Valores de las neuronas de salida
-        values = mlp.forward(data[u])
+        for u in u_arr:
+            # Valores de las neuronas de salida
+            values = mlp.forward(data[u])
 
-        # expected = [0] * len(expected)
-        # expected[u] = 1
-        aux_error = np.array(expected[u]) - np.array(values)
+            # expected = [0] * len(expected)
+            # expected[u] = 1
+            aux_error = np.array(expected[u]) - np.array(values)
 
-        mlp.backward(aux_error, data[u], n)
+            deltas = mlp.backward(aux_error, data[u], n)
+            for aux in range(len(final_delta_w)):
+                final_delta_w[aux] += deltas[aux]
+
+        mlp.apply_delta_w(final_delta_w)
 
         new_error = error.compute(data, mlp, expected)
+        print("new error", new_error)
 
         if condition.check_replace(min_error, new_error):
             print("new error", new_error)
@@ -78,7 +87,7 @@ if __name__ == "__main__":
 
         mlp = MultiLayerPerceptron(config['perceptrons_for_layers'], activation_function)
 
-        train_perceptron(config, mlp, data, expected)
+        train_perceptron(config, mlp, data, expected, config['perceptrons_for_layers'])
 
         for weights in mlp.get_all_weights():
             print(weights)
@@ -87,5 +96,3 @@ if __name__ == "__main__":
             print("expected: ", expected[i])
             obtained = mlp.forward(data[i])
             print("obtained: ", obtained)
-
-

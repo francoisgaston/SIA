@@ -1,5 +1,5 @@
 import math
-
+import numpy as np
 
 class SumError:
 
@@ -49,6 +49,8 @@ class QuadraticErrorMultilayer:
         ans = 0
         for i in range(len(expected)):
             obtained = mlp.forward(data[i])
+            # index_max = np.argmax(obtained)
+            # obtained_transformed = [0 if idx!=index_max else 1 for idx in range(len(obtained))]
             for j in range(len(expected[i])):
                 ans += (expected[i][j] - obtained[j]) ** 2
         return ans/2.0

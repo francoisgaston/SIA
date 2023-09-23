@@ -17,7 +17,7 @@ class MultiLayerPerceptron:
         self.layers_count = len(perceptrons_for_layers)
 
     def get_all_weights(self):
-        return [layer.get_perceptrons_weights() for layer in self.layers]
+        return [layer.get_perceptrons_weights_with_bias() for layer in self.layers]
 
     def forward(self, x):
         for layer in self.layers:
@@ -49,18 +49,22 @@ class MultiLayerPerceptron:
         # Caso particular: Perceptron simple
         if len(self.layers) == 1:
             delta_w = np.matmul(d_n, x)
-            self.layers[0].add_perceptrons_delta_weights(delta_w)
-            return
+            return [delta_w]
 
         # delta_w = np.matmul(np.transpose(d_n), values)
 
         # TODO: esto esta mal, revisar para el caso de que la ultima sea 1
+        final_delta_w = []
         delta_w = np.matmul(np.split(d_n, len(d_n)), np.split(values, 1))
+        # print(delta_w)
+        final_delta_w.append(delta_w)
 
         # Obtengo los W antes de actualizar
         #olds_w = self.layers[len(self.layers)-1].get_perceptrons_weights()
         olds_w = self.layers[len(self.layers)-1].get_perceptron_weights_transposed()
-        self.layers[len(self.layers)-1].add_perceptrons_delta_weights(delta_w)
+
+        # Ahora hacemos desde mlp el add delta_weights
+        #self.layers[len(self.layers)-1].add_perceptrons_delta_weights(delta_w)
 
         # Itero entre todas las capas
         for index in range(len(self.layers)-2, -1, -1):
@@ -73,9 +77,20 @@ class MultiLayerPerceptron:
             delta_w, d = self.layers[index].backward(d, olds_w, n, values)
             # Nos quedamos con una copia de los pesos viejos para la proxima capa
             olds_w = self.layers[index].get_perceptron_weights_transposed()
-            # Actualizamos los pesos de las neuronas de la capa actual
-            self.layers[index].add_perceptrons_delta_weights(delta_w)
+            final_delta_w.append(delta_w)
 
+            # Ahora hacemos desde mlp el add delta_weights
+            # self.layers[len(self.layers)-1].add_perceptrons_delta_weights(delta_w)
+            # Actualizamos los pesos de las neuronas de la capa actual
+            # self.layers[index].add_perceptrons_delta_weights(delta_w)
+
+        # retorno una lista de matrices con los delta_w en tipo np para la suma
+        return final_delta_w
+
+
+    def apply_delta_w(self, final_delta_w):
+        for index, layer in enumerate(self.layers):
+            layer.add_perceptrons_delta_weights(final_delta_w[len(self.layers) - index - 1])
 
         
 
