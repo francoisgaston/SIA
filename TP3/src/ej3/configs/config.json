@@ -16,7 +16,7 @@
             ],
     "beta": 1,
     "n": 10,
-    "error": "QUADRATIC_MULTILAYER",
+    "error": "CROSSENTROPY",
     "epsilon": 0.1,
     "limit": 1000000
 }
