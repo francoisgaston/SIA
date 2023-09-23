@@ -63,6 +63,12 @@ def train_perceptron(config, mlp, data, expected, perceptrons_per_layer):
 
         mlp.apply_delta_w(final_delta_w)
 
+
+        # De test salen los datos para un csv para despues graficar
+        # de trainig salen otros datos para graficar
+        # trining_data()
+        # test_perceotron()
+
         new_error = error.compute(data, mlp, expected)
         # print("new error", new_error)
 
