@@ -11,6 +11,17 @@ class SignActivation(Function):
     def scale(self, expected):
         return expected
 
+class ReLUActivation(Function):
+    def eval(self, x):
+        return max(0, x)
+
+    def diff(self, x):
+        return 1 if x > 0 else 0
+
+    def scale(self, expected):
+        return expected
+
+
 
 class LinearActivation(Function):
     def eval(self, x):
@@ -77,5 +88,8 @@ def from_str(string, beta=1):
             return SigmoidActivation(beta)
         case "LOGISTIC":
             return LogisticActivation(beta)
+        case "RELU":
+            return ReLUActivation()
         case _:
             return SignActivation()
+
