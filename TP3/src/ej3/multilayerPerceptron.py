@@ -16,6 +16,8 @@ class MultiLayerPerceptron:
         self.layers = layers
         self.layers_count = len(perceptrons_for_layers)
 
+    def get_all_weights(self):
+        return [layer.get_perceptrons_weights() for layer in self.layers]
 
     def forward(self, x):
         for layer in self.layers:
