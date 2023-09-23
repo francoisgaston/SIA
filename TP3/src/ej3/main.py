@@ -64,7 +64,7 @@ def train_perceptron(config, mlp, data, expected, perceptrons_per_layer):
         mlp.apply_delta_w(final_delta_w)
 
         new_error = error.compute(data, mlp, expected)
-        print("new error", new_error)
+        # print("new error", new_error)
 
         if condition.check_replace(min_error, new_error):
             print("new error", new_error)
