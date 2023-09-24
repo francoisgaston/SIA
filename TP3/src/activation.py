@@ -35,14 +35,13 @@ class SigmoidActivation(Function):
         return self._beta * (1 - math.pow(self.eval(x), 2))
 
     def scale(self, expected):
-#         Deben estar entre -1 y 1
-#         En min debe dar -1, en max debe dar 1
+        # Deben estar entre -1 y 1
+        # En min debe dar -1, en max debe dar 1
         min_val = min(expected)
         max_val = max(expected)
         m = ((1-(-1))/(max_val-min_val))
         b = 1 - m*max_val
-        for i in range(len(expected)):
-            expected[i] = m * expected[i] + b
+        return [m * y + b for y in expected]
 
 
 class LogisticActivation(Function):
@@ -63,8 +62,7 @@ class LogisticActivation(Function):
         max_val = max(expected)
         m = (1/(max_val-min_val))
         b = 1 - m*max_val
-        for i in range(len(expected)):
-            expected[i] = m*expected[i] + b
+        return [m * y + b for y in expected]
 
 def from_str(string, beta=1):
     match string.upper():
