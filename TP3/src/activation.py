@@ -1,5 +1,5 @@
 import math
-from utils.Function import Function
+from .utils.Function import Function
 
 class SignActivation(Function):
     def eval(self, x):
@@ -17,7 +17,6 @@ class LinearActivation(Function):
         return x
 
     def diff(self, x):
-        # TODO: preguntar
         return 1
 
     def scale(self, expected):

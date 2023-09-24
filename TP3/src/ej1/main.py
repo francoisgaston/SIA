@@ -4,11 +4,12 @@ import numpy as np
 import json
 import sys
 
-from error import from_str as error_from_str
-from condition import from_str as condition_from_str
-from activation import from_str as activation_from_str
-from utils.write_csv import write_csv
+from ..error import from_str as error_from_str
+from ..condition import from_str as condition_from_str
+from ..activation import from_str as activation_from_str
+from ..utils.write_csv import write_csv
 
+# Correr el script desde TP3: pipenv run python -m src.ej1.main src\ej1\config\config.json
 
 # Crea los valores iniciales para cada w_i
 def initialize_w(dim=3, start_random=0, stop_random=1):
@@ -37,7 +38,7 @@ def initialize_w(dim=3, start_random=0, stop_random=1):
 # activation: Clase con funciones que calcula la activación
 #   eval(self, x) -> Double - evalúa la función de activación para un valor x
 #   diff(self, x) -> Double - evalúa la derivada de la función de activación para un valor x
-# n: tasa de aprendizaje? TODO: preguntar
+# n: tasa de aprendizaje?
 def run_perceptron(**kwargs):
     i = 0
     if len(kwargs['data']) == 0:
@@ -85,7 +86,6 @@ if __name__ == "__main__":
 
             for _, row in df.iterrows():
                 auxdata = []
-                x = row['x1']
                 dim = len(row) - 1  # -1 porque tenemos el expected
                 for i in range(1, dim + 1):
                     auxdata.append(row["x" + str(i)])
