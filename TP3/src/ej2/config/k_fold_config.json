@@ -1,0 +1,12 @@
+{
+  "data": "src/ej2/perceptron_data/TP3_ej2_conjunto.csv",
+  "random_interval": [0,1],
+  "limit": 1000,
+  "activation": "SIGMOID",
+  "beta": 1,
+  "error": "QUADRATIC",
+  "epsilon": 0.0,
+  "eta": 0.1,
+  "k_fold": 3,
+  "output": "src/ej2/results/k_fold/"
+}
