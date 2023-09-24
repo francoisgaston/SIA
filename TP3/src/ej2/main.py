@@ -10,7 +10,7 @@ from ..activation import from_str as activation_from_str
 from ..utils.write_csv import write_csv
 
 
-# Correr el script desde TP3: pipenv run python -m src.ej1.main src\ej1\config\config.json
+# Correr el script desde TP3: pipenv run python -m src.ej2.main src\ej2\config\config.json
 
 # Crea los valores iniciales para cada w_i
 def initialize_w(dim=3, start_random=0, stop_random=1):
@@ -85,7 +85,7 @@ if __name__ == "__main__":
 
         activation_function = activation_from_str(string=config['activation'], beta=config["beta"])
         # Si no es lineal, escalamos los datos de entrada
-        expected = np.array(activation_function.scale(expected))
+        expected = activation_function.scale(expected)
         ans, last = run_perceptron(
             config=config,
             data=data,

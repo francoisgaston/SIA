@@ -1,11 +1,11 @@
 {
-  "data": "perceptron_data/TP3_ej2_conjunto.csv",
+  "data": "src/ej2/perceptron_data/TP3_ej2_conjunto.csv",
   "random_interval": [0,1],
-  "iteration_limit": 1000000,
-  "activation": "SIGMOID",
+  "limit": 1000000,
+  "activation": "LINEAR",
   "beta": 0.005,
   "error": "QUADRATIC",
   "epsilon": 0.015,
-  "eta": 100,
-  "output": "ej2"
+  "eta": 0.03,
+  "output": "src/ej2/results/"
 }

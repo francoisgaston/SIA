@@ -24,5 +24,5 @@ if __name__ == '__main__':
                 ans.append([row['Id'], x, (row['w1'] * x + row['w0']) / (-row['w2'])])
 
         headers = ["Id", "x", "y"]
-        filename = "src/results/plotter_" + "_".join(sys.argv[1].split("/")[-1].split(".")[0].split("_")[:-1])
+        filename = "src/ej1/results/plotter_" + "_".join(sys.argv[1].split("/")[-1].split(".")[0].split("_")[:-1])
         write_csv(filename, headers, ans)

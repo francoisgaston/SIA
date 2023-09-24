@@ -1,11 +1,11 @@
 {
   "data": "src/ej1/perceptron_data/TP3_ej1_AND.csv",
   "random_interval": [0,1],
-  "iteration_limit": 1000000,
-  "activation": "SIGMOID",
+  "limit": 1000000,
+  "activation": "SIGN",
   "beta": 0.005,
-  "error": "QUADRATIC",
+  "error": "SUM",
   "epsilon": 0.015,
-  "eta": 100,
+  "eta": 0.1,
   "output": "src/ej1/results/"
 }
