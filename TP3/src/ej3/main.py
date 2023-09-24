@@ -64,10 +64,9 @@ def train_perceptron(config, mlp, data, expected, perceptrons_per_layer):
 
             mlp.apply_delta_w(final_delta_w)
             
-            # Assume you've calculated error_test somewhere
-            error_test = 0  # Replace with actual test error calculation
+            # TODO
+            error_test = 0
             
-            # Write values to CSV
             csv_writer.writerow([i, min_error, error_test, config['input'], config['input_length'],
                                  config['perceptrons_for_layers'], config['activation'], config['n'], config['beta']])
             
