@@ -35,6 +35,7 @@ def calculate_error(data: ndarray, expected: ndarray, w: ndarray, activation_fun
         h_u = np.dot(data[i], w)
         output_u = activation_function.eval(h_u)
         error += (expected[i] - output_u) ** 2
+    # TODO: Da mejores resultados si se divide por la cantidad de datos?
     return error / 2
 
 

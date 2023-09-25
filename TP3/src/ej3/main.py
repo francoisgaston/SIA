@@ -10,6 +10,7 @@ from error import from_str as error_from_str
 from multilayerPerceptron import MultiLayerPerceptron
 import random
 
+
 # Recibe la data y lo transforma en np's arrays de cada numero
 def read_input(file, input_length):
     file1 = open(file, "r+")
@@ -17,7 +18,8 @@ def read_input(file, input_length):
     result = np.array_split(result, len(result) / input_length)
     return result
 
-def train_perceptron(config, mlp, data, expected, perceptrons_per_layer):
+
+def train_perceptron(config, mlp, data, expected, perceptrons_per_layer, on_epoch=None, on_min_error=None):
     i = 0
     if len(data) == 0:
         return []
@@ -30,52 +32,32 @@ def train_perceptron(config, mlp, data, expected, perceptrons_per_layer):
 
     batch = config["batch"] if config["batch"] <= len(data) else len(data)
 
-    current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    
-    # Specify the folder name
-    folder_name = "output"
+    while not condition.check_stop(min_error) and i < limit:
+        final_delta_w = [np.zeros((perceptrons_per_layer[indx], perceptrons_per_layer[indx - 1] + 1)) for indx in
+                         range(len(perceptrons_per_layer) - 1, 0, -1)]
+        u_arr = random.sample(range(len(data)), batch)
 
-    # Check if the folder exists. If not, create it
-    if not os.path.exists(folder_name):
-        os.makedirs(folder_name)
+        for u in u_arr:
+            values = mlp.forward(data[u])
+            aux_error = np.array(expected[u]) - np.array(values)
+            deltas = mlp.backward(aux_error, data[u], n)
+            for aux in range(len(final_delta_w)):
+                final_delta_w[aux] += deltas[aux]
 
-    # Create the filename with the current time and folder
-    csv_filename = f"{folder_name}/training_data_{current_time}.csv"
+        mlp.apply_delta_w(final_delta_w)
 
-    # Open a new CSV file and create a CSV writer object
-    with open(csv_filename, mode='w', newline='') as csv_file:
-        csv_writer = csv.writer(csv_file)
+        new_error = error.compute(data, mlp, expected)
 
-        # Write the headers for the CSV file
-        csv_writer.writerow(['epoca', 'error_training', 'error_test', 'entrada', 'salida',
-                             'capas_ocultas', 'activacion', 'eta', 'beta'])
-        
-        while not condition.check_stop(min_error) and i < limit:
-            final_delta_w = [np.zeros((perceptrons_per_layer[indx], perceptrons_per_layer[indx - 1] + 1)) for indx in
-                                  range(len(perceptrons_per_layer)-1, 0 , -1)]
-            u_arr = random.sample(range(len(data)), batch)
+        if on_epoch is not None:
+            on_epoch(i, mlp, new_error)
 
-            for u in u_arr:
-                values = mlp.forward(data[u])
-                aux_error = np.array(expected[u]) - np.array(values)
-                deltas = mlp.backward(aux_error, data[u], n)
-                for aux in range(len(final_delta_w)):
-                    final_delta_w[aux] += deltas[aux]
+        if condition.check_replace(min_error, new_error):
+            if on_min_error is not None:
+                on_min_error(i, mlp, min_error)
+            min_error = new_error
 
-            mlp.apply_delta_w(final_delta_w)
-            
-            # TODO
-            error_test = 0
-            
-            csv_writer.writerow([i, min_error, error_test, config['input'], config['input_length'],
-                                 config['perceptrons_for_layers'], config['activation'], config['n'], config['beta']])
-            
-            new_error = error.compute(data, mlp, expected)
-            if condition.check_replace(min_error, new_error):
-                print("new error", new_error)
-                min_error = new_error
+        i += 1
 
-            i += 1
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
@@ -88,8 +70,39 @@ if __name__ == "__main__":
         data = read_input(config['input'], config['input_length'])
         activation_function = activation_from_str(string=config['activation'], beta=config["beta"])
         mlp = MultiLayerPerceptron(config['perceptrons_for_layers'], activation_function)
-        
-        train_perceptron(config, mlp, data, expected, config['perceptrons_for_layers'])
+
+        current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+
+        # Specify the folder name
+        folder_name = "src/ej3/output"
+
+        # Check if the folder exists. If not, create it
+        if not os.path.exists(folder_name):
+            os.makedirs(folder_name)
+
+        # Create the filename with the current time and folder
+        csv_filename = f"{folder_name}/training_data_{current_time}.csv"
+
+        # Open a new CSV file and create a CSV writer object
+        with open(csv_filename, mode='w', newline='') as csv_file:
+            csv_writer = csv.writer(csv_file)
+
+            # Write the headers for the CSV file
+            csv_writer.writerow(['epoca', 'error_training', 'error_test', 'entrada', 'salida',
+                                 'capas_ocultas', 'activacion', 'eta', 'beta'])
+
+
+            def on_epoch(epoch, mlp, training_error):
+                # TODO
+                error_test = 0
+                csv_writer.writerow([epoch, training_error, error_test, config['input'], config['input_length'],
+                                     config['perceptrons_for_layers'], config['activation'], config['n'],
+                                     config['beta']])
+
+            def on_min_error(epoch, mlp, min_error):
+                print("min_error: ", min_error)
+
+            train_perceptron(config, mlp, data, expected, config['perceptrons_for_layers'], on_epoch, on_min_error)
 
         for weights in mlp.get_all_weights():
             print(weights)
@@ -98,4 +111,3 @@ if __name__ == "__main__":
             print("expected: ", expected[i])
             obtained = mlp.forward(data[i])
             print("obtained: ", obtained)
-

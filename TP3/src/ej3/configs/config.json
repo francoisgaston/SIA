@@ -1,5 +1,5 @@
 {
-    "input": "data/TP3-ej3-digitos.txt",
+    "input": "src/ej3/perceptron_data/TP3-ej3-digitos.txt",
     "input_length" : 35,
     "perceptrons_for_layers": [35, 5, 5, 5, 10],
     "activation": "LOGISTIC",
