@@ -8,7 +8,7 @@ from pandas import DataFrame
 
 from ..activation import from_str as activation_from_str
 from ..utils.Function import Function
-from ..utils.write_csv import append_row_to_csv, create_csv, get_filename
+from ..utils.write_csv import append_row_to_csv, create_csv, get_filename, write_csv
 from .main import run_perceptron, format_data
 
 
@@ -35,7 +35,7 @@ def calculate_error(data: ndarray, expected: ndarray, w: ndarray, activation_fun
         h_u = np.dot(data[i], w)
         output_u = activation_function.eval(h_u)
         error += (expected[i] - output_u) ** 2
-    return error / 2.0
+    return error / 2
 
 
 def k_fold_iteration(train_data: ndarray, test_data: ndarray, train_expected: ndarray, test_expected: ndarray,
@@ -90,7 +90,7 @@ def k_fold(config: dict, k: int, df: DataFrame):
     # Los headers de los csv son: Epoch, w0, w1, ..., wn, train_error, test_error
     headers = ["Epoch"] + ["w" + str(i) for i in range(len(folds[0]["data"][0]))] + ["train_error", "test_error"]
     for i in range(k):
-        print("Empezando fold ", i+1, " de ", k, " folds")
+        print("Testeando fold ", i+1, " de ", k, " folds")
         train_data = np.array([])
         train_expected = np.array([])
         # Se obtienen los datos de entrenamiento y de testeo
@@ -103,8 +103,11 @@ def k_fold(config: dict, k: int, df: DataFrame):
                 folds[j]["expected"]
         # El fold actual es el de testeo
         test_data = folds[i]["data"]
+        # print(test_data.shape)
         test_expected = folds[i]["expected"]
-        filename = filename_prefix + "_fold_" + str(i)
+        tmp_filename_prefix = filename_prefix.split("/")
+        tmp_filename_prefix.insert(-1, "tmp")
+        filename = "/".join(tmp_filename_prefix) + "_fold_" + str(i)
         # Se crea el archivo csv para guardar los resultados de este fold
         filenames.append(create_csv(filename, headers))
         config["filename"] = filenames[i]
@@ -112,7 +115,7 @@ def k_fold(config: dict, k: int, df: DataFrame):
         min_error = k_fold_iteration(train_data, test_data, train_expected, test_expected, config)
         # Se guarda el mínimo error de testeo de este fold
         min_errors.append(min_error)
-        print("El mínimo error de testeo del fold ", i, " fue: ", min_error)
+        print("El mínimo error de testeo del fold ", i+1, " fue: ", min_error)
     # Se obtiene el índice del fold con el mínimo error de testeo
     best_fold_idx = min_errors.index(min(min_errors))
     # Se eliminan los archivos csv de los folds que no son el de mínimo error
@@ -121,7 +124,20 @@ def k_fold(config: dict, k: int, df: DataFrame):
         if i != best_fold_idx:
             os.remove(filenames[i])
         else:
-            os.rename(filenames[i], get_filename(filename_prefix))
+            os.rename(filenames[i], get_filename(filename_prefix + "_data"))
+    headers = ["x" + str(i) for i in range(len(folds[0]["data"][0]))] + ["y"]
+    # Se guarda el conjunto de datos de entrenamiento en un csv
+    rows = []
+    for i in range(k):
+        if i != best_fold_idx:
+            for j in range(len(folds[i]["data"])):
+                rows.append(folds[i]["data"][j].tolist() + [folds[i]["expected"][j]])
+    write_csv(config["output"] + config['data'].split("/")[-1].split(".")[0] + "_train", headers, rows)
+    # Se guarda el conjunto de datos de testeo en un csv
+    rows = []
+    for j in range(len(folds[best_fold_idx]["data"])):
+        rows.append(folds[best_fold_idx]["data"][j].tolist() + [folds[best_fold_idx]["expected"][j]])
+    write_csv(config["output"] + config['data'].split("/")[-1].split(".")[0] + "_test", headers, rows)
     # Se retorna el mínimo error de testeo
     return min_errors[best_fold_idx]
 
