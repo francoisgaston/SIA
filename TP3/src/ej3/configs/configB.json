@@ -20,5 +20,6 @@
   "error": "QUADRATIC_MULTILAYER",
   "epsilon": 0.1,
   "limit": 1000000,
-  "batch": 5
+  "batch": 5,
+  "test_pct": 0.5
 }
