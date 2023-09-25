@@ -58,56 +58,67 @@ def train_perceptron(config, mlp, data, expected, perceptrons_per_layer, on_epoc
 
         i += 1
 
+import json
+import sys
+import os
+import numpy as np
+import datetime
+import csv
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Por favor ingrese el archivo de configuración")
         exit(1)
 
-    with open(f"{sys.argv[1]}", "r") as config_file:
-        config = json.load(config_file)
-        expected = np.array(config['expected'])
-        data = read_input(config['input'], config['input_length'])
-        activation_function = activation_from_str(string=config['activation'], beta=config["beta"])
-        mlp = MultiLayerPerceptron(config['perceptrons_for_layers'], activation_function)
+    # Specify the folder name
+    folder_name = "src/ej3/output"
 
-        current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    # Check if the folder exists. If not, create it
+    if not os.path.exists(folder_name):
+        os.makedirs(folder_name)
 
-        # Specify the folder name
-        folder_name = "src/ej3/output"
+    # Create the filename
+    csv_filename = f"{folder_name}/all_training_data.csv"
 
-        # Check if the folder exists. If not, create it
-        if not os.path.exists(folder_name):
-            os.makedirs(folder_name)
+    # Check if the CSV file already exists
+    file_exists = os.path.isfile(csv_filename)
 
-        # Create the filename with the current time and folder
-        csv_filename = f"{folder_name}/training_data_{current_time}.csv"
+    # Open the CSV file and create a CSV writer object
+    with open(csv_filename, mode='a', newline='') as csv_file:
+        csv_writer = csv.writer(csv_file)
 
-        # Open a new CSV file and create a CSV writer object
-        with open(csv_filename, mode='w', newline='') as csv_file:
-            csv_writer = csv.writer(csv_file)
+        # Write the headers for the CSV file only if the file is new
+        if not file_exists:
+            csv_writer.writerow(['config_id', 'epoca', 'error_training', 'error_test', 'entrada', 'salida',
+                                'capas_ocultas', 'activacion', 'eta', 'beta', 'activation', 'error_function', 'batch'])
 
-            # Write the headers for the CSV file
-            csv_writer.writerow(['epoca', 'error_training', 'error_test', 'entrada', 'salida',
-                                 'capas_ocultas', 'activacion', 'eta', 'beta'])
+        for config_id, config_file_path in enumerate(sys.argv[1:]):
+            with open(config_file_path, "r") as config_file:
+                config = json.load(config_file)
+                
+                expected = np.array(config['expected'])
+                data = read_input(config['input'], config['input_length'])  # 
+                activation_function = activation_from_str(string=config['activation'], beta=config["beta"])  # 
+                mlp = MultiLayerPerceptron(config['perceptrons_for_layers'], activation_function)  # 
+                
+                def on_epoch(epoch, mlp, training_error):
+                    # TODO
+                    error_test = 0  # Placeholder, replace this with your logic
+                    csv_writer.writerow([config_id, epoch, training_error, error_test, config['input'], config['input_length'],
+                                         config['perceptrons_for_layers'], config['activation'], config['n'],
+                                         config['beta'], config['activation'], config["error"], config["batch"]])
 
+                def on_min_error(epoch, mlp, min_error):
+                    print("min_error: ", min_error)
 
-            def on_epoch(epoch, mlp, training_error):
-                # TODO
-                error_test = 0
-                csv_writer.writerow([epoch, training_error, error_test, config['input'], config['input_length'],
-                                     config['perceptrons_for_layers'], config['activation'], config['n'],
-                                     config['beta']])
+                train_perceptron(config, mlp, data, expected, config['perceptrons_for_layers'], on_epoch, on_min_error)  # 
 
-            def on_min_error(epoch, mlp, min_error):
-                print("min_error: ", min_error)
+            for weights in mlp.get_all_weights():  # 
+                print(weights)
 
-            train_perceptron(config, mlp, data, expected, config['perceptrons_for_layers'], on_epoch, on_min_error)
+            for i in range(len(data)):
+                print("expected: ", expected[i])
+                obtained = mlp.forward(data[i])  
+                print("obtained: ", obtained)
 
-        for weights in mlp.get_all_weights():
-            print(weights)
-
-        for i in range(len(data)):
-            print("expected: ", expected[i])
-            obtained = mlp.forward(data[i])
-            print("obtained: ", obtained)
