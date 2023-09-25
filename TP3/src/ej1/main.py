@@ -47,8 +47,10 @@ def run_perceptron(config, data, expected):
     activation_function = activation_from_str(string=config['activation'], beta=config["beta"])
     condition = condition_from_str(config['error'], config['epsilon'])
     error = error_from_str(config['error'], activation_function=activation_function)
+    new_error = error.compute(data, expected, w)
 
     ans = [w.tolist()]
+    ans[0].append(new_error)
 
     while not condition.check_stop(min_error) and i < config['limit']:
         u = random.randint(0, len(data) - 1)
@@ -63,6 +65,7 @@ def run_perceptron(config, data, expected):
             w_min = w
         ans.append(w.tolist())
         i += 1
+        ans[i].append(new_error)
 
     return ans, w_min
 
@@ -94,8 +97,9 @@ if __name__ == "__main__":
 
         filename = config['output'] + config['data'].split("/")[-1].split(".")[0]
         headers = ["Id"]
-        for i in range(len(ans[0])):
+        for i in range(len(ans[0])-1):
             headers.append("w" + str(i))
+        headers.append("Error")
         for i in range(len(ans)):
             # Los np.arrays son inmutables
             ans[i] = np.insert(ans[i], 0, i)
