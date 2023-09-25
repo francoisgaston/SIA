@@ -7,6 +7,6 @@
   "error": "QUADRATIC",
   "epsilon": 0.0,
   "eta": 0.1,
-  "k_fold": 7,
+  "k_fold": 2,
   "output": "src/ej2/results/k_fold/"
 }

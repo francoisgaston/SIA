@@ -28,15 +28,14 @@ def k_separate(data: DataFrame, k: int):
 
 def calculate_error(data: ndarray, expected: ndarray, w: ndarray, activation_function: Function):
     """
-    Calculates the error of the perceptron by the MSE error function: 1/2 * sum((expected - output)^2)
+    Calculates the error of the perceptron by the MSE error function: 1/n * sum((expected - output)^2)
     """
     error = 0
     for i in range(len(data)):
         h_u = np.dot(data[i], w)
         output_u = activation_function.eval(h_u)
         error += (expected[i] - output_u) ** 2
-    # TODO: Da mejores resultados si se divide por la cantidad de datos?
-    return error / 2
+    return error / len(data)
 
 
 def k_fold_iteration(train_data: ndarray, test_data: ndarray, train_expected: ndarray, test_expected: ndarray,
