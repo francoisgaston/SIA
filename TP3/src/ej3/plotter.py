@@ -3,36 +3,60 @@ import plotly.express as px
 import plotly.graph_objects as go
 import sys
 
-def plot_errors_from_csv(csv_filepath):
-    # Read the CSV file into a Pandas DataFrame
-    df = pd.read_csv(csv_filepath)
+def graficar_errores_de_csv(ruta_csv):
+    # Leer el archivo CSV en un DataFrame de Pandas
+    df = pd.read_csv(ruta_csv)
     
-    # Get unique configuration IDs
-    unique_config_ids = df['config_id'].unique()
+    # Obtener IDs de configuración únicos
+    ids_config_unicos = df['config_id'].unique()
     
-    for config_id in unique_config_ids:
-        # Filter the DataFrame based on config_id
-        df_filtered = df[df['config_id'] == config_id]
+    for config_id in ids_config_unicos:
+        # Filtrar el DataFrame basado en config_id
+        df_filtrado = df[df['config_id'] == config_id]
         
-        # Sort by epoch
-        df_filtered = df_filtered.sort_values('epoca')
+        # Extraer atributos de configuración para la anotación
+        fila_muestra = df_filtrado.iloc[0]
+        atributos_config = {
+            'Capas Ocultas': fila_muestra['capas_ocultas'],
+            'Activación': fila_muestra['activacion'],
+            'Eta': fila_muestra['eta'],
+            'Beta': fila_muestra['beta'],
+            'Función de Activación': fila_muestra['activation'],
+            'Función de Error': fila_muestra['error_function'],
+            'Tamaño de Lote': fila_muestra['batch']
+        }
         
-        # Plot using Plotly
-        fig = px.line(df_filtered, x='epoca', y=['error_training', 'error_test'],
-                      labels={'value': 'Error', 'epoca': 'Epoch'},
-                      title=f"Training and Test Error for Config {config_id}")
+        texto_anotacion = "<br>".join([f"{k}: {v}" for k, v in atributos_config.items()])
+        
+        # Ordenar por época
+        df_filtrado = df_filtrado.sort_values('epoca')
+        
+        # Graficar usando Plotly
+        fig = px.line(df_filtrado, x='epoca', y=['error_training', 'error_test'],
+                      labels={'value': 'Error', 'epoca': 'Época'},
+                      title=f"Error de Entrenamiento y Prueba para Config {config_id}")
+        
+        # Actualizar la disposición para hacer el eje x logarítmico
+        fig.update_layout(xaxis_type="log", xaxis_title="Época Logarítmica")
 
-        # Update the layout to make the x-axis logarithmic
-        fig.update_layout(xaxis_type="log",
-                          xaxis_title="Log Epoch")
+        # Agregar la anotación con atributos de configuración
+        fig.add_annotation(x=0, y=0, xref="paper", yref="paper",
+                           text=texto_anotacion,
+                           showarrow=False,
+                           font=dict(size=10),
+                           bordercolor="black",
+                           borderwidth=1,
+                           borderpad=4,
+                           bgcolor="white",
+                           opacity=0.8)
         
         fig.show()
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Please provide the path to the CSV file as an argument.")
+        print("Por favor, proporcione la ruta al archivo CSV como un argumento.")
         sys.exit(1)
     
-    csv_filepath = sys.argv[1]
-    plot_errors_from_csv(csv_filepath)
+    ruta_csv = sys.argv[1]
+    graficar_errores_de_csv(ruta_csv)
 
