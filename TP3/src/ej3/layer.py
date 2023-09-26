@@ -1,5 +1,5 @@
 import numpy as np
-from perceptron import Perceptron
+from .perceptron import Perceptron
 
 class Layer:
 

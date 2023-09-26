@@ -6,10 +6,10 @@ import sys
 import random
 import os
 
-from condition import from_str as condition_from_str
-from activation import from_str as activation_from_str
-from error import from_str as error_from_str
-from multilayerPerceptron import MultiLayerPerceptron
+from .condition import from_str as condition_from_str
+from .activation import from_str as activation_from_str
+from .error import from_str as error_from_str
+from .multilayerPerceptron import MultiLayerPerceptron
 
 
 
