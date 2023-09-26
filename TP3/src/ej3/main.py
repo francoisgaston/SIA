@@ -18,6 +18,12 @@ def read_input(file, input_length):
     result = np.array_split(result, len(result) / input_length)
     return result
 
+def add_gaussian_noise(data, stddev):
+    if(stddev == 0): 
+        return data
+    noise = np.random.normal(0, stddev, data.shape)
+    return data + noise
+
 def split_data(data, expected, test_pct):
     # Shuffle and partition data into training and test sets
     indices = list(range(len(data)))
@@ -38,6 +44,8 @@ def split_data(data, expected, test_pct):
 def train_perceptron(config, mlp, data, expected, perceptrons_per_layer, on_epoch=None, on_min_error=None):
     if len(data) == 0:
         return []
+
+    data = add_gaussian_noise(np.array(data), config['noise_stddev'])
 
     train_data, train_expected, test_data, test_expected = split_data(data, expected, config["test_pct"])
     i = 0
@@ -107,7 +115,7 @@ if __name__ == "__main__":
         # Write the headers for the CSV file only if the file is new
         if not file_exists:
             csv_writer.writerow(['config_id', 'epoca', 'error_training', 'error_test', 'entrada', 'salida',
-                                'capas_ocultas', 'activacion', 'eta', 'beta', 'activation', 'error_function', 'batch'])
+                                'capas_ocultas', 'activacion', 'eta', 'beta', 'activation', 'error_function', 'batch', 'noise_stddev'])
 
         for config_id, config_file_path in enumerate(sys.argv[1:]):
             with open(config_file_path, "r") as config_file:
@@ -121,7 +129,7 @@ if __name__ == "__main__":
                 def on_epoch(epoch, mlp, training_error, test_error):
                     csv_writer.writerow([config_id, epoch, training_error, test_error, config['input'], config['input_length'],
                                          config['perceptrons_for_layers'], config['activation'], config['n'],
-                                         config['beta'], config['activation'], config["error"], config["batch"]])
+                                         config['beta'], config['activation'], config["error"], config["batch"], config['noise_stddev']])
 
                 def on_min_error(epoch, mlp, min_error):
                     print("min_error: ", min_error)
