@@ -11,11 +11,25 @@ from .activation import from_str as activation_from_str
 from .error import from_str as error_from_str
 from .multilayerPerceptron import MultiLayerPerceptron
 
-def add_gaussian_noise(data, stddev):
-    if(stddev == 0): 
-        return data
-    noise = np.random.normal(0, stddev, data.shape)
-    return data + noise
+import numpy as np
+
+def generate_noisy_labels(original_labels, noise_stddev):
+    noisy_labels = original_labels + np.random.normal(0, noise_stddev, original_labels.shape)
+    
+    noisy_labels = noisy_labels / noisy_labels.sum(axis=1, keepdims=True)
+    
+    noisy_labels = np.argmax(noisy_labels, axis=1)
+    
+    one_hot_noisy_labels = np.eye(noisy_labels.max() + 1)[noisy_labels]
+    
+    return one_hot_noisy_labels
+
+def add_gaussian_noise(data, labels, stddev):
+    if stddev == 0:
+        return data, labels
+    noisy_data = data + np.random.normal(0, stddev, data.shape)
+    noisy_labels = generate_noisy_labels(labels, stddev)
+    return noisy_data, noisy_labels
 
 # Recibe la data y lo transforma en np's arrays de cada numero
 def read_input(file, input_length):
@@ -51,7 +65,18 @@ def train_perceptron(config, mlp, data, expected, on_epoch=None, on_min_error=No
     min_error = sys.float_info.max
     n = config['n']
 
-    data = add_gaussian_noise(np.array(data), config['noise_stddev'])
+    # Generate noisy data and labels
+    noisy_data, noisy_labels = add_gaussian_noise(np.array(data), np.array(expected), config['noise_stddev'])
+    
+    if config["data_augmentation"]:
+        # Concatenate original and noisy data and labels
+        data = np.concatenate((data, noisy_data))
+        expected = np.concatenate((expected, noisy_labels))
+    else:
+        data = noisy_data
+        expected = noisy_labels
+
+
     condition = condition_from_str(config['error'], config['epsilon'])
     error = error_from_str(config["error"])
     limit = config["limit"]
@@ -92,7 +117,7 @@ if __name__ == "__main__":
         exit(1)
 
     # Specify the folder name
-    folder_name = "src/ej3/output"
+    folder_name = "ej3/output"
 
     # Check if the folder exists. If not, create it
     if not os.path.exists(folder_name):
