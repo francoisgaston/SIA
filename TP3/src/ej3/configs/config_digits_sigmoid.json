@@ -18,8 +18,14 @@
   "beta": 1,
   "n": 0.1,
   "error": "QUADRATIC_MULTILAYER",
-  "epsilon": 0.1,
-  "limit": 1000000,
+  "epsilon": 0,
+  "limit": 100,
   "batch": 5,
-  "test_pct": 0.5
+  "test_pct": 0.8,
+  "output": "src/ej3/metric/results/",
+  "metric": {
+    "name": "ACCURACY",
+    "avg_type": "MACRO",
+    "precision": 0.2
+  }
 }
