@@ -24,7 +24,8 @@ def graficar_errores_de_csv(ruta_csv):
             'Función de Activación': fila_muestra['activation'],
             'Función de Error': fila_muestra['error_function'],
             'Tamaño de Lote': fila_muestra['batch'],
-            'Error Gaussiano': fila_muestra['noise_stddev']
+            'Error Gaussiano': fila_muestra['noise_stddev'],
+            'Augmentacion': fila_muestra['data_augmentation']
         }
         
         texto_anotacion = "<br>".join([f"{k}: {v}" for k, v in atributos_config.items()])

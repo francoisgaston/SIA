@@ -56,6 +56,10 @@ def split_data(data, expected, test_pct):
 
     return train_data, train_expected, test_data, test_expected
 
+def augment_training_data(data, labels, noise_stddev):
+    noisy_data, noisy_labels = add_gaussian_noise(np.array(data), np.array(labels), noise_stddev)
+    return np.concatenate((data, noisy_data)), np.concatenate((labels, noisy_labels))
+
 
 def train_perceptron(config, mlp, data, expected, on_epoch=None, on_min_error=None):
     if len(data) == 0:
@@ -64,18 +68,6 @@ def train_perceptron(config, mlp, data, expected, on_epoch=None, on_min_error=No
     i = 0
     min_error = sys.float_info.max
     n = config['n']
-
-    # Generate noisy data and labels
-    noisy_data, noisy_labels = add_gaussian_noise(np.array(data), np.array(expected), config['noise_stddev'])
-    
-    if config["data_augmentation"]:
-        # Concatenate original and noisy data and labels
-        data = np.concatenate((data, noisy_data))
-        expected = np.concatenate((expected, noisy_labels))
-    else:
-        data = noisy_data
-        expected = noisy_labels
-
 
     condition = condition_from_str(config['error'], config['epsilon'])
     error = error_from_str(config["error"])
@@ -137,7 +129,7 @@ if __name__ == "__main__":
         # Write the headers for the CSV file only if the file is new
         if not file_exists:
             csv_writer.writerow(['config_id', 'epoca', 'error_training', 'error_test', 'entrada', 'salida',
-              'capas_ocultas', 'activacion', 'eta', 'beta', 'activation', 'error_function', 'batch', 'noise_stddev'])
+              'capas_ocultas', 'activacion', 'eta', 'beta', 'activation', 'error_function', 'batch', 'noise_stddev', 'data_augmentation'])
 
         for config_id, config_file_path in enumerate(sys.argv[1:]):
             with open(config_file_path, "r") as config_file:
@@ -150,6 +142,8 @@ if __name__ == "__main__":
                 mlp = MultiLayerPerceptron(config['perceptrons_for_layers'], activation_function)  #
                 train_data, train_expected, test_data, test_expected = split_data(data, expected, config["test_pct"])
 
+                if config["data_augmentation"]:
+                    train_data, train_expected = augment_training_data(train_data, train_expected, config['noise_stddev'])
 
                 def on_epoch(epoch, mlp):
                     training_error = error.compute(train_data, mlp, train_expected)
@@ -157,17 +151,7 @@ if __name__ == "__main__":
                     csv_writer.writerow(
                         [config_id, epoch, training_error, test_error, config['input'], config['input_length'],
                          config['perceptrons_for_layers'], config['activation'], config['n'],
-                         config['beta'], config['activation'], config["error"], config["batch"]])
-
-
-
-                def on_epoch(epoch, mlp):
-                    training_error = error.compute(train_data, mlp, train_expected)
-                    test_error = error.compute(test_data, mlp, test_expected)
-                    csv_writer.writerow(
-                        [config_id, epoch, training_error, test_error, config['input'], config['input_length'],
-                         config['perceptrons_for_layers'], config['activation'], config['n'],
-                          config['beta'], config['activation'], config["error"], config["batch"], config['noise_stddev']])
+                         config['beta'], config['activation'], config["error"], config["batch"], config["noise_stddev"], config["data_augmentation"]])
 
 
                 def on_min_error(epoch, mlp, min_error):
