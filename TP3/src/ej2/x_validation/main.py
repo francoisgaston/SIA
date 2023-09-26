@@ -6,10 +6,12 @@ import pandas as pd
 from numpy import ndarray
 from pandas import DataFrame
 
-from ..activation import from_str as activation_from_str
-from ..utils.Function import Function
-from ..utils.write_csv import append_row_to_csv, create_csv, get_filename, write_csv
-from .main import run_perceptron, format_data
+from ...activation import from_str as activation_from_str
+from ...utils.Function import Function
+from ...utils.write_csv import append_row_to_csv, create_csv, get_filename, write_csv
+from ..main import run_perceptron, format_data
+from .on_epoch import OnEpoch
+from .on_epoch import from_str as on_epoch_from_str
 
 
 def k_separate(data: DataFrame, k: int):
@@ -28,15 +30,14 @@ def k_separate(data: DataFrame, k: int):
 
 def calculate_error(data: ndarray, expected: ndarray, w: ndarray, activation_function: Function):
     """
-    Calculates the error of the perceptron by the MSE error function: 1/2 * sum((expected - output)^2)
+    Calculates the error of the perceptron by the MSE error function: 1/n * sum((expected - output)^2)
     """
     error = 0
     for i in range(len(data)):
         h_u = np.dot(data[i], w)
         output_u = activation_function.eval(h_u)
         error += (expected[i] - output_u) ** 2
-    # TODO: Da mejores resultados si se divide por la cantidad de datos?
-    return error / 2
+    return error / len(data)
 
 
 def k_fold_iteration(train_data: ndarray, test_data: ndarray, train_expected: ndarray, test_expected: ndarray,
@@ -47,13 +48,13 @@ def k_fold_iteration(train_data: ndarray, test_data: ndarray, train_expected: nd
     Returns the minimum error of the test data
     """
     activation_function = activation_from_str(string=config['activation'], beta=config["beta"])
+    onEpoch = on_epoch_from_str(string=config['x_validation']['on_epoch'], activation_function=activation_function)
     min_error = sys.float_info.max
 
     def on_epoch(w: ndarray, epoch: int):
-        train_error = calculate_error(train_data, train_expected, w, activation_function)
-        test_error = calculate_error(test_data, test_expected, w, activation_function)
         nonlocal min_error
-        min_error = min(min_error, test_error)
+        train_error, test_error = onEpoch.exec(w, epoch, train_data, train_expected, test_data, test_expected)
+        min_error = min(min_error, onEpoch.min_test_error())
         row = [epoch] + w.tolist() + [train_error, test_error]
         append_row_to_csv(config["filename"], row)
 
@@ -152,6 +153,6 @@ if __name__ == "__main__":
         config = json.load(config_file)
         with open(config['data'], 'r', newline='') as data_file:
             df = pd.read_csv(data_file)
-        k = config["k_fold"]
+        k = config['x_validation']["k_fold"]
         min_error = k_fold(config, k, df)
         print("El mínimo error de testeo fue: ", min_error)
