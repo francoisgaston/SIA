@@ -4,10 +4,10 @@ import numpy as np
 import json
 import sys
 
-from ..error import from_str as error_from_str
-from ..condition import from_str as condition_from_str
-from ..activation import from_str as activation_from_str
-from ..utils.write_csv import write_csv
+from error import from_str as error_from_str
+from condition import from_str as condition_from_str
+from activation import from_str as activation_from_str
+from utils.write_csv import write_csv
 
 
 # Correr el script desde TP3: pipenv run python -m src.ej1.main src\ej1\config\config.json

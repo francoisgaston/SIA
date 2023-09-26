@@ -75,5 +75,5 @@ if __name__ == "__main__":
         )
         with open(f"{sys.argv[2]}", "r") as dots_file:
             add_dots(fig, pd.read_csv(dots_file))
-        fig.write_html(f"{'/'.join(sys.argv[1].split('/')[:-1])}/plotter_{operator}.html")
-        # fig.show()
+        #fig.write_html(f"{'/'.join(sys.argv[1].split('/')[:-1])}/plotter_{operator}.html")
+        fig.show()

@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import sys
-from ..utils.write_csv import write_csv
+from utils.write_csv import write_csv
 
 # Run the script: python -m src.ej1.adapter_ej1 [csv_file]
 
