@@ -7,6 +7,9 @@
   "error": "QUADRATIC",
   "epsilon": 0.0,
   "eta": 0.1,
-  "k_fold": 2,
+  "x_validation": {
+    "k_fold": 2,
+    "on_epoch": "MSE"
+  },
   "output": "src/ej2/results/k_fold/"
 }

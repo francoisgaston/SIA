@@ -4,6 +4,9 @@ import json
 import plotly.graph_objects as go
 import pandas as pd
 
+from ...activation import from_str as activation_from_str
+from .on_epoch import from_str as on_epoch_from_str
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Falta el archivo de resultados CSV y el archivo de configuración utilizado")
@@ -12,6 +15,8 @@ if __name__ == "__main__":
     with open(f"{sys.argv[1]}", "r") as csv_file, open(f"{sys.argv[2]}", "r") as config_file:
         csv = pd.read_csv(csv_file)
         config = json.load(config_file)
+        activation = activation_from_str(config["activation"], config["beta"])
+        on_epoch = on_epoch_from_str(config["x_validation"]["on_epoch"], activation)
         fig = go.Figure()
         fig.add_trace(
             go.Scatter(
@@ -74,11 +79,10 @@ if __name__ == "__main__":
             )
         )
         fig.update_layout(
-            title=f"Error de entrenamiento y de testeo para los datos en {config['data'].split('/')[-1].split('.')[0]}"
-                  f"<br><sup>Resultados obtenidos con {config['k_fold']}-fold cross validation en {config['limit']} épocas"
-                  f"<br>Función de activación: {config['activation']}, con η = {config['eta']} y β = {config['beta']}</sup>",
+            title=f"{on_epoch.name} de entrenamiento y de testeo con {config['x_validation']['k_fold']}-fold cross validation"
+                  f"<br><sup>Función de activación: {config['activation']}, con η = {config['eta']} y β = {config['beta']}</sup>",
             xaxis=dict(title="Época"),
-            yaxis=dict(title="MSE"),
+            yaxis=dict(title=f"{on_epoch.label}"),
             legend_title="Tipo de error",
         )
         fig.update_yaxes(

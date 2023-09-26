@@ -1,5 +1,7 @@
 class Function:
 
+    image = None
+
     # Evaluates the function
     def eval(self, x):
         pass
