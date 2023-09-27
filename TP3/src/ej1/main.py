@@ -52,6 +52,11 @@ def run_perceptron(config, data, expected):
     ans = [w.tolist()]
     ans[0].append(new_error)
 
+    # Marca la cantidad de veces que fue decreciendo o aumentando el error para modificar el eta
+    # error_tendency aumenta cuando disminuye el error
+    error_tendency = 0
+    last_error = min_error
+
     while not condition.check_stop(min_error) and i < config['limit']:
         u = random.randint(0, len(data) - 1)
         h_u = np.dot(data[u], w)
@@ -59,6 +64,22 @@ def run_perceptron(config, data, expected):
         delta_w = n * (expected[u] - output_u) * activation_function.diff(h_u) * data[u]
         w += delta_w
         new_error = error.compute(data, expected, w)
+        if last_error > new_error:
+            if error_tendency < 0:
+                error_tendency = 0
+            error_tendency += 1
+        if new_error >= last_error:
+            if error_tendency > 0:
+                error_tendency = 0
+            error_tendency -= 1
+        last_error = new_error
+        if config['adaptive_eta']:
+            if error_tendency >= config['adaptive_eta_iterations_increment']:
+                n += config['adaptive_eta_increment']
+                error_tendency = 0
+            if error_tendency <= config['adaptive_eta_iterations_decrement']:
+                n -= config['adaptive_eta_decrement_constant'] * n
+                error_tendency = 0
         if condition.check_replace(min_error, new_error):
             min_error = new_error
             print("min_error", min_error)
