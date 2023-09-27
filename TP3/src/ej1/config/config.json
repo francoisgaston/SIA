@@ -7,5 +7,10 @@
   "error": "SUM",
   "epsilon": 0.015,
   "eta": 0.1,
+  "adaptive_eta": true,
+  "adaptive_eta_iterations_increment": 4,
+  "adaptive_eta_iterations_decrement": -4,
+  "adaptive_eta_increment": 0.1,
+  "adaptive_eta_decrement_constant": 0.1,
   "output": "src/ej1/results/"
 }
