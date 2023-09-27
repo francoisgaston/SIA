@@ -49,7 +49,6 @@ if __name__ == "__main__":
             data = read_input(config['input'], config['input_length'])  #
             # activation_function = activation_from_str(string=config['activation'], beta=config["beta"])  #
             error = error_from_str(config["error"])
-              #
             train_data, train_expected, test_data, test_expected = split_data(data, expected, config["test_pct"])
 
 
@@ -57,20 +56,20 @@ if __name__ == "__main__":
                 print("min_error: ", min_error)
 
 
-            for activation_function in config["activation"]:
+            for activation_function_str in config["activation"]:
                 for beta in config["beta"]:
-                    activation_function = activation_from_str(string=activation_function, beta=beta)  #
+                    activation_function = activation_from_str(string=activation_function_str, beta=beta)  #
                     for n in config["n"]:
                         for batch in config["batch"]:
                             for repetition in range(config['repetitions']):
-                                def on_epoch(epoch, mlp):
+                                def on_epoch(epoch, mlp, actual_eta):
                                     training_error = error.compute(train_data, mlp, train_expected)
                                     test_error = error.compute(test_data, mlp, test_expected)
                                     csv_writer.writerow(
                                         [repetition+1,epoch, training_error, test_error, config['input'],
                                          config['input_length'],
-                                         config['perceptrons_for_layers'], activation_function, n,
-                                         beta, activation_function, config["error"], batch,
+                                         config['perceptrons_for_layers'], activation_function_str, n,
+                                         beta, activation_function_str, config["error"], batch,
                                          config['noise_stddev']])
                                 aux = config.copy()
                                 aux["n"] = n

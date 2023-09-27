@@ -15,16 +15,18 @@ def generate_graph(ruta_csv, config):
     for value in grouped_values:
         # Filtrar el DataFrame basado en config_id
         df_filtrado = df[df[config['grouped_by']] == value].groupby("epoca")
-        df_filtrado = df_filtrado["error_training"].agg(["min","max","mean"]).reset_index()
+        df_filtrado = df_filtrado["error_training"].agg(["min", "max", "mean"]).reset_index()
         # Ordenar por época
         df_filtrado = df_filtrado.sort_values('epoca')
-        first = go.Scatter(x=df_filtrado['epoca'],y=df_filtrado['mean'],name=f'promedio para{config["grouped_by"]} = {value}')
+        first = go.Scatter(x=df_filtrado['epoca'], y=df_filtrado['mean'],
+                           name=f'promedio para {config["grouped_by"]} = {value}')
         aux = go.Figure([
             first,
-            go.Scatter(x=df_filtrado['epoca'], y=df_filtrado['max'], name=f'maximo para {config["grouped_by"]} = {value}',
-                       showlegend=False,mode='lines',
-                        marker=first.marker.color,
-                        line=dict(width=0)),
+            go.Scatter(x=df_filtrado['epoca'], y=df_filtrado['max'],
+                       name=f'maximo para {config["grouped_by"]} = {value}',
+                       showlegend=False, mode='lines',
+                       marker=first.marker.color,
+                       line=dict(width=0)),
             go.Scatter(x=df_filtrado['epoca'], y=df_filtrado['min'],
                        name=f'minimo para {config["grouped_by"]} = {value}',
                        showlegend=False,
@@ -32,15 +34,37 @@ def generate_graph(ruta_csv, config):
                        line=dict(width=0),
                        mode='lines',
                        fill='tonexty',
-                        )
+                       )
         ])
         for trace in aux.data:
             fig.add_trace(trace)
-        # fig.add_scatter(x=df_filtrado['epoca'],y=df_filtrado['mean'],name=f'{config["grouped_by"]} = {value}')
-        # fig.add_scatter(x=df_filtrado['epoca'], y=df_filtrado['max'], name=f'máximo de ')
-        # fig.add_scatter(x=df_filtrado['epoca'], y=df_filtrado['min'], name=f'mínimo')
 
-    fig.update_layout(yaxis_type="log")
+    fila_muestra = df.iloc[0]
+    atributos_config = {
+        'Capas Ocultas': fila_muestra['capas_ocultas'],
+        'Activacion': fila_muestra['activacion'],
+        'Eta': fila_muestra['eta'],
+        'Beta': fila_muestra['beta'],
+        'Función de Error': fila_muestra['error_function'],
+        'Batch': fila_muestra['batch'],
+        'Repeticiones': config["repeticiones"]
+    }
+
+    texto_anotacion = "<br>".join(
+        [f"{k}: {v}" for k, v in atributos_config.items() if k.lower() != config['grouped_by']])
+    fig.update_layout(yaxis_type="log", xaxis_title="Época",
+                      yaxis_title="Error (logarítmico)",
+                      title=f"Comparación de evolución de errores en entrenamiento para {config['grouped_by']} ({config['exercise']})",
+                      )
+    fig.add_annotation(x=0, y=0, xref="paper", yref="paper",
+                       text=texto_anotacion,
+                       showarrow=False,
+                       font=dict(size=10),
+                       bordercolor="black",
+                       borderwidth=1,
+                       borderpad=4,
+                       bgcolor="white",
+                       opacity=0.8)
     fig.show()
 
 
@@ -52,4 +76,4 @@ if __name__ == "__main__":
     with open(sys.argv[1], "r") as config_file:
         config = json.load(config_file)
         ruta_csv = sys.argv[2]
-        generate_graph(ruta_csv,config)
+        generate_graph(ruta_csv, config)

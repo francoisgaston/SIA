@@ -1,3 +1,5 @@
 {
-  "grouped_by": "batch"
+  "grouped_by": "eta",
+  "repeticiones": 3,
+  "exercise": "digito"
 }
