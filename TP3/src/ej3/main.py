@@ -76,6 +76,9 @@ def train_perceptron(config, mlp, data, expected, on_epoch=None, on_min_error=No
 
     batch = config["batch"] if config["batch"] <= len(data) else len(data)
 
+    last_error = min_error
+    error_tendency = 0
+
     while not condition.check_stop(min_error) and i < limit:
         final_delta_w = [np.zeros((perceptrons_per_layer[indx], perceptrons_per_layer[indx - 1] + 1)) for indx in
                          range(len(perceptrons_per_layer) - 1, 0, -1)]
@@ -92,6 +95,22 @@ def train_perceptron(config, mlp, data, expected, on_epoch=None, on_min_error=No
 
         new_error = error.compute(data, mlp, expected)
 
+        if last_error > new_error:
+            if error_tendency < 0:
+                error_tendency = 0
+            error_tendency += 1
+        if new_error >= last_error:
+            if error_tendency > 0:
+                error_tendency = 0
+            error_tendency -= 1
+        last_error = new_error
+        if config['adaptive_eta']:
+            if error_tendency >= config['adaptive_eta_iterations_increment']:
+                n += config['adaptive_eta_increment']
+                error_tendency = 0
+            if error_tendency <= config['adaptive_eta_iterations_decrement']:
+                n -= config['adaptive_eta_decrement_constant'] * n
+                error_tendency = 0
         if on_epoch is not None:
             on_epoch(i, mlp)
 

@@ -1,5 +1,5 @@
 {
-  "input": "ej3/perceptron_data/TP3-ej3-digitos.txt",
+  "input": "src/ej3/perceptron_data/TP3-ej3-digitos.txt",
   "input_length": 35,
   "perceptrons_for_layers": [35, 10, 10],
   "activation": "LOGISTIC",
@@ -17,6 +17,11 @@
   ],
   "beta": 1,
   "n": 0.1,
+  "adaptive_eta": true,
+  "adaptive_eta_iterations_increment": 25,
+  "adaptive_eta_iterations_decrement": -20,
+  "adaptive_eta_increment": 0.05,
+  "adaptive_eta_decrement_constant": 0.1,
   "error": "QUADRATIC_MULTILAYER",
   "epsilon": 0,
   "limit": 1000,
