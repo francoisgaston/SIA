@@ -22,6 +22,9 @@ def add_gaussian_noise(data, labels, stddev):
     noisy_labels = labels + np.random.normal(0, stddev, labels.shape)
     return noisy_data, noisy_labels
 
+def augment_training_data(data, labels, noise_stddev):
+    noisy_data, noisy_labels = add_gaussian_noise(np.array(data), np.array(labels), noise_stddev)
+    return np.concatenate((data, noisy_data)), np.concatenate((labels, noisy_labels))
 
 # Recibe la data y lo transforma en np's arrays de cada numero
 def read_input(file, input_length):
@@ -49,9 +52,7 @@ def split_data(data, expected, test_pct):
     return train_data, train_expected, test_data, test_expected
 
 
-def augment_training_data(data, labels, noise_stddev):
-    noisy_data, noisy_labels = add_gaussian_noise(np.array(data), np.array(labels), noise_stddev)
-    return np.concatenate((data, noisy_data)), np.concatenate((labels, noisy_labels))
+
 
 
 def train_perceptron(config, mlp, data, expected, on_epoch=None, on_min_error=None):
@@ -148,6 +149,7 @@ if __name__ == "__main__":
             with open(config_file_path, "r") as config_file:
                 config = json.load(config_file)
                 for i in range(config['iterations']):
+                    # for augmentation in [True, False]:
 
                     expected = np.array(config['expected'])
                     data = read_input(config['input'], config['input_length'])  # 
@@ -166,7 +168,7 @@ if __name__ == "__main__":
                         csv_writer.writerow(
                             [config_id, epoch, training_error, test_error, config['input'], config['input_length'],
                              config['perceptrons_for_layers'], config['activation'], config['n'],
-                             config['beta'], config['activation'], config["error"], config["batch"], config["noise_stddev"], config["data_augmentation"], i])
+                             config['beta'], config['activation'], config["error"], config["batch"], config["noise_stddev"], augmentation, i])
                     # TODO: make csv show actual eta
 
                     def on_min_error(epoch, mlp, min_error):

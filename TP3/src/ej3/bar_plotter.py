@@ -7,15 +7,16 @@ def bar_plot(csv_filename):
     df = pd.read_csv(csv_filename)
 
     # Create a column 'perceptrons_for_layers' that combines 'entrada', 'capas_ocultas', and 'salida'
-    df['perceptrons_for_layers'] =  df['capas_ocultas'].astype(str) + ', noise:' + df['noise_stddev'].astype(str)
-    
-    # Find the minimum 'error_training' and 'error_test' for each iteration within each 'config_id'
-    min_errors_df = df.groupby(['config_id', 'iteration', 'perceptrons_for_layers']).agg({'error_training': 'min', 'error_test': 'min'}).reset_index()
+    df['perceptrons_for_layers'] = df['capas_ocultas'].astype(str) + ', noise:' + df['noise_stddev'].astype(str) + ', augmeted:' + df['data_augmentation'].astype(str)
 
-    # Compute the mean and standard deviation of those minimum errors across all iterations for each 'config_id'
-    statistics_df = min_errors_df.groupby(['config_id', 'perceptrons_for_layers']).agg({'error_training': ['mean', 'std'], 'error_test': ['mean', 'std']}).reset_index()
 
-    # Sort by the length of 'capas_ocultas'
+    # Create a unique configuration identifier based on the three fields
+    df['unique_config_id'] = df['noise_stddev'].astype(str) + "_" + df['capas_ocultas'].astype(str) + "_" + df['data_augmentation'].astype(str)
+
+    # Compute the mean and standard deviation for each unique 'unique_config_id'
+    statistics_df = df.groupby(['unique_config_id', 'perceptrons_for_layers']).agg({'error_training': ['mean', 'std'], 'error_test': ['mean', 'std']}).reset_index()
+
+    # Sort by the length of 'perceptrons_for_layers'
     statistics_df['sort_key'] = statistics_df['perceptrons_for_layers'].apply(len)
     statistics_df = statistics_df.sort_values('sort_key').reset_index(drop=True)
 
@@ -26,9 +27,8 @@ def bar_plot(csv_filename):
         mean_values = statistics_df[(error_type, 'mean')].values
         std_values = statistics_df[(error_type, 'std')].values
 
-        # Calculate lower bounds for the error bars
+        # Ensure the error bars don't go below zero
         lower_error = mean_values - std_values
-        # Ensure the lower error bars don't go below zero
         lower_error[lower_error < 0] = 0
 
         fig.add_trace(go.Bar(
@@ -39,10 +39,9 @@ def bar_plot(csv_filename):
                 type='data',
                 symmetric=False,
                 array=std_values,
-                arrayminus=mean_values - lower_error  # Set lower error to be the difference between the mean and the adjusted lower bounds
+                arrayminus=mean_values - lower_error
             )
         ))
-
 
     # Add Spanish labels
     fig.update_layout(
