@@ -43,6 +43,7 @@ def generate_graph(ruta_csv, config):
     atributos_config = {
         'Capas Ocultas': fila_muestra['capas_ocultas'],
         'Activacion': fila_muestra['activacion'],
+        'Adaptive eta': fila_muestra['adaptive_eta'],
         'Eta': fila_muestra['eta'],
         'Beta': fila_muestra['beta'],
         'Función de Error': fila_muestra['error_function'],

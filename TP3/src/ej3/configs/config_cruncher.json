@@ -4,24 +4,24 @@
   "perceptrons_for_layers": [2, 10, 10, 10, 2],
   "activation": ["LOGISTIC"],
   "expected": [
-    [1,0],
-    [1,0],
-    [0,1],
-    [0,1]
+                [1,0],
+                [1,0],
+                [0,1],
+                [0,1]
   ],
   "beta": [1],
-  "n": [1,0.1,0.01],
+  "n": [0.1],
   "error": "QUADRATIC_MULTILAYER",
   "epsilon": 0,
   "limit":1000,
-  "batch": [2],
+  "batch": [5],
   "test_pct": 1,
   "noise_stddev": 0.0001,
   "repetitions": 3,
-  "adaptive_eta": false,
-  "adaptive_eta_iterations_increment": 25,
-  "adaptive_eta_iterations_decrement": -20,
-  "adaptive_eta_increment": 0.05,
-  "adaptive_eta_decrement_constant": 0.1,
-  "output": "eta_variation_ejA"
+  "adaptive_eta": [false,true],
+  "adaptive_eta_iterations_increment": 15,
+  "adaptive_eta_iterations_decrement": -8,
+  "adaptive_eta_increment": 0.1,
+  "adaptive_eta_decrement_constant": 0.5,
+  "output": "adaptive_eta_variation_ejA"
 }

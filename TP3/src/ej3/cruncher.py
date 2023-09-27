@@ -42,7 +42,7 @@ if __name__ == "__main__":
             # Write the headers for the CSV file only if the file is new
             csv_writer.writerow(['repeticion','epoca', 'error_training', 'error_test', 'entrada', 'salida',
                                      'capas_ocultas', 'activacion', 'eta', 'beta', 'activation', 'error_function',
-                                     'batch', 'noise_stddev'])
+                                     'batch', 'noise_stddev','adaptive_eta'])
 
 
             expected = np.array(config['expected'])
@@ -62,18 +62,20 @@ if __name__ == "__main__":
                     for n in config["n"]:
                         for batch in config["batch"]:
                             for repetition in range(config['repetitions']):
-                                def on_epoch(epoch, mlp, actual_eta):
-                                    training_error = error.compute(train_data, mlp, train_expected)
-                                    test_error = error.compute(test_data, mlp, test_expected)
-                                    csv_writer.writerow(
-                                        [repetition+1,epoch, training_error, test_error, config['input'],
-                                         config['input_length'],
-                                         config['perceptrons_for_layers'], activation_function_str, n,
-                                         beta, activation_function_str, config["error"], batch,
-                                         config['noise_stddev']])
-                                aux = config.copy()
-                                aux["n"] = n
-                                aux["batch"] = batch
-                                mlp = MultiLayerPerceptron(config['perceptrons_for_layers'], activation_function)
-                                train_perceptron(aux, mlp, train_data, train_expected, on_epoch, on_min_error)
+                                for adaptive_eta_value in config['adaptive_eta']:
+                                    def on_epoch(epoch, mlp, actual_eta):
+                                        training_error = error.compute(train_data, mlp, train_expected)
+                                        test_error = error.compute(test_data, mlp, test_expected)
+                                        csv_writer.writerow(
+                                            [repetition+1,epoch, training_error, test_error, config['input'],
+                                             config['input_length'],
+                                             config['perceptrons_for_layers'], activation_function_str, n,
+                                             beta, activation_function_str, config["error"], batch,
+                                             config['noise_stddev'],adaptive_eta_value],)
+                                    aux = config.copy()
+                                    aux["n"] = n
+                                    aux["batch"] = batch
+                                    aux['adaptive_eta'] = adaptive_eta_value
+                                    mlp = MultiLayerPerceptron(config['perceptrons_for_layers'], activation_function)
+                                    train_perceptron(aux, mlp, train_data, train_expected, on_epoch, on_min_error)
 
