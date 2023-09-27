@@ -13,16 +13,18 @@ from .multilayerPerceptron import MultiLayerPerceptron
 
 import numpy as np
 
+
 def generate_noisy_labels(original_labels, noise_stddev):
     noisy_labels = original_labels + np.random.normal(0, noise_stddev, original_labels.shape)
-    
+
     noisy_labels = noisy_labels / noisy_labels.sum(axis=1, keepdims=True)
-    
+
     noisy_labels = np.argmax(noisy_labels, axis=1)
-    
+
     one_hot_noisy_labels = np.eye(noisy_labels.max() + 1)[noisy_labels]
-    
+
     return one_hot_noisy_labels
+
 
 def add_gaussian_noise(data, labels, stddev):
     if stddev == 0:
@@ -30,6 +32,7 @@ def add_gaussian_noise(data, labels, stddev):
     noisy_data = data + np.random.normal(0, stddev, data.shape)
     noisy_labels = generate_noisy_labels(labels, stddev)
     return noisy_data, noisy_labels
+
 
 # Recibe la data y lo transforma en np's arrays de cada numero
 def read_input(file, input_length):
@@ -55,6 +58,7 @@ def split_data(data, expected, test_pct):
     test_expected = [expected[i] for i in test_indices]
 
     return train_data, train_expected, test_data, test_expected
+
 
 def augment_training_data(data, labels, noise_stddev):
     noisy_data, noisy_labels = add_gaussian_noise(np.array(data), np.array(labels), noise_stddev)
@@ -112,7 +116,7 @@ def train_perceptron(config, mlp, data, expected, on_epoch=None, on_min_error=No
                 n -= config['adaptive_eta_decrement_constant'] * n
                 error_tendency = 0
         if on_epoch is not None:
-            on_epoch(i, mlp)
+            on_epoch(i, mlp, n)
 
         if condition.check_replace(min_error, new_error):
             if on_min_error is not None:
@@ -128,7 +132,7 @@ if __name__ == "__main__":
         exit(1)
 
     # Specify the folder name
-    folder_name = "ej3/output"
+    folder_name = "src/ej3/output"
 
     # Check if the folder exists. If not, create it
     if not os.path.exists(folder_name):
@@ -148,7 +152,8 @@ if __name__ == "__main__":
         # Write the headers for the CSV file only if the file is new
         if not file_exists:
             csv_writer.writerow(['config_id', 'epoca', 'error_training', 'error_test', 'entrada', 'salida',
-              'capas_ocultas', 'activacion', 'eta', 'beta', 'activation', 'error_function', 'batch', 'noise_stddev', 'data_augmentation'])
+                                 'capas_ocultas', 'activacion', 'eta', 'beta', 'activation', 'error_function', 'batch',
+                                 'noise_stddev', 'data_augmentation'])
 
         for config_id, config_file_path in enumerate(sys.argv[1:]):
             with open(config_file_path, "r") as config_file:
@@ -164,14 +169,15 @@ if __name__ == "__main__":
                 if config["data_augmentation"]:
                     train_data, train_expected = augment_training_data(train_data, train_expected, config['noise_stddev'])
 
-                def on_epoch(epoch, mlp):
+
+                def on_epoch(epoch, mlp, actual_eta):
                     training_error = error.compute(train_data, mlp, train_expected)
                     test_error = error.compute(test_data, mlp, test_expected)
                     csv_writer.writerow(
                         [config_id, epoch, training_error, test_error, config['input'], config['input_length'],
                          config['perceptrons_for_layers'], config['activation'], config['n'],
                          config['beta'], config['activation'], config["error"], config["batch"], config["noise_stddev"], config["data_augmentation"]])
-
+                # TODO: make csv show actual eta
 
                 def on_min_error(epoch, mlp, min_error):
                     print("min_error: ", min_error)
