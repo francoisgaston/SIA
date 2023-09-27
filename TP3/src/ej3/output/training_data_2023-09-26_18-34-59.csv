@@ -1,0 +1,5 @@
+config_id,epoca,error_training,error_test,entrada,salida,capas_ocultas,activacion,eta,beta,activation,error_function,batch,noise_stddev,data_augmentation
+0,0,"[2.55833358 0.35731969 0.35315115 0.55543704 0.73037726 2.00452399
+ 0.0245811  0.6369584  1.1584146  0.53921963]","[3.72668978e+00 5.93325035e-01 1.40511919e-01 3.55034774e-01
+ 2.37630355e-03 3.66479458e+00 2.46098620e+00 2.34408115e-01
+ 1.16050556e+00 4.56911830e-02]",ej3/perceptron_data/TP3-ej3-digitos.txt,35,"[35, 10, 10]",LOGISTIC,0.1,1,LOGISTIC,CROSSENTROPY,5,0,False

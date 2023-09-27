@@ -9,6 +9,7 @@ def graficar_errores_de_csv(ruta_csv):
     # Obtener IDs de configuración únicos
     ids_config_unicos = df['config_id'].unique()
 
+    print(ids_config_unicos)
     # Inicializar figura
     fig = go.Figure()
 

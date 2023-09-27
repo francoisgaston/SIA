@@ -14,23 +14,12 @@ from .multilayerPerceptron import MultiLayerPerceptron
 import numpy as np
 
 
-def generate_noisy_labels(original_labels, noise_stddev):
-    noisy_labels = original_labels + np.random.normal(0, noise_stddev, original_labels.shape)
-
-    noisy_labels = noisy_labels / noisy_labels.sum(axis=1, keepdims=True)
-
-    noisy_labels = np.argmax(noisy_labels, axis=1)
-
-    one_hot_noisy_labels = np.eye(noisy_labels.max() + 1)[noisy_labels]
-
-    return one_hot_noisy_labels
-
 
 def add_gaussian_noise(data, labels, stddev):
     if stddev == 0:
         return data, labels
     noisy_data = data + np.random.normal(0, stddev, data.shape)
-    noisy_labels = generate_noisy_labels(labels, stddev)
+    noisy_labels = labels + np.random.normal(0, stddev, labels.shape)
     return noisy_data, noisy_labels
 
 
@@ -132,7 +121,7 @@ if __name__ == "__main__":
         exit(1)
 
     # Specify the folder name
-    folder_name = "src/ej3/output"
+    folder_name = "ej3/output"
 
     # Check if the folder exists. If not, create it
     if not os.path.exists(folder_name):
@@ -153,42 +142,43 @@ if __name__ == "__main__":
         if not file_exists:
             csv_writer.writerow(['config_id', 'epoca', 'error_training', 'error_test', 'entrada', 'salida',
                                  'capas_ocultas', 'activacion', 'eta', 'beta', 'activation', 'error_function', 'batch',
-                                 'noise_stddev', 'data_augmentation'])
+                                 'noise_stddev', 'data_augmentation', 'iteration'])
 
         for config_id, config_file_path in enumerate(sys.argv[1:]):
             with open(config_file_path, "r") as config_file:
                 config = json.load(config_file)
+                for i in range(config['iterations']):
 
-                expected = np.array(config['expected'])
-                data = read_input(config['input'], config['input_length'])  # 
-                activation_function = activation_from_str(string=config['activation'], beta=config["beta"])  # 
-                error = error_from_str(config["error"])
-                mlp = MultiLayerPerceptron(config['perceptrons_for_layers'], activation_function)  #
-                train_data, train_expected, test_data, test_expected = split_data(data, expected, config["test_pct"])
+                    expected = np.array(config['expected'])
+                    data = read_input(config['input'], config['input_length'])  # 
+                    activation_function = activation_from_str(string=config['activation'], beta=config["beta"])  # 
+                    error = error_from_str(config["error"])
+                    mlp = MultiLayerPerceptron(config['perceptrons_for_layers'], activation_function)  #
+                    train_data, train_expected, test_data, test_expected = split_data(data, expected, config["test_pct"])
 
-                if config["data_augmentation"]:
-                    train_data, train_expected = augment_training_data(train_data, train_expected, config['noise_stddev'])
-
-
-                def on_epoch(epoch, mlp, actual_eta):
-                    training_error = error.compute(train_data, mlp, train_expected)
-                    test_error = error.compute(test_data, mlp, test_expected)
-                    csv_writer.writerow(
-                        [config_id, epoch, training_error, test_error, config['input'], config['input_length'],
-                         config['perceptrons_for_layers'], config['activation'], config['n'],
-                         config['beta'], config['activation'], config["error"], config["batch"], config["noise_stddev"], config["data_augmentation"]])
-                # TODO: make csv show actual eta
-
-                def on_min_error(epoch, mlp, min_error):
-                    print("min_error: ", min_error)
+                    if config["data_augmentation"]:
+                        train_data, train_expected = augment_training_data(train_data, train_expected, config['noise_stddev'])
 
 
-                train_perceptron(config, mlp, train_data, train_expected, on_epoch, on_min_error)
+                    def on_epoch(epoch, mlp, actual_eta):
+                        training_error = error.compute(train_data, mlp, train_expected)
+                        test_error = error.compute(test_data, mlp, test_expected)
+                        csv_writer.writerow(
+                            [config_id, epoch, training_error, test_error, config['input'], config['input_length'],
+                             config['perceptrons_for_layers'], config['activation'], config['n'],
+                             config['beta'], config['activation'], config["error"], config["batch"], config["noise_stddev"], config["data_augmentation"], i])
+                    # TODO: make csv show actual eta
 
-            for weights in mlp.get_all_weights():  # 
-                print(weights)
+                    def on_min_error(epoch, mlp, min_error):
+                        print("min_error: ", min_error)
 
-            for i in range(len(data)):
-                print("expected: ", expected[i])
-                obtained = mlp.forward(data[i])
-                print("obtained: ", obtained)
+
+                    train_perceptron(config, mlp, train_data, train_expected, on_epoch, on_min_error)
+
+                for weights in mlp.get_all_weights():  # 
+                    print(weights)
+
+                for i in range(len(data)):
+                    print("expected: ", expected[i])
+                    obtained = mlp.forward(data[i])
+                    print("obtained: ", obtained)
