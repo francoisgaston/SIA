@@ -166,7 +166,7 @@ if __name__ == "__main__":
                         csv_writer.writerow(
                             [config_id, epoch, training_error, test_error, config['input'], config['input_length'],
                              config['perceptrons_for_layers'], config['activation'], config['n'],
-                             config['beta'], config['activation'], config["error"], config["batch"], config["noise_stddev"], config["data_augmentation"], config['iterations']])
+                             config['beta'], config['activation'], config["error"], config["batch"], config["noise_stddev"], config["data_augmentation"], i])
                     # TODO: make csv show actual eta
 
                     def on_min_error(epoch, mlp, min_error):
