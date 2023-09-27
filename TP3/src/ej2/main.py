@@ -73,7 +73,6 @@ def run_perceptron(config, data, expected, on_epoch=None, on_min_error=None):
                 error_tendency = 0
             error_tendency -= 1
         last_error = new_error
-        print(n)
         if config['adaptive_eta']:
             if error_tendency >= config['adaptive_eta_iterations_increment']:
                 n += config['adaptive_eta_increment']
