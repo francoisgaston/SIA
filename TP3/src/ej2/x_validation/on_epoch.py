@@ -11,7 +11,7 @@ class OnEpoch:
              test_expected: ndarray):
         pass
 
-    def min_test_error(self):
+    def final_test_error(self):
         pass
 
 
@@ -20,7 +20,7 @@ class MseOnEpoch(OnEpoch):
     label = "MSE"
 
     def __init__(self, activation_function: Function):
-        self._min_test_error = sys.float_info.max
+        self._final_test_error = sys.float_info.max
         self._activation_function = activation_function
 
     def _calculate_error(self, data: ndarray, expected: ndarray, w: ndarray):
@@ -38,11 +38,11 @@ class MseOnEpoch(OnEpoch):
              test_expected: ndarray):
         train_error = self._calculate_error(train_data, train_expected, w)
         test_error = self._calculate_error(test_data, test_expected, w)
-        self._min_test_error = min(self._min_test_error, test_error)
+        self._final_test_error = test_error
         return train_error, test_error
 
-    def min_test_error(self):
-        return self._min_test_error
+    def final_test_error(self):
+        return self._final_test_error
 
 
 class AvgMaxErrorOnEpoch(OnEpoch):
@@ -50,7 +50,7 @@ class AvgMaxErrorOnEpoch(OnEpoch):
     label = "%"
 
     def __init__(self, activation_function: Function):
-        self._min_test_error = sys.float_info.max
+        self._final_test_error = sys.float_info.max
         self._activation_function = activation_function
 
     def _calculate_error(self, data: ndarray, expected: ndarray, w: ndarray):
@@ -63,18 +63,18 @@ class AvgMaxErrorOnEpoch(OnEpoch):
         for i in range(len(data)):
             h_u = np.dot(data[i], w)
             output_u = self._activation_function.eval(h_u)
-            error += abs(expected[i] - output_u)
-        return error / (len(data) * max_error) * 100
+            error += abs(expected[i] - output_u) / max_error
+        return error / len(data) * 100
 
     def exec(self, w: ndarray, epoch: int, train_data: ndarray, train_expected: ndarray, test_data: ndarray,
              test_expected: ndarray):
         train_error = self._calculate_error(train_data, train_expected, w)
         test_error = self._calculate_error(test_data, test_expected, w)
-        self._min_test_error = min(self._min_test_error, test_error)
+        self._final_test_error = test_error
         return train_error, test_error
 
-    def min_test_error(self):
-        return self._min_test_error
+    def final_test_error(self):
+        return self._final_test_error
 
 
 def from_str(string: str, activation_function: Function):

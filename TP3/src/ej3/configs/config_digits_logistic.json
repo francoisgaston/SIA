@@ -24,7 +24,7 @@
   "test_pct": 0.5,
   "output": "src/ej3/metric/results/",
   "metric": {
-    "name": "FPR",
+    "name": "ACCURACY",
     "avg_type": "MICRO",
     "precision": 0.1
   },

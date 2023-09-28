@@ -28,18 +28,6 @@ def k_separate(data: DataFrame, k: int):
     return folds
 
 
-def calculate_error(data: ndarray, expected: ndarray, w: ndarray, activation_function: Function):
-    """
-    Calculates the error of the perceptron by the MSE error function: 1/n * sum((expected - output)^2)
-    """
-    error = 0
-    for i in range(len(data)):
-        h_u = np.dot(data[i], w)
-        output_u = activation_function.eval(h_u)
-        error += (expected[i] - output_u) ** 2
-    return error / len(data)
-
-
 def k_fold_iteration(train_data: ndarray, test_data: ndarray, train_expected: ndarray, test_expected: ndarray,
                      config: dict):
     """
@@ -54,7 +42,7 @@ def k_fold_iteration(train_data: ndarray, test_data: ndarray, train_expected: nd
     def on_epoch(w: ndarray, epoch: int):
         nonlocal min_error
         train_error, test_error = onEpoch.exec(w, epoch, train_data, train_expected, test_data, test_expected)
-        min_error = min(min_error, onEpoch.min_test_error())
+        min_error = onEpoch.final_test_error()
         row = [epoch] + w.tolist() + [train_error, test_error]
         append_row_to_csv(config["filename"], row)
 
@@ -126,7 +114,11 @@ def k_fold(config: dict, k: int, df: DataFrame):
         if i != best_fold_idx:
             os.remove(filenames[i])
         else:
-            os.rename(filenames[i], get_filename(filename_prefix + "_data"))
+            data_filename_prefix = filename_prefix.split("/")
+            data_filename_prefix.insert(-1, "data")
+            data_filename = get_filename("/".join(data_filename_prefix))
+            os.makedirs(os.path.dirname(data_filename), exist_ok=True)
+            os.rename(filenames[i], data_filename)
     headers = ["x" + str(i) for i in range(len(folds[0]["data"][0]))] + ["y"]
     # Se guarda el conjunto de datos de entrenamiento en un csv
     rows = []
@@ -134,12 +126,16 @@ def k_fold(config: dict, k: int, df: DataFrame):
         if i != best_fold_idx:
             for j in range(len(folds[i]["data"])):
                 rows.append(folds[i]["data"][j].tolist() + [folds[i]["expected"][j]])
-    write_csv(config["output"] + config['data'].split("/")[-1].split(".")[0] + "_train", headers, rows)
+    train_filename_prefix = filename_prefix.split("/")
+    train_filename_prefix.insert(-1, "train")
+    write_csv("/".join(train_filename_prefix), headers, rows)
     # Se guarda el conjunto de datos de testeo en un csv
     rows = []
     for j in range(len(folds[best_fold_idx]["data"])):
         rows.append(folds[best_fold_idx]["data"][j].tolist() + [folds[best_fold_idx]["expected"][j]])
-    write_csv(config["output"] + config['data'].split("/")[-1].split(".")[0] + "_test", headers, rows)
+    test_filename_prefix = filename_prefix.split("/")
+    test_filename_prefix.insert(-1, "test")
+    write_csv("/".join(test_filename_prefix), headers, rows)
     # Se retorna el mínimo error de testeo
     return min_errors[best_fold_idx]
 

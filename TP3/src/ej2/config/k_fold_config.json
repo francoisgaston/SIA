@@ -1,15 +1,16 @@
 {
   "data": "src/ej2/perceptron_data/TP3_ej2_conjunto.csv",
   "random_interval": [0,1],
-  "limit": 200,
-  "activation": "LOGISTIC",
+  "limit": 300,
+  "activation": "SIGMOID",
   "beta": 0.8,
   "error": "QUADRATIC",
   "epsilon": 0.0,
-  "eta": 0.45,
+  "eta": 0.15,
   "x_validation": {
     "k_fold": 2,
     "on_epoch": "MSE"
   },
+  "adaptive_eta": false,
   "output": "src/ej2/results/k_fold/"
 }
