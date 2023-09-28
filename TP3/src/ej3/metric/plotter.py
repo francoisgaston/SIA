@@ -86,8 +86,8 @@ if __name__ == "__main__":
 
         fig = go.Figure()
         fig.add_trace(
-            go.Scatter(x=epochs, y=train_measures, mode='lines+markers', name=f'Entrenamiento ({train_percentage}%)'))
-        fig.add_trace(go.Scatter(x=epochs, y=test_measures, mode='lines+markers', name=f'Testeo ({test_percentage}%)'))
+            go.Scatter(x=epochs, y=train_measures, mode='lines', name=f'Entrenamiento ({train_percentage}%)'))
+        fig.add_trace(go.Scatter(x=epochs, y=test_measures, mode='lines', name=f'Testeo ({test_percentage}%)'))
         fig.add_trace(
             go.Scatter(
                 name=f"{metric.name} final",
@@ -132,8 +132,5 @@ if __name__ == "__main__":
                   f" y batch = {config['batch']}<br>Arquitectura: {config['perceptrons_for_layers']}</sup>",
             xaxis_title="Época",
             yaxis_title=metric.name
-        )
-        fig.update_yaxes(
-            type="log"
         )
         fig.show()

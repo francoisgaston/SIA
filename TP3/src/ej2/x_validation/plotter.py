@@ -85,7 +85,4 @@ if __name__ == "__main__":
             yaxis=dict(title=f"{on_epoch.label}"),
             legend_title="Tipo de error",
         )
-        fig.update_yaxes(
-            type="log",
-        )
         fig.show()

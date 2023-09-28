@@ -2,7 +2,6 @@ class Metric:
 
     name = None
 
-    @staticmethod
     # Metrica que se va a utilizar para medir el rendimiento del clasificador
     def measure(self, tp=0, tn=0, fp=0, fn=0):
         pass
@@ -13,7 +12,6 @@ class Accuracy(Metric):
 
     name = "Accuracy"
 
-    @staticmethod
     def measure(self, tp=0, tn=0, fp=0, fn=0):
         return (tp + tn) / (tp + tn + fp + fn) if tp + tn + fp + fn != 0 else 0
 
@@ -22,7 +20,6 @@ class Precision(Metric):
 
     name = "Precision"
 
-    @staticmethod
     def measure(self, tp=0, tn=0, fp=0, fn=0):
         return tp / (tp + fp) if tp + fp != 0 else 0
 
@@ -31,7 +28,6 @@ class Recall(Metric):
 
     name = "Recall"
 
-    @staticmethod
     def measure(self, tp=0, tn=0, fp=0, fn=0):
         return tp / (tp + fn) if tp + fn != 0 else 0
 
@@ -40,7 +36,6 @@ class F1(Metric):
 
     name = "F1-SCORE"
 
-    @staticmethod
     def measure(self, tp=0, tn=0, fp=0, fn=0):
         precision = Precision.measure(tp, tn, fp, fn)
         recall = Recall.measure(tp, tn, fp, fn)
@@ -51,7 +46,6 @@ class TPR(Metric):
 
     name = "Tasa de verdaderos positivos"
 
-    @staticmethod
     def measure(self, tp=0, tn=0, fp=0, fn=0):
         return Recall.measure(tp, tn, fp, fn)
 
@@ -60,7 +54,6 @@ class FPR(Metric):
 
     name = "Tasa de falsos positivos"
 
-    @staticmethod
     def measure(self, tp=0, tn=0, fp=0, fn=0):
         return fp / (fp + tn) if fp + tn != 0 else 0
 

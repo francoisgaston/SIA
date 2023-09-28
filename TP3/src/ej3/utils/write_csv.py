@@ -19,7 +19,7 @@ def create_csv(name, headers):
 
 
 def append_row_to_csv(filename, row):
-    with open(filename, "a") as csv_file:
+    with open(filename, "a", newline='') as csv_file:
         CSV = csv.writer(csv_file)
         CSV.writerow(row)
 
