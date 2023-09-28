@@ -1,0 +1,16 @@
+{
+  "data": "src/ej1/perceptron_data/TP3_ej1_AND.csv",
+  "random_interval": [0,1],
+  "limit": 1000000,
+  "activation": "SIGN",
+  "beta": 0.005,
+  "error": "SUM",
+  "epsilon": 0.015,
+  "eta": 0.1,
+  "adaptive_eta": true,
+  "adaptive_eta_iterations_increment": 4,
+  "adaptive_eta_iterations_decrement": -4,
+  "adaptive_eta_increment": 0.1,
+  "adaptive_eta_decrement_constant": 0.1,
+  "output": "src/ej1/results/"
+}

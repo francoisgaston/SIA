@@ -1,0 +1,31 @@
+{
+  "input": "src/ej3/perceptron_data/TP3-ej3-digitos.txt",
+  "input_length": 35,
+  "perceptrons_for_layers": [35, 5, 5, 5, 10],
+  "activation": "SIGMOID",
+  "expected": [
+    [1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, 1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, 1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, 1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, 1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, 1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, 1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, 1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1, 1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, 1]
+  ],
+  "beta": 1,
+  "n": 0.1,
+  "error": "QUADRATIC_MULTILAYER",
+  "epsilon": 0,
+  "limit": 100,
+  "batch": 5,
+  "test_pct": 0.8,
+  "output": "src/ej3/metric/results/",
+  "metric": {
+    "name": "ACCURACY",
+    "avg_type": "MACRO",
+    "precision": 0.2
+  }
+}

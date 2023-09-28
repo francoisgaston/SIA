@@ -13,6 +13,7 @@ This project revolves around the creation of a [Sokoban puzzle](http://www.game-
 This project is dedicated to optimizing character configurations for a role-playing game (RPG) using genetic algorithms. Characters belong to four distinct classes: Warriors, Archers, Defenders, and Assassins, each with specific performance objectives for attack and defense.
 <br> The genetic algorithm implementation includes various genetic operators (crossover and mutation), selection and replacement strategies, and termination criteria. All algorithm parameters are specified in an external configuration file for flexibility and experimentation.
 
+
 ### Members
 - 62248 - [José Rodolfo Mentasti](https://github.com/JoseMenta)
 - 62510 - [Martín Augusto Ippolito](https://github.com/martinippo01)
