@@ -13,6 +13,10 @@ This project centers on the development of a Sokoban puzzle solver through the i
 This project is dedicated to optimizing character configurations for a role-playing game (RPG) using genetic algorithms. Characters belong to four distinct classes: Warriors, Archers, Defenders, and Assassins, each with specific performance objectives for attack and defense.
 <br> The genetic algorithm implementation includes various genetic operators (crossover and mutation), selection and replacement strategies, and termination criteria. All algorithm parameters are specified in an external configuration file for flexibility and experimentation.
 
+#### TP03: Simple and Multilayer Perceptron
+This project involves implementing simple and multilayer perceptrons to solve various problems. It explores logical operations, classification tasks, and digit recognition using neural networks. The project aims to understand the capabilities of these neural models and their generalization performance.
+<br> This project provides a comprehensive exploration of neural networks, from basic single-layer perceptrons to more advanced multilayer architectures. It aims to enhance understanding of neural network capabilities and their application in real-world problem-solving scenarios.
+
 
 
 ### Members
