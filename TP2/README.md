@@ -99,22 +99,33 @@ El programa debe recibir por argumento el _path_ a un archivo JSON, el cual debe
 
 ## Graficar
 Para graficar los resultados obtenidos es necesario previamente correr `src/main.py` o `src/run_configs.py` (el csv de la última generación) según corresponda. 
-#### Comparación de Fitness
+### Comparación de Fitness
 Para obtener el grafico de comparación de fitness es necesario correr
 ````sh
-python3 src/plotter.py src/results/[csv file]
+pipenv run python src/plotter.py src/results/[csv file]
 ````
 <img src="src/docs/fitness_bars.png" width="400" alt="Graphic bars of 3 tests displaying the average of the individual with most fitness">
 
 
-#### Comparación de convergencia
+### Comparación de convergencia
 Para obtener el grafico de comparación de convergencia es necesario correr
 ````sh
-python3 src/animated_plot.py src/config/animated_plot_config.json src/results/[csv file]
+pipenv run python src/animated_plot.py src/config/animated_plot_config.json src/results/[csv file]
 ````
 donde el archivo csv es el obtenido al ejecutar `src/run_configs.py` (el csv con todas las generaciones).
+Es importante tener la clase correcta a graficar en el archivo animated_plot_config.json ademas de poder modificar otros parametros.
 <img src="src/docs/convergence.gif" width="400" alt="Convergence of Archer's agility between 3 tests">
 
+#### Configuración
+El programa debe recibir por argumento el _path_ a un archivo JSON, el cual debe tener definido lo siguiente:
+````json
+{
+  "attribute": "Atributo a graficar - ["agility", "strength", "resistance", "expertise", "life", "height", "fitness"]",
+  "class": "Clase del personaje a graficar - ["WARRIOR", "ARCHER", "DEFENDER", "INFILTRATE"]",
+  "generate_output": "Booleano para indicar si se desea generar el archivo GIF o mostrarlo como un archivo HTML - Boolean",
+  "output": "Path del archivo de salida - String"
+}
+````
 
 
 ## Consideraciones
