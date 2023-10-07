@@ -1,0 +1,5 @@
+{
+  "input": "data/letters.txt",
+  "size": 25,
+  "max_iterations": 100
+}

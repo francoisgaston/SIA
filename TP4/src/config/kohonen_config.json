@@ -1,0 +1,10 @@
+{
+  "input": "data/europe.csv",
+  "eta": 1,
+  "radius": 1,
+  "size": 3,
+  "variable_radius": false,
+  "variable_eta": false,
+  "mult_iterations": 1000,
+  "similarity": "EUCLIDES"
+}
