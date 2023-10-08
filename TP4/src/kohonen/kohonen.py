@@ -39,12 +39,22 @@ class Kohonen:
         for i in range(self.size):
             for j in range(self.size):
                 self.perceptrons[i][j] = Perceptron(np.random.uniform(0, 1, self._dimension))
+                # self.perceptrons[i][j] = Perceptron(np.ones(self._dimension))
 
     def _init_data_weights_(self, data: ndarray) -> None:
-        for i in range(len(self.perceptrons)):
+        perceptrons_count = len(self.perceptrons)
+        data_count = len(data)
+        if data_count < perceptrons_count:
+            raise Exception("KxK must be lower or equal to P")
+
+        aux_data = data.copy()
+        for i in range(perceptrons_count):
             for j in range(len(self.perceptrons[i])):
-                rand_index = np.random.randint(0, high=self.size - 1)
-                self.perceptrons[i][j] = Perceptron(np.copy(data[rand_index]))
+                rand_index = np.random.randint(0, high=data_count)
+                element = aux_data[rand_index]
+                self.perceptrons[i][j] = Perceptron(np.copy(element))
+                aux_data = np.delete(aux_data, rand_index, 0)
+                print(self.perceptrons[i][j].weights)
 
     # Given the radius and the winner perceptron coordinates (tuple),
     # update the weights of the perceptron neighbourhood according to n (eta) and the input (x)
@@ -62,11 +72,11 @@ class Kohonen:
 
     def _update_eta_function(self) -> None:
         if self._update_eta:
-            self._eta = self._eta / self.epoch
+            self._eta = min(self._eta / self.epoch, 1)
 
     def _update_radius_function(self) -> None:
         if self._update_radius:
-            self._radius = self.size / self.epoch
+            self._radius = max(self.size / self.epoch, 1)
 
     def train(self, data) -> None:
         if len(data) == 0: return
@@ -103,11 +113,11 @@ class Kohonen:
                 count = 0
                 for delta_row in range(-1, 2):
                     for delta_col in range(-1, 2):
-                        row, col = i+delta_row, j+delta_col
-                        if 0 <= row <= self.size-1 and 0 <= col<= self.size-1:
+                        row, col = i + delta_row, j + delta_col
+                        if 0 <= row <= self.size - 1 and 0 <= col <= self.size - 1:
                             sum += self.perceptrons[i][j].similarity(self.perceptrons[row][col].weights)
                             count += 1
-                ans[i][j] = sum/count
+                ans[i][j] = sum / count
 
         return ans
 
