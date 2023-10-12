@@ -18,11 +18,22 @@ class Hopfield:
         N = numpy.shape(patterns)[1]
         pre_W = 1 / N * np.matmul(K, patterns)
         np.fill_diagonal(pre_W, 0)
+
         return pre_W
+
+    @staticmethod
+    def print_letter(pattern):
+        for i in range(5):
+            for j in range(5):
+                if pattern[i * 5 + j] == 1:
+                    print(" * ", end="")
+                else:
+                    print("   ", end="")
+            print("")
 
     def energy_function(self, S: ndarray):
         result = 0
-        for i in range(self.dimension):
+        for i in range(1, self.dimension):
             for j in range(i, self.dimension):
                 result += self.weight_matrix[i][j] * S[i] * S[j]
         return (-1) * result
@@ -33,8 +44,7 @@ class Hopfield:
                 return idx
         return -1
 
-
-    def train(self, pattern: ndarray, on_new_state = None) -> ndarray:
+    def train(self, pattern: ndarray, on_new_state=None) -> ndarray:
         i = 0
         previous_found_idx = -1
         state = np.transpose(pattern)
@@ -45,11 +55,14 @@ class Hopfield:
                 if elem == 0:
                     aux[0][idx] = state[0][idx]
             state = aux
+
             if on_new_state is not None:
                 on_new_state(np.transpose(state))
             pattern_found_idx = self._pattern_found_index(state)
             if pattern_found_idx != -1 and pattern_found_idx == previous_found_idx:
                 break
+            i += 1
+            Hopfield.print_letter(state)
         return state
 
 
