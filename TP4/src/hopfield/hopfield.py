@@ -19,17 +19,34 @@ class Hopfield:
         pre_W = 1 / N * np.matmul(K, patterns)
         np.fill_diagonal(pre_W, 0)
 
+        print("Producto escalar entre letras: ")
+        for i in range(len(patterns)):
+            for j in range(i + 1, len(patterns)):
+                print("<")
+                Hopfield.print_letter(patterns[i])
+                print(";")
+                Hopfield.print_letter(patterns[j])
+                print("> = ", end="")
+                res = 0
+                for k in range(len(patterns[0])):
+                    res += patterns[i][k] * patterns[j][k]
+                print(res)
+
         return pre_W
 
     @staticmethod
     def print_letter(pattern):
+        print(" ------------------- ")
         for i in range(5):
+            print(" | ", end="")
             for j in range(5):
                 if pattern[i * 5 + j] == 1:
                     print(" * ", end="")
                 else:
                     print("   ", end="")
-            print("")
+            print(" | ")
+        print(" ------------------- ")
+
 
     def energy_function(self, S: ndarray):
         result = 0
@@ -40,14 +57,16 @@ class Hopfield:
 
     def _pattern_found_index(self, state: ndarray) -> int:
         for idx, pattern in enumerate(self._patterns):
-            if np.array_equal(state, pattern):
+            if np.array_equal(state.astype(int), np.transpose(np.array(pattern))):
                 return idx
         return -1
 
     def train(self, pattern: ndarray, on_new_state=None) -> ndarray:
+
         i = 0
         previous_found_idx = -1
         state = np.transpose(pattern)
+        previous_state = None
         while i < self._max_iterations:
             aux = np.matmul(self.weight_matrix, state)
             aux = np.sign(aux)
@@ -59,9 +78,13 @@ class Hopfield:
             if on_new_state is not None:
                 on_new_state(np.transpose(state))
             pattern_found_idx = self._pattern_found_index(state)
-            if pattern_found_idx != -1 and pattern_found_idx == previous_found_idx:
+            # if pattern_found_idx != -1 and pattern_found_idx == previous_found_idx:
+            #     break
+            if previous_state is not None and np.array_equal(previous_state, state):
+                print("Found a repeated state")
                 break
             i += 1
+            previous_state = state
             Hopfield.print_letter(state)
         return state
 

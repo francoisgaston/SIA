@@ -1,5 +1,6 @@
 {
-  "input": "data.txt",
+  "input": "letters.txt",
+  "try": "try.txt",
   "size": 25,
   "max_iterations": 100
 }

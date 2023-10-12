@@ -20,8 +20,10 @@ if __name__ == "__main__":
         config = json.load(config_file)
         input_file = config["input"]
         input_length = config["size"]
+        try_file = config["try"]
 
         patterns = read_input(input_file, input_length)
+        pattern_to_try = read_input(try_file, input_length)
         max_iterations = config["max_iterations"]
         hopfield = Hopfield(patterns, max_iterations)
 
@@ -33,7 +35,7 @@ if __name__ == "__main__":
             energy_results.append(hopfield.energy_function(state))
 
 
-        hopfield.train(patterns[0], on_new_state)
+        hopfield.train(pattern_to_try[0], on_new_state)
 
         for pattern in patterns:
             Hopfield.print_letter(pattern)
