@@ -25,11 +25,11 @@ def component_graph(countries, pc1):
     fig.show()
 
 
-def biplot(principal, x, names, headers):
-    loadings = principal.components_.T * np.sqrt(principal.explained_variance_)
-    fig = px.scatter(x, x=0, y=1, text=names)
+def biplot(loadings, PC1, PC2, names, headers):
+    fig = px.scatter(x=PC1, y=PC2, text=names)
+    fig.update_traces(textposition='top center')
 
-    for i, feature in enumerate(headers[1::]):
+    for i, feature in enumerate(headers):
         fig.add_annotation(
             ax=0, ay=0,
             axref="x", ayref="y",
@@ -48,8 +48,13 @@ def biplot(principal, x, names, headers):
             xanchor="center",
             yanchor="bottom",
             text=feature,
-            yshift=5,
+            yshift=5
         )
+
+    fig.update_layout(xaxis_title="PC1",
+                      yaxis_title="PC2",
+                      title="Valores de las componentes principales 1 y 2")
+
     fig.show()
 
 
@@ -72,7 +77,10 @@ def main():
     pc1 = x[:, 0]
     component_graph(names, pc1)
 
-    biplot(principal, x, names, headers)
+    # TODO: Preguntar si esta bien la escala de las flechas (Lo saque de sklearn)
+    loadings = principal.components_.T * np.sqrt(principal.explained_variance_)
+    pc2 = x[:, 1]
+    biplot(loadings, pc1, pc2, names, headers[1::])
 
 
 if __name__ == "__main__":
