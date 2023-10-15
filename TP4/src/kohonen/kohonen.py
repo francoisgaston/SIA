@@ -50,6 +50,7 @@ class Kohonen:
         aux_data = data.copy()
         for i in range(perceptrons_count):
             for j in range(len(self.perceptrons[i])):
+                data_count = len(aux_data)
                 rand_index = np.random.randint(0, high=data_count)
                 element = aux_data[rand_index]
                 self.perceptrons[i][j] = Perceptron(np.copy(element))
