@@ -2,6 +2,7 @@ import math
 import random
 import sys
 import numpy as np
+from typing import List, Tuple
 
 from numpy import ndarray
 from Perceptron import Perceptron
@@ -55,16 +56,26 @@ class Kohonen:
                 element = aux_data[rand_index]
                 self.perceptrons[i][j] = Perceptron(np.copy(element))
                 aux_data = np.delete(aux_data, rand_index, 0)
-                print(self.perceptrons[i][j].weights)
+                # print(self.perceptrons[i][j].weights)
 
-    # Given the radius and the winner perceptron coordinates (tuple),
-    # update the weights of the perceptron neighbourhood according to n (eta) and the input (x)
-    def _update_neighbourhood(self, center: (int, int), x: ndarray) -> None:
+    def get_neighbors(self, center:(int, int)) -> List[Tuple[int, int]]:
+        ans = []
         floor_radius = math.floor(self._radius)
         for a in range(max(0, center[0] - floor_radius), min(self.size, center[0] + floor_radius + 1)):
             for b in range(max(0, center[1] - floor_radius), min(self.size, center[1] + floor_radius + 1)):
                 if distance(center, (a, b)) <= self._radius:
-                    self.perceptrons[a][b].update_weights(self._eta, x)
+                    ans.append((a, b))
+
+        return ans
+    # Given the radius and the winner perceptron coordinates (tuple),
+    # update the weights of the perceptron neighbourhood according to n (eta) and the input (x)
+    def _update_neighbourhood(self, center: (int, int), x: ndarray) -> None:
+        # floor_radius = math.floor(self._radius)
+        # for a in range(max(0, center[0] - floor_radius), min(self.size, center[0] + floor_radius + 1)):
+        #     for b in range(max(0, center[1] - floor_radius), min(self.size, center[1] + floor_radius + 1)):
+        #         if distance(center, (a, b)) <= self._radius:
+        for (a, b) in self.get_neighbors(center):
+            self.perceptrons[a][b].update_weights(self._eta, x)
 
     def _update_variables(self) -> None:
         self.epoch += 1
@@ -94,15 +105,17 @@ class Kohonen:
             self._update_neighbourhood((row, col), register)
             self._update_variables()
 
-    def get_activations(self, data) -> ndarray:
+    def get_activations(self, data, data_names) -> ndarray:
         if len(data) == 0: return np.empty((self.size, self.size), dtype=int)
         assert len(data[0]) == self._dimension
 
-        results = np.zeros((self.size, self.size), dtype=int)
-        for register in data:
+        counts = np.zeros((self.size, self.size), dtype=int)
+        names = [[[] for _ in range(self.size)] for _ in range(self.size)]
+        for index, register in enumerate(data):
             row, col = self._find_winner_perceptron(register)
-            results[row][col] += 1
-        return results
+            counts[row][col] += 1
+            names[row][col].append(data_names[index])
+        return counts, names
 
     def get_u_matrix(self):
         ans = np.zeros((self.size, self.size))
@@ -112,12 +125,15 @@ class Kohonen:
                 # Para cada perceptron, calculamos la distancia promedio a sus vecinas
                 sum = 0.0
                 count = 0
-                for delta_row in range(-1, 2):
-                    for delta_col in range(-1, 2):
-                        row, col = i + delta_row, j + delta_col
-                        if 0 <= row <= self.size - 1 and 0 <= col <= self.size - 1:
-                            sum += self.perceptrons[i][j].similarity(self.perceptrons[row][col].weights)
-                            count += 1
+                for (row, col) in self.get_neighbors((i, j)):
+                    sum += self.perceptrons[i][j].similarity(self.perceptrons[row][col].weights)
+                    count += 1
+                # for delta_row in range(-1, 2):
+                #     for delta_col in range(-1, 2):
+                #         row, col = i + delta_row, j + delta_col
+                #         if 0 <= row <= self.size - 1 and 0 <= col <= self.size - 1:
+                #             sum += self.perceptrons[i][j].similarity(self.perceptrons[row][col].weights)
+                #             count += 1
                 ans[i][j] = sum / count
 
         return ans
