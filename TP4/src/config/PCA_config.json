@@ -1,4 +1,4 @@
 {
-  "input": "data/europe.csv",
+  "input": "src/data/europe.csv",
   "n_components": 2
 }

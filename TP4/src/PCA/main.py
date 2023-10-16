@@ -2,11 +2,11 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
-import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import plotly.express as px
 import json
 import sys
+
 
 def read_input(input_file_path):
     df = pd.read_csv(input_file_path)
@@ -19,8 +19,16 @@ def read_input(input_file_path):
     return aux, names, headers
 
 
+def boxplot_graph(headers, scaled_data):
+    fig = go.Figure()
+    for i in range(len(headers)):
+        fig.add_trace(go.Box(y=scaled_data[:, i], name=headers[i]))
+    fig.update_layout(title="Variables normalizadas")
+    fig.show()
+
+
 def component_graph(countries, pc1):
-    fig = go.Figure([go.Bar(x=countries,y=pc1)])
+    fig = go.Figure([go.Bar(x=countries, y=pc1)])
     fig.update_layout(xaxis_title="País",
                       yaxis_title="PC1",
                       title="PC1 para cada país")
@@ -28,8 +36,8 @@ def component_graph(countries, pc1):
 
 
 def biplot(loadings, PC1, PC2, names, headers):
-    fig = px.scatter(x=PC1, y=PC2, text=names)
-    fig.update_traces(textposition='top center')
+    fig = px.scatter(x=PC1, y=PC2, text=names, color=PC1, color_continuous_scale='bluered')
+    fig.update_traces(textposition='top center', textfont_color='black')
 
     for i, feature in enumerate(headers):
         fig.add_annotation(
@@ -41,7 +49,8 @@ def biplot(loadings, PC1, PC2, names, headers):
             arrowsize=2,
             arrowhead=2,
             xanchor="right",
-            yanchor="top"
+            yanchor="top",
+            arrowcolor="green",
         )
         fig.add_annotation(
             x=loadings[i, 0],
@@ -50,15 +59,18 @@ def biplot(loadings, PC1, PC2, names, headers):
             xanchor="center",
             yanchor="bottom",
             text=feature,
-            yshift=5
+            yshift=5,
+            font=dict(
+                color="green",
+            )
         )
 
     fig.update_layout(xaxis_title="PC1",
                       yaxis_title="PC2",
-                      title="Valores de las componentes principales 1 y 2")
+                      title="Valores de las componentes principales 1 y 2",
+                      coloraxis_showscale=False)
 
     fig.show()
-
 
 
 def main():
@@ -72,6 +84,7 @@ def main():
         scaling = StandardScaler()
         scaling.fit(data)
         Scaled_data = scaling.transform(data)
+        boxplot_graph(headers[1::], Scaled_data)
 
         # Analisis de PCA
         n_components = config["n_components"]
@@ -83,7 +96,12 @@ def main():
         pc1 = x[:, 0]
         component_graph(names, pc1)
 
-        if n_components>1:
+        # Ordenar los paises segun el valor de la componente principal
+        sorted_countries = [country for country in sorted(zip(pc1, names))]
+        for idx, country in enumerate(sorted_countries):
+            print(f"#{idx + 1} {country[1]}: {country[0].round(2)}")
+
+        if n_components > 1:
             # TODO: Preguntar si esta bien la escala de las flechas (Lo saque de sklearn)
             loadings = principal.components_.T * np.sqrt(principal.explained_variance_)
             pc2 = x[:, 1]
