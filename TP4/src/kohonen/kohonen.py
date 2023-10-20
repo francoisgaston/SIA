@@ -20,12 +20,17 @@ class Kohonen:
     # radius: radius to update neurons
     # eta: learning rate
     # data: if none => random weights
-    def __init__(self, size: int = 1, radius: float = None, eta: float = None, dimension: int = 1,
-                 mult_iterations: int = 1, data: ndarray = None):
-        self._update_eta = eta is None
-        self._update_radius = radius is None
-        self._radius = radius if radius is not None else size
-        self._eta = eta if eta is not None else 1
+    def __init__(self, size: int = 1, initial_radius: float = None, initial_eta: float = 0.1,
+                 variable_eta: bool = True, variable_radius: bool = True,
+                 dimension: int = 1,
+                 mult_iterations: int = 2, data: ndarray = None):
+        initial_radius = size if initial_radius is None else initial_radius
+        self._update_eta = variable_eta
+        self._update_radius = variable_radius
+        self._radius = initial_radius
+        # queremos que cuando llegue a la última iteración, el radio sea 1
+        self._delta_radius = (self._radius - 1)/((mult_iterations-1) * size * size) if mult_iterations > 1 else (self._radius - 1)/(size * size )
+        self._eta = initial_eta
         self.epoch = 1
         self.size = size
         self._dimension = dimension
@@ -43,7 +48,7 @@ class Kohonen:
                 # self.perceptrons[i][j] = Perceptron(np.ones(self._dimension))
 
     def _init_data_weights_(self, data: ndarray) -> None:
-        perceptrons_count = len(self.perceptrons)
+        perceptrons_count = len(self.perceptrons) #TODO: esto no debería ser size*size?
         data_count = len(data)
         if data_count < perceptrons_count:
             raise Exception("KxK must be lower or equal to P")
@@ -57,6 +62,13 @@ class Kohonen:
                 self.perceptrons[i][j] = Perceptron(np.copy(element))
                 aux_data = np.delete(aux_data, rand_index, 0)
                 # print(self.perceptrons[i][j].weights)
+
+        # len_aux_data = len(aux_data)
+        # for i in range(len(self.perceptrons)):
+        #     for j in range(len(self.perceptrons[i])):
+        #         rand_index = np.random.randint(low=0, high=len_aux_data)
+        #         element = aux_data[rand_index]
+        #         self.perceptrons[i][j] = Perceptron(np.copy(element))
 
     def get_neighbors(self, center:(int, int)) -> List[Tuple[int, int]]:
         ans = []
@@ -88,7 +100,9 @@ class Kohonen:
 
     def _update_radius_function(self) -> None:
         if self._update_radius:
-            self._radius = max(self.size / self.epoch, 1)
+            if self._radius > 1:
+                self._radius -= self._delta_radius
+            self._radius = max(self._radius, 1)
 
     def train(self, data) -> None:
         if len(data) == 0: return
