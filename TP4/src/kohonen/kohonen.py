@@ -28,6 +28,7 @@ class Kohonen:
         self._update_eta = variable_eta
         self._update_radius = variable_radius
         self._radius = initial_radius
+        self._initial_eta = initial_eta
         # queremos que cuando llegue a la última iteración, el radio sea 1
         self._delta_radius = (self._radius - 1)/((mult_iterations-1) * size * size) if mult_iterations > 1 else (self._radius - 1)/(size * size )
         self._eta = initial_eta
@@ -60,6 +61,7 @@ class Kohonen:
                 rand_index = np.random.randint(0, high=data_count)
                 element = aux_data[rand_index]
                 self.perceptrons[i][j] = Perceptron(np.copy(element))
+                # TODO: por que los vamos sacando?
                 aux_data = np.delete(aux_data, rand_index, 0)
                 # print(self.perceptrons[i][j].weights)
 
@@ -95,9 +97,8 @@ class Kohonen:
         self._update_eta_function()
 
     def _update_eta_function(self) -> None:
-        # TODO: hacer que sea 0.1/epoch, no eta, si no cambia mucho
         if self._update_eta:
-            self._eta = min(self._eta / self.epoch, 0.1) #antes era 1
+            self._eta = min(self._initial_eta / self.epoch, 0.1) #antes era 1
 
     def _update_radius_function(self) -> None:
         if self._update_radius:
