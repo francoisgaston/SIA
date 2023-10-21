@@ -95,8 +95,9 @@ class Kohonen:
         self._update_eta_function()
 
     def _update_eta_function(self) -> None:
+        # TODO: hacer que sea 0.1/epoch, no eta, si no cambia mucho
         if self._update_eta:
-            self._eta = min(self._eta / self.epoch, 1)
+            self._eta = min(self._eta / self.epoch, 0.1) #antes era 1
 
     def _update_radius_function(self) -> None:
         if self._update_radius:

@@ -23,7 +23,7 @@ def boxplot_graph(headers, scaled_data):
     fig = go.Figure()
     for i in range(len(headers)):
         fig.add_trace(go.Box(y=scaled_data[:, i], name=headers[i]))
-    fig.update_layout(title="Variables normalizadas")
+    fig.update_layout(title="Variables estandarizadas")
     fig.show()
 
 
