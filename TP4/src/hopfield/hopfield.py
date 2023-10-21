@@ -16,22 +16,8 @@ class Hopfield:
     def _weight_matrix(patterns: ndarray) -> ndarray:
         K = numpy.transpose(patterns)
         N = numpy.shape(patterns)[1]
-        pre_W = 1 / N * np.matmul(K, patterns)
+        pre_W = (1 / 1) * np.matmul(K, patterns)
         np.fill_diagonal(pre_W, 0)
-
-        print("Producto escalar entre letras: ")
-        for i in range(len(patterns)):
-            for j in range(i + 1, len(patterns)):
-                print("<")
-                Hopfield.print_letter(patterns[i])
-                print(";")
-                Hopfield.print_letter(patterns[j])
-                print("> = ", end="")
-                res = 0
-                for k in range(len(patterns[0])):
-                    res += patterns[i][k] * patterns[j][k]
-                print(res)
-
         return pre_W
 
     @staticmethod
@@ -46,7 +32,6 @@ class Hopfield:
                     print("   ", end="")
             print(" | ")
         print(" ------------------- ")
-
 
     def energy_function(self, S: ndarray):
         result = 0
@@ -87,5 +72,27 @@ class Hopfield:
             previous_state = state
             Hopfield.print_letter(state)
         return state
+
+    @staticmethod
+    def _analyse_orthogonality(patterns: ndarray):
+        max_product = np.dot(patterns[0], patterns[1])
+        min_product = np.dot(patterns[0], patterns[1])
+        avg_product = 0
+
+        print("productos -> ", end=" ")
+        for i in range(len(patterns)):
+            for j in range(i + 1, len(patterns)):
+                product = np.dot(patterns[i], patterns[j])
+                if product > max_product:
+                    max_product = product
+                if product < min_product:
+                    min_product = product
+                avg_product += abs(product)
+                print(product, end=" | ")
+
+        avg_product /= len(patterns)
+        return max_product, min_product, avg_product
+
+
 
 

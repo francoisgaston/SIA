@@ -37,7 +37,7 @@ if __name__ == "__main__":
 
         hopfield.train(pattern_to_try[0], on_new_state)
 
-        # for pattern in patterns:
-        #     Hopfield.print_letter(pattern)
+        for pattern in patterns:
+            Hopfield.print_letter(pattern)
 
         print(energy_results)
