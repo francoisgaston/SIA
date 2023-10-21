@@ -1,0 +1,6 @@
+{
+  "input": "src/data/europe.csv",
+  "eta": 0.1,
+  "epoch": 1000,
+  "n_components": 2
+}
