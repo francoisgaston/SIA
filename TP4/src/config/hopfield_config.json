@@ -2,5 +2,7 @@
   "input": "storedPatterns.txt",
   "try": "try.txt",
   "size": 25,
-  "max_iterations": 100
+  "max_iterations": 100,
+  "noise": true,
+  "probability_of_noise": 0.9
 }

@@ -53,10 +53,16 @@ if __name__ == "__main__":
         input_file = config["input"]
         input_length = config["size"]
         try_file = config["try"]
+        noise = config["noise"]
         
         patterns = read_input(input_file, input_length)
         pattern_to_try = read_input(try_file, input_length)
-        pattern_to_try = PatternsNoise.swap_with_gaussian(pattern_to_try[0], 0.5)
+
+        if noise is True:
+            pattern_to_try = PatternsNoise.swap_with_gaussian(pattern_to_try[0], config["probability_of_noise"])
+        else:
+            pattern_to_try = pattern_to_try[0]
+
         max_iterations = config["max_iterations"]
         hopfield = Hopfield(patterns, max_iterations)
 

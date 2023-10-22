@@ -20,8 +20,6 @@ class PatternsNoise:
         swapped_arr[swapped_arr > 0] = 1
         swapped_arr[swapped_arr < 0] = -1
         swapped_arr[swapped_arr == 0] = arr[swapped_arr == 0]
-        print(arr)
-        print(swapped_arr)
         return swapped_arr
 
 if __name__ == "__main__":
