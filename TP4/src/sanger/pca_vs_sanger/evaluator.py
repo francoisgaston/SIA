@@ -25,7 +25,7 @@ def main():
     with open(f"{sys.argv[1]}", "r") as file:
         config = json.load(file)
 
-        data, dimension, names = read_input_normalize(config["input"])
+        data, _, _ = read_input_normalize(config["input"])
         etas = config["etas"]
         limit = config["limit"]
         n_components = config["n_components"]
@@ -38,8 +38,8 @@ def main():
 
         for eta in etas:
             print(f"Training with eta={eta}")
-            PC1_CSV = f"{output_dir}/pca_vs_oja_{timestamp}_{eta}-pc1.csv"
-            PC2_CSV = f"{output_dir}/pca_vs_oja_{timestamp}_{eta}-pc2.csv"
+            PC1_CSV = f"{output_dir}/pca_vs_sanger_{timestamp}_{eta}-pc1.csv"
+            PC2_CSV = f"{output_dir}/pca_vs_sanger_{timestamp}_{eta}-pc2.csv"
             os.makedirs(os.path.dirname(PC1_CSV), exist_ok=True)
             os.makedirs(os.path.dirname(PC2_CSV), exist_ok=True)
             with open(PC1_CSV, "w", newline='') as pc1_of, open(PC2_CSV, "w", newline='') as pc2_of:

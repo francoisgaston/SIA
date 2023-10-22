@@ -12,7 +12,7 @@ def main():
     with open(f"{sys.argv[1]}", "r") as file:
         config = json.load(file)
 
-        data, dimension, names = read_input_normalize(config["input"])
+        data, _, _ = read_input_normalize(config["input"])
         n = config["eta"]
         limit = config["limit"]
         n_components = config["n_components"]
