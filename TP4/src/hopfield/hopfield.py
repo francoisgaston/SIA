@@ -62,7 +62,7 @@ class Hopfield:
             state = aux
 
             if on_new_state is not None:
-                on_new_state(np.transpose(state))
+                on_new_state(np.transpose(state), i)
             pattern_found_idx = self._pattern_found_index(state)
             # if pattern_found_idx != -1 and pattern_found_idx == previous_found_idx:
             #     break
