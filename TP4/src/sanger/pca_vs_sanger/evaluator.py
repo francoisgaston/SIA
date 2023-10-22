@@ -14,7 +14,7 @@ scikit_pc2: ndarray = np.array([-0.1728722, -0.13013955, -0.36965724, 0.2652478,
 
 
 def euclidean_distance(x: ndarray, y: ndarray) -> float:
-    return np.linalg.norm(x - y)
+    return np.linalg.norm(np.absolute(x) - np.absolute(y))
 
 
 def main():
