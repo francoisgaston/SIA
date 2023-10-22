@@ -32,8 +32,10 @@ class Sanger:
                 delta_w[i, j] = self._eta * output[j] * (x[i] - delta_w[i, j])
         return delta_w
 
-    def train(self, limit: int = 100) -> ndarray:
+    def train(self, limit: int = 100, on_epoch: callable = None) -> ndarray:
         for _ in range(limit):
+            if on_epoch is not None:
+                on_epoch(self._epoch, self.weights.copy())
             self._update_eta()
             for u in self._data:
                 output = np.matmul(self.weights.T, u)

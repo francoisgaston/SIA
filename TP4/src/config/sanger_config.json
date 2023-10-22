@@ -1,6 +1,9 @@
 {
   "input": "src/data/europe.csv",
   "eta": 0.1,
-  "epoch": 1000,
-  "n_components": 2
+  "limit": 10000,
+  "n_components": 2,
+
+  "etas": [0.5, 0.2, 0.1, 0.08766557934, 0.01, 0.001],
+  "output": "src/sanger/results/"
 }

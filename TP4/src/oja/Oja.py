@@ -26,7 +26,7 @@ class Oja:
     def train(self, limit: int = 100, on_epoch: callable = None) -> ndarray:
         for i in range(limit):
             if on_epoch is not None:
-                on_epoch(i, self.weights)
+                on_epoch(i, self.weights.copy())
             self._update_eta()
             for u in self._data:
                 output = np.dot(u, self.weights)
