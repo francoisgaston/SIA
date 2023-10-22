@@ -1,0 +1,13 @@
+{
+  "input": "data/europe.csv",
+  "initial_radius": [3],
+  "initial_eta": [0.1],
+  "size": [5,4,3,2],
+  "variable_radius": [true],
+  "variable_eta": [true],
+  "mult_iterations":[500],
+  "similarity": ["EUCLIDEAN"],
+  "data_initialization": [true],
+  "output": "kohonen_size_comparison",
+  "repetitions": 20
+}
