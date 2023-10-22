@@ -3,6 +3,7 @@ import sys
 import numpy as np
 
 from hopfield import Hopfield
+from patternsNoise import PatternsNoise
 
 def read_input(file, input_length):
     file1 = open(file, "r+")
@@ -24,6 +25,7 @@ if __name__ == "__main__":
 
         patterns = read_input(input_file, input_length)
         pattern_to_try = read_input(try_file, input_length)
+        pattern_to_try = PatternsNoise.swap_with_gaussian(pattern_to_try[0], 0.5)
         max_iterations = config["max_iterations"]
         hopfield = Hopfield(patterns, max_iterations)
 
@@ -35,8 +37,8 @@ if __name__ == "__main__":
             energy_results.append(hopfield.energy_function(state))
 
         print("Patron de entrada: ")
-        Hopfield.print_letter(pattern_to_try[0])
-        hopfield.train(pattern_to_try[0], on_new_state)
+        Hopfield.print_letter(pattern_to_try)
+        hopfield.train(pattern_to_try, on_new_state)
 
         for pattern in patterns:
             Hopfield.print_letter(pattern)
