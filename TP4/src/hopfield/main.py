@@ -34,7 +34,8 @@ if __name__ == "__main__":
             # Calculate energy function after every new state
             energy_results.append(hopfield.energy_function(state))
 
-
+        print("Patron de entrada: ")
+        Hopfield.print_letter(pattern_to_try[0])
         hopfield.train(pattern_to_try[0], on_new_state)
 
         for pattern in patterns:

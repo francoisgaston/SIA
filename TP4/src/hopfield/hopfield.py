@@ -16,7 +16,7 @@ class Hopfield:
     def _weight_matrix(patterns: ndarray) -> ndarray:
         K = numpy.transpose(patterns)
         N = numpy.shape(patterns)[1]
-        pre_W = (1 / 1) * np.matmul(K, patterns)
+        pre_W = (1 / N) * np.matmul(K, patterns)
         np.fill_diagonal(pre_W, 0)
         return pre_W
 
@@ -57,7 +57,8 @@ class Hopfield:
             aux = np.sign(aux)
             for idx, elem in enumerate(aux):
                 if elem == 0:
-                    aux[0][idx] = state[0][idx]
+                    # aux[0][idx] = state[0][idx]
+                    aux[idx] = state[idx]
             state = aux
 
             if on_new_state is not None:
