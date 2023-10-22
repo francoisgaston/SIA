@@ -1,6 +1,6 @@
 {
   "input": "storedPatterns.txt",
   "try": "try.txt",
-  "size": 30,
+  "size": 25,
   "max_iterations": 100
 }
