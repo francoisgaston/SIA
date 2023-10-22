@@ -3,6 +3,7 @@ import json
 import sys
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 from hopfield import Hopfield
 
@@ -10,7 +11,6 @@ def read_input(file, input_length):
     file1 = open(file, "r+")
     result = [(1 if character == '1' else -1) for character in file1.read().split()]
     result = np.array_split(result, len(result) / input_length)
-    print(result)
     return result
 
 if __name__ == "__main__":
@@ -33,35 +33,27 @@ if __name__ == "__main__":
         combinations = list(itertools.combinations(letters.keys(), combination_size))
         avg_list = []
         for combination in combinations:
-            # print(combination, end="")
             patterns_combination = [np.array(letters[key]) for key in combination]
             max_product, min_product, avg_product = Hopfield._analyse_orthogonality(np.array(patterns_combination))
-            # print(" => Max: ", end="")
-            # print(max_product, end="")
-            # print(" | Min: ", end="")
-            # print(min_product, end="")
-            # print(" | Avg: ", end="")
-            # print(avg_product)
             avg_list.append((avg_product, combination))
         df = pd.DataFrame(sorted(avg_list), columns=["|<,>| avg", "combination"])
-        # df.head(15).style.format({'|<,>| avg': "{:.2f}"}).hide(axis='index')
-        print(df.head(55))
-        print(df.tail(15))
+        
+        # Visualize top 55 combinations
+        plt.figure(figsize=(15,6))
+        df.head(55).plot(x='combination', y='|<,>| avg', kind='bar', figsize=(15, 6))
+        plt.title("Top 55 Combinations based on Average Orthogonality")
+        plt.ylabel("|<,>| avg")
+        plt.xlabel("Combinations")
+        plt.xticks(rotation=90)
+        plt.tight_layout()
+        plt.show()
 
-
-        # hopfield = Hopfield(patterns, max_iterations)
-        #
-        # energy_results = []
-        #
-        # # Hopfield train hook
-        # def on_new_state(state):
-        #     # Calculate energy function after every new state
-        #     energy_results.append(hopfield.energy_function(state))
-        #
-        #
-        # hopfield.train(pattern_to_try[0], on_new_state)
-        #
-        # for pattern in patterns:
-        #     Hopfield.print_letter(pattern)
-        #
-        # print(energy_results)
+        # Visualize bottom 15 combinations
+        plt.figure(figsize=(10,4))
+        df.tail(15).plot(x='combination', y='|<,>| avg', kind='bar', figsize=(10, 4))
+        plt.title("Bottom 15 Combinations based on Average Orthogonality")
+        plt.ylabel("|<,>| avg")
+        plt.xlabel("Combinations")
+        plt.xticks(rotation=90)
+        plt.tight_layout()
+        plt.show()
