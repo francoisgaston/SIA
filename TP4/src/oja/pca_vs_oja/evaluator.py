@@ -13,7 +13,7 @@ scikit_pc1: ndarray = np.array([0.1248739, -0.50050586, 0.40651815, -0.48287333,
 
 
 def euclidean_distance(x: ndarray, y: ndarray) -> float:
-    return np.linalg.norm(x - y)
+    return np.linalg.norm(np.absolute(x) - np.absolute(y))
 
 
 def main():
@@ -46,10 +46,11 @@ def main():
 
                 def on_epoch(epoch, weights):
                     error = euclidean_distance(weights, scikit_pc1)
-                    print(f"Epoch {epoch}: {error}")
+                    #print(f"Epoch {epoch}: {error}")
                     csv_writer.writerow([epoch, error] + weights.tolist())
-
-                oja.train(limit=limit, on_epoch=on_epoch)
+                print(eta)
+                print(scikit_pc1)
+                print(oja.train(limit=limit, on_epoch=on_epoch))
 
 
 if __name__ == "__main__":
