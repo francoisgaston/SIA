@@ -71,5 +71,5 @@ if __name__ == "__main__":
         kohonen.train(data)
         results, activation_names = kohonen.get_activations(data, names)
         u_data = kohonen.get_u_matrix()
-        show_heatmap(results, "matriz de agrupacion", activation_names)
-        show_u_matrix(u_data, "matriz u")
+        show_heatmap(results, config["heatmap_title"], activation_names)
+        show_u_matrix(u_data, config["u_matrix_title"])
