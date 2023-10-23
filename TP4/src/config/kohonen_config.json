@@ -2,12 +2,12 @@
   "input": "data/europe.csv",
   "initial_radius": 3,
   "initial_eta": 0.1,
-  "size": 2,
-  "variable_radius": true,
+  "size": 3,
+  "variable_radius": false,
   "variable_eta": true,
   "mult_iterations": 500,
   "similarity": "EUCLIDEAN",
   "data_initialization": true,
-  "heatmap_title": "matriz de agrupacion (k=2)",
-  "u_matrix_title": "matriz u (k=2)"
+  "heatmap_title": "matriz de agrupacion (radio=3)",
+  "u_matrix_title": "matriz u (radio=3)"
 }

@@ -1,4 +1,4 @@
 {
-  "group_by": "size",
-  "title": "Promedio Heatmap y U-matrix para k"
+  "group_by": "variable_radius",
+  "title": "Promedio U-matrix para radio variable"
 }
