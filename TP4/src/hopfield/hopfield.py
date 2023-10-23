@@ -71,7 +71,7 @@ class Hopfield:
                 break
             i += 1
             previous_state = state
-            Hopfield.print_letter(state)
+            # Hopfield.print_letter(state)
         return state
 
     @staticmethod

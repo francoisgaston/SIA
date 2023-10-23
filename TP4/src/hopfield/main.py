@@ -60,6 +60,12 @@ if __name__ == "__main__":
         patterns = read_input(input_file, input_length)
         pattern_to_try = read_input(try_file, input_length)
 
+        if config["plot_stored_patterns"] is True:
+            i = 1
+            for pattern in patterns:
+                plot_pattern(np.array(pattern), i, save_path="plots/stored")
+                i += 1
+
         if noise is True:
             pattern_to_try = PatternsNoise.swap_with_gaussian(pattern_to_try[0], config["probability_of_noise"])
         else:
@@ -74,18 +80,25 @@ if __name__ == "__main__":
         def on_new_state(state, iteration):
             # Calculate energy function after every new state
             energy_results.append(hopfield.energy_function(state))
-            plot_pattern(np.array(state), iteration)
+            if config["plot_states"] is True:
+                plot_pattern(np.array(state), iteration)
 
         print("Input pattern: ")
-        plot_pattern(pattern_to_try, 0)
+        Hopfield.print_letter(pattern_to_try)
+
 
         hopfield.train(pattern_to_try, on_new_state)
 
         # Aggregate all saved plots into a grid
-        aggregate_plots(len(energy_results))
+        if config["plot_states"] is True:
+            plot_pattern(pattern_to_try, -1)
+            aggregate_plots(len(energy_results))
 
-        print(energy_results)
-        df = pd.DataFrame({'Value': energy_results, 'Index': range(len(energy_results))})
-        print(df)
-        fig = px.line(df, x='Index', y='Value', title='Index vs. Value with Lines and Dots', markers=True)
-        fig.show()
+        if config["plot_energy"] is True:
+            print(energy_results)
+            df = pd.DataFrame({'Value': energy_results, 'Index': range(len(energy_results))})
+            print(df)
+            fig = px.line(df, x='Index', y='Value', title='Evolucion de la energia de Hopfield', markers=True)
+            fig.update_xaxes(title_text='Iteraciones')
+            fig.update_yaxes(title_text='H [Energia de Hopfield]')
+            fig.show()

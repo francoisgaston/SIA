@@ -1,6 +1,6 @@
 {
   "input": "letters.txt",
-  "combination_size": 4,
+  "combination_size": 7,
   "try": "try.txt",
   "size": 25,
   "max_iterations": 100
