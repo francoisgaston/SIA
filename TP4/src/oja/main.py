@@ -19,6 +19,8 @@ def main():
         oja = Oja(eta_0=n, data=data)
         autovector = oja.train(limit=limit)
 
+        print(autovector)
+
 
 if __name__ == "__main__":
     main()

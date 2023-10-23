@@ -5,7 +5,8 @@ import plotly.graph_objects as go
 import plotly.express as px
 import json
 import sys
-
+import os
+import csv
 from utils import read_input
 
 
@@ -63,6 +64,14 @@ def biplot(loadings, PC1, PC2, names, headers):
     fig.show()
 
 
+def csv_to_compare(names, pc1):
+    CSV = f"src/oja/results/pca_vs_oja_bar_PCA.csv"
+    os.makedirs(os.path.dirname(CSV), exist_ok=True)
+    with open(CSV, "w", newline='') as output_file:
+        csv_writer = csv.writer(output_file)
+        csv_writer.writerow(names)
+        csv_writer.writerow(pc1)
+
 def main():
     with open(f"{sys.argv[1]}", "r") as file:
         config = json.load(file)
@@ -84,6 +93,7 @@ def main():
 
         # TODO: revisar si está bien, creo que si porque es como que estoy eligiendo al primer autovector solo
         pc1 = x[:, 0]
+
         component_graph(names, pc1)
 
         # Ordenar los paises segun el valor de la componente principal
@@ -96,6 +106,8 @@ def main():
             loadings = principal.components_.T * np.sqrt(principal.explained_variance_)
             pc2 = x[:, 1]
             biplot(loadings, pc1, pc2, names, headers[1::])
+
+        csv_to_compare(names, pc1)
 
 
 if __name__ == "__main__":
