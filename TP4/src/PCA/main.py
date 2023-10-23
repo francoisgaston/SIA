@@ -19,10 +19,11 @@ def boxplot_graph(headers, scaled_data):
 
 
 def component_graph(countries, pc1):
-    fig = go.Figure([go.Bar(x=countries, y=pc1)])
+    fig = go.Figure(go.Bar(x=countries, y=pc1))
     fig.update_layout(xaxis_title="País",
                       yaxis_title="PC1",
                       title="PC1 para cada país")
+    fig.update_traces(textfont_size=16, textposition='outside', text=pc1, texttemplate='<b>%{text:.2f}</b>')
     fig.show()
 
 
