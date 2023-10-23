@@ -2,6 +2,8 @@ import json
 import sys
 import os
 import numpy as np
+import pandas as pd
+import plotly.express as px
 import matplotlib.pyplot as plt
 from hopfield import Hopfield
 from patternsNoise import PatternsNoise
@@ -83,3 +85,7 @@ if __name__ == "__main__":
         aggregate_plots(len(energy_results))
 
         print(energy_results)
+        df = pd.DataFrame({'Value': energy_results, 'Index': range(len(energy_results))})
+        print(df)
+        fig = px.line(df, x='Index', y='Value', title='Index vs. Value with Lines and Dots', markers=True)
+        fig.show()
