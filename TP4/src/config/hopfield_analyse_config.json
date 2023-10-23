@@ -1,7 +1,7 @@
 {
   "input": "letters.txt",
-  "combination_size": 7,
+  "combination_size": 3,
   "try": "try.txt",
   "size": 25,
-  "max_iterations": 100
+  "max_iterations": 77
 }

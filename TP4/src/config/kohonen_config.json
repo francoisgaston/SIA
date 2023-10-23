@@ -1,5 +1,5 @@
 {
-  "input": "data/europe.csv",
+  "input": "src/data/europe.csv",
   "initial_radius": 3,
   "initial_eta": 0.1,
   "size": 3,
@@ -8,6 +8,6 @@
   "mult_iterations": 500,
   "similarity": "EUCLIDEAN",
   "data_initialization": true,
-  "heatmap_title": "matriz de agrupacion (radio=3)",
-  "u_matrix_title": "matriz u (radio=3)"
+  "heatmap_title": "Matriz de agrupacion (Radio inicial=3)",
+  "u_matrix_title": "Matriz U (Radio inicial=3)"
 }

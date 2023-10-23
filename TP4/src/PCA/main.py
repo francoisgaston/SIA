@@ -99,6 +99,7 @@ def main():
 
         # Ordenar los paises segun el valor de la componente principal
         sorted_countries = [country for country in sorted(zip(pc1, names))]
+        print("Países ordenados según el valor de la componente principal 1:")
         for idx, country in enumerate(sorted_countries):
             print(f"#{idx + 1} {country[1]}: {country[0].round(2)}")
 
