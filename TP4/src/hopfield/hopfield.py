@@ -80,7 +80,6 @@ class Hopfield:
         min_product = np.dot(patterns[0], patterns[1])
         avg_product = 0
 
-        # print("productos -> ", end=" ")
         for i in range(len(patterns)):
             for j in range(i + 1, len(patterns)):
                 product = np.dot(patterns[i], patterns[j])
@@ -89,7 +88,6 @@ class Hopfield:
                 if product < min_product:
                     min_product = product
                 avg_product += abs(product)
-                # print(product, end=" | ")
 
         avg_product /= len(patterns)
         return max_product, min_product, avg_product
