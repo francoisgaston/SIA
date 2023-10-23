@@ -24,7 +24,7 @@ def biplot_graphs(names: ndarray, headers: ndarray, scikit: tuple, sanger: tuple
             arrowhead=2,
             xanchor="right",
             yanchor="top",
-            arrowcolor="lightblue",
+            arrowcolor="steelblue",
         )
         eigenvecs_fig.add_annotation(
             x=scikit[0][i, 0],
@@ -35,7 +35,7 @@ def biplot_graphs(names: ndarray, headers: ndarray, scikit: tuple, sanger: tuple
             text=feature,
             yshift=5,
             font=dict(
-                color="lightblue",
+                color="steelblue",
             )
         )
         eigenvecs_fig.add_annotation(
@@ -48,7 +48,7 @@ def biplot_graphs(names: ndarray, headers: ndarray, scikit: tuple, sanger: tuple
             arrowhead=2,
             xanchor="right",
             yanchor="top",
-            arrowcolor="pink",
+            arrowcolor="tomato",
         )
         eigenvecs_fig.add_annotation(
             x=sanger[0][i, 0],
@@ -59,7 +59,7 @@ def biplot_graphs(names: ndarray, headers: ndarray, scikit: tuple, sanger: tuple
             text=feature,
             yshift=5,
             font=dict(
-                color="pink",
+                color="tomato",
             )
         )
 
@@ -116,7 +116,7 @@ def get_sanger_data(scaled_data: ndarray) -> tuple:
 def get_scikit_data(scaled_data: ndarray, n_components: int) -> tuple:
     principal = PCA(n_components)
     principal.fit(scaled_data)
-    loadings = principal.components_.T * np.sqrt(principal.explained_variance_)
+    loadings = principal.components_.T
 
     pcs = principal.transform(scaled_data)
     pc1 = pcs[:, 0]
