@@ -1,4 +1,6 @@
 {
   "input": "src/data/europe.csv",
-  "n_components": 2
+  "n_components": 2,
+
+  "output": "src/PCA/results/"
 }

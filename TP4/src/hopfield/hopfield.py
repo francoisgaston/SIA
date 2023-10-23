@@ -16,7 +16,7 @@ class Hopfield:
     def _weight_matrix(patterns: ndarray) -> ndarray:
         K = numpy.transpose(patterns)
         N = numpy.shape(patterns)[1]
-        pre_W = (1 / 1) * np.matmul(K, patterns)
+        pre_W = (1 / N) * np.matmul(K, patterns)
         np.fill_diagonal(pre_W, 0)
         return pre_W
 
@@ -57,11 +57,12 @@ class Hopfield:
             aux = np.sign(aux)
             for idx, elem in enumerate(aux):
                 if elem == 0:
-                    aux[0][idx] = state[0][idx]
+                    # aux[0][idx] = state[0][idx]
+                    aux[idx] = state[idx]
             state = aux
 
             if on_new_state is not None:
-                on_new_state(np.transpose(state))
+                on_new_state(np.transpose(state), i)
             pattern_found_idx = self._pattern_found_index(state)
             # if pattern_found_idx != -1 and pattern_found_idx == previous_found_idx:
             #     break
@@ -70,7 +71,7 @@ class Hopfield:
                 break
             i += 1
             previous_state = state
-            Hopfield.print_letter(state)
+            # Hopfield.print_letter(state)
         return state
 
     @staticmethod
@@ -79,7 +80,6 @@ class Hopfield:
         min_product = np.dot(patterns[0], patterns[1])
         avg_product = 0
 
-        print("productos -> ", end=" ")
         for i in range(len(patterns)):
             for j in range(i + 1, len(patterns)):
                 product = np.dot(patterns[i], patterns[j])
@@ -88,7 +88,6 @@ class Hopfield:
                 if product < min_product:
                     min_product = product
                 avg_product += abs(product)
-                print(product, end=" | ")
 
         avg_product /= len(patterns)
         return max_product, min_product, avg_product

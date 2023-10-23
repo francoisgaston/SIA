@@ -1,4 +1,3 @@
-import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
@@ -7,16 +6,7 @@ import plotly.express as px
 import json
 import sys
 
-
-def read_input(input_file_path):
-    df = pd.read_csv(input_file_path)
-    headers = df.columns.tolist()
-    names = df['Country']
-    selected_columns = df.loc[:, df.columns != 'Country']
-    selected_columns = selected_columns.iloc[0:]
-    aux = selected_columns.to_numpy()
-    # aux = np.delete(aux, 0, axis=1)
-    return aux, names, headers
+from utils import read_input
 
 
 def boxplot_graph(headers, scaled_data):
