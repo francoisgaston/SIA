@@ -1,0 +1,11 @@
+{
+  "input": "storedPatterns.txt",
+  "try": "try.txt",
+  "size": 25,
+  "max_iterations": 100,
+  "noise": false,
+  "probability_of_noise": 0.9,
+  "plot_states": true,
+  "plot_energy": true,
+  "plot_stored_patterns": true
+}
