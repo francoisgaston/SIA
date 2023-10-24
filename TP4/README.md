@@ -53,8 +53,8 @@ pipenv run python src/kohonen/main.py [config_file]
 #### Resultado
 El programa muestra en pantalla los gráficos Heatmap y Matriz U luego de entrenar el modelo con los datos de entrada.
 
-<img src="images/kohonen_heatmap.png" width="500" alt="Kohonen Heatmap">
-<img src="images/kohonen_umatrix.png" width="500" alt="Kohonen U-Matrix">
+<img src="images/kohonen_heatmap.png" width="1000" alt="Kohonen Heatmap">
+<img src="images/kohonen_umatrix.png" width="1000" alt="Kohonen U-Matrix">
 
 
 # Ejercicio 2 - Componentes Principales
@@ -76,11 +76,11 @@ pipenv run python src/PCA/main.py [config_file]
 #### Resultado
 El programa muestra en pantalla los gráficos de:
 - Boxplot de las variables estandarizadas
-   <img src="images/pca_boxplot.png" width="500" alt="PCA Boxplot"> 
+   <br><img src="images/pca_boxplot.png" width="1000" alt="PCA Boxplot"> 
 - Gráfico de barras de PC1 por país
-   <img src="images/pca_pc1.png" width="500" alt="PCA PC1">
+   <br><img src="images/pca_pc1.png" width="1000" alt="PCA PC1">
 - Biplot de PC1 y PC2
-   <img src="images/pca_biplot.png" width="500" alt="PCA Biplot">
+   <br><img src="images/pca_biplot.png" width="1000" alt="PCA Biplot">
 
 También imprime por STDOUT un listado de los países ordenados (ascendentemente) por su valor de PC1.
 
@@ -126,7 +126,7 @@ El programa imprime por STDOUT los autovectores asociados a las componentes prin
 
 
 # Ejercicio 3 - Patrones - Modelo de Hopfield
-<img src="images/hopfield_patterns.png" width="500" alt="Hopfield Patterns">
+<img src="images/hopfield_patterns.png" width="1000" alt="Hopfield Patterns">
 
 ## Ejecucion
 ### `src/hopfield/main.py`
