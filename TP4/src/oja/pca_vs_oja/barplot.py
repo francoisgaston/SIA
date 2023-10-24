@@ -19,7 +19,8 @@ def main():
     # Reformatea los datos utilizando melt para tener cada dato del encabezado en el eje X
     melted_data = df_combined.melt(id_vars=['Eta'], var_name='País', value_name='Valor')
     fig = px.bar(melted_data, x='País', y='Valor', color='Eta', labels={'Valor': 'PC1'}, barmode='group')
-    fig.update_layout(title='PC1 para cada pais agrupado por eta')
+    fig.update_layout(title='PC1 con regla de Oja')
+    fig.update_traces(texttemplate='%{text:.4f}', textposition='outside', text=melted_data['Valor'])
     fig.show()
 
 
