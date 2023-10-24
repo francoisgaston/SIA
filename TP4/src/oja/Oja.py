@@ -21,7 +21,7 @@ class Oja:
         self._eta = self._eta_0 / self._epoch
 
     def _delta_weights(self, x: ndarray, output: float) -> ndarray:
-        return self._eta * output * (x - output * self.weights)
+        return (self._eta * output * (x - output * self.weights)).astype(float)
 
     def train(self, limit: int = 100, on_epoch: callable = None) -> ndarray:
         for i in range(limit):

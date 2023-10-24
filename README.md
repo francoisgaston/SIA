@@ -17,6 +17,10 @@ This project is dedicated to optimizing character configurations for a role-play
 This project involves implementing simple and multilayer perceptrons to solve various problems. It explores logical operations, classification tasks, and digit recognition using neural networks. The project aims to understand the capabilities of these neural models and their generalization performance.
 <br> This project provides a comprehensive exploration of neural networks, from basic single-layer perceptrons to more advanced multilayer architectures. It aims to enhance understanding of neural network capabilities and their application in real-world problem-solving scenarios.
 
+#### TP04: Unsupervised Learning
+This project focuses on unsupervised learning and comprises various exercises involving Kohonen networks, Principal Component Analysis (PCA), and pattern recognition using the Hopfield model. 
+<br> The exercises explore clustering countries based on characteristics, computing principal components, and recognizing noisy patterns
+
 ### Members
 - 62248 - [José Rodolfo Mentasti](https://github.com/JoseMenta)
 - 62510 - [Martín Augusto Ippolito](https://github.com/martinippo01)

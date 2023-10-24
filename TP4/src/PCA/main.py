@@ -19,10 +19,11 @@ def boxplot_graph(headers, scaled_data):
 
 
 def component_graph(countries, pc1):
-    fig = go.Figure([go.Bar(x=countries, y=pc1)])
+    fig = go.Figure(go.Bar(x=countries, y=pc1))
     fig.update_layout(xaxis_title="País",
                       yaxis_title="PC1",
                       title="PC1 para cada país")
+    fig.update_traces(textfont_size=16, textposition='outside', text=pc1, texttemplate='<b>%{text:.2f}</b>')
     fig.show()
 
 
@@ -98,6 +99,7 @@ def main():
 
         # Ordenar los paises segun el valor de la componente principal
         sorted_countries = [country for country in sorted(zip(pc1, names))]
+        print("Países ordenados según el valor de la componente principal 1:")
         for idx, country in enumerate(sorted_countries):
             print(f"#{idx + 1} {country[1]}: {country[0].round(2)}")
 

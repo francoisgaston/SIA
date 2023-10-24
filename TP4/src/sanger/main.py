@@ -1,7 +1,7 @@
 import sys
 import json
-from Sanger import Sanger
-from utils import read_input_normalize
+from .Sanger import Sanger
+from .utils import read_input_normalize
 
 
 def main():
@@ -18,7 +18,10 @@ def main():
         n_components = config["n_components"]
 
         sanger = Sanger(eta_0=n, data=data, n_components=n_components)
-        eigenvectors = sanger.train(limit=limit)
+        eigenvectors = sanger.train(limit=limit).T
+        print("Los autovectores son: ")
+        for i in range(len(eigenvectors)):
+            print(f" - Autovector PC{i+1}: {eigenvectors[i].round(3).tolist()}")
 
 
 if __name__ == "__main__":

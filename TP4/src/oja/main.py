@@ -1,7 +1,7 @@
 import sys
 import json
-from Oja import Oja
-from utils import read_input_normalize
+from .Oja import Oja
+from .utils import read_input_normalize
 
 
 def main():
@@ -17,9 +17,9 @@ def main():
         limit = config["limit"]
 
         oja = Oja(eta_0=n, data=data)
-        autovector = oja.train(limit=limit)
+        eigenvector = oja.train(limit=limit)
 
-        print(autovector)
+        print(f"El autovector de PC1 es: {eigenvector.round(3).tolist()}")
 
 
 if __name__ == "__main__":
