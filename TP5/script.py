@@ -8,9 +8,9 @@ def convert_to_bit_matrix_and_save(hex_font, filename):
     """
     with open(filename, 'w') as file:
         for char in hex_font:
-            char_matrix = [f"{num:08b}" for num in char]  # Convert each hex to binary string
+            char_matrix = [f"{num:08b}"[3::] for num in char]  # Convert each hex to binary string
             formatted_matrix = [" ".join(row) for row in char_matrix]
-            file.write("\n".join(formatted_matrix) + "\n---------------\n")
+            file.write("\n".join(formatted_matrix) + "\n")
 
 hex_fonts = [
    [0x04, 0x04, 0x02, 0x00, 0x00, 0x00, 0x00],   # 0x60, `
@@ -44,7 +44,7 @@ hex_fonts = [
    [0x04, 0x04, 0x04, 0x00, 0x04, 0x04, 0x04],   # 0x7c, |
    [0x0c, 0x02, 0x02, 0x01, 0x02, 0x02, 0x0c],   # 0x7d, }
    [0x08, 0x15, 0x02, 0x00, 0x00, 0x00, 0x00],   # 0x7e, ~
-   [0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f]   
+   [0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f]
 ]
 
-convert_to_bit_matrix_and_save(hex_fonts, "./fonts.txt")
+convert_to_bit_matrix_and_save(hex_fonts, "src/data/fonts.txt")
