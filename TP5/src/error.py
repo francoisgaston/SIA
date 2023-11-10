@@ -62,6 +62,7 @@ class CrossEntropyError:
     def __init__(self, activation_function=None):
         self._activation_function = activation_function
 
+    # TODO: Compute passes data, mlp and expected, in that order
     def compute(self, data, expected, w):
         ans = 0.0
         for i in range(len(data)):
@@ -95,8 +96,8 @@ class Norm2Error:
         ans = 0.0
         for i in range(len(data)):
             obtained = mlp.forward(data[i])
-            ans += np.linalg.norm(data[i] - obtained) # ||xn - xn'||
-        return ans   # || x1 - x1'|| + ||x2 - x2'|| + ... + ||xn - xn'||
+            ans += np.linalg.norm(expected[i] - obtained) # ||xn - xn'||
+        return ans/len(data)   # || x1 - x1'|| + ||x2 - x2'|| + ... + ||xn - xn'||
 
 
 # Given two vectors, calculates the norm between both of them: || x1 - x2 ||

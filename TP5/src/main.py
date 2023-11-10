@@ -24,6 +24,21 @@ def augment_training_data(data, labels, noise_stddev):
     noisy_data, noisy_labels = add_gaussian_noise(np.array(data), np.array(labels), noise_stddev)
     return np.concatenate((data, noisy_data)), np.concatenate((labels, noisy_labels))
 
+
+def print_pixels_diff(mlp, data):
+    print("Cantidad de pixeles diferentes por dato:")
+    max_diff = 0
+    for i in range(len(data)):
+        obtained = mlp.forward(data[i])
+        if i == 1:
+           print(data[i], "\n", np.round(obtained), "\n\n")
+        diff = 0
+        for j in range(len(data[i])):
+            diff += np.round(data[i][j] - obtained[j])
+        max_diff = max(max_diff,diff)
+        # print(f"{i}: {diff} pixels")
+    print(f"max_diff: {max_diff}\n")
+
 # Recibe la data y lo transforma en np's arrays de cada numero
 def read_input(file, input_length):
     file1 = open(file, "r+")
@@ -64,7 +79,6 @@ def train_perceptron(config, mlp, data, expected, perceptrons_per_layer, on_epoc
     condition = condition_from_str(config['error'], config['epsilon'])
     error = error_from_str(config["error"])
     limit = config["limit"]
-
     batch = config["batch"] if config["batch"] <= len(data) else len(data)
 
     last_error = min_error
@@ -86,6 +100,19 @@ def train_perceptron(config, mlp, data, expected, perceptrons_per_layer, on_epoc
 
         new_error = error.compute(data, mlp, expected)
 
+        ### Adam
+        # for j in range(len(mlp.weights)):
+        #     m[j] = beta1 * m[j] + (1 - beta1) * gradient[j]
+        #     v[j] = beta2 * v[j] + (1 - beta2) * (gradient[j] ** 2)
+        #
+        #     # Compute bias-corrected first and second moment estimates
+        #     m_hat = m[j] / (1 - beta1 ** t)
+        #     v_hat = v[j] / (1 - beta2 ** t)
+        #
+        #     # Update weights
+        #     mlp.weights[j] -= alpha * m_hat / (np.sqrt(v_hat) + epsilon)
+
+        ### Adaptive eta
         if last_error > new_error:
             if error_tendency < 0:
                 error_tendency = 0
@@ -102,6 +129,8 @@ def train_perceptron(config, mlp, data, expected, perceptrons_per_layer, on_epoc
             if error_tendency <= config['adaptive_eta_iterations_decrement']:
                 n -= config['adaptive_eta_decrement_constant'] * n
                 error_tendency = 0
+
+        ### exec
         if on_epoch is not None:
             on_epoch(i, mlp, n)
 
@@ -132,9 +161,10 @@ if __name__ == "__main__":
 
 
         def on_min_error(epoch, mlp, min_error):
+            print_pixels_diff(mlp, data)
             print("min_error: ", min_error)
 
-        train_perceptron(config, mlp, data, expected,perceptrons_per_layer=layers, on_epoch=None, on_min_error=on_min_error)
+        train_perceptron(config, mlp, data, expected, perceptrons_per_layer=layers, on_epoch=None, on_min_error=on_min_error)
 
         for weights in mlp.get_all_weights():
             print(weights)
