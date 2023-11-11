@@ -1,4 +1,5 @@
 import csv
+import pickle
 import datetime
 import json
 import numpy as np
@@ -39,6 +40,7 @@ def print_pixels_diff(mlp, data):
         max_diff = max(max_diff,diff)
         # print(f"{i}: {diff} pixels")
     print(f"max_diff: {max_diff}\n")
+    return max_diff
 
 
 # Recibe la data y lo transforma en np's arrays de cada numero
@@ -100,35 +102,6 @@ def train_perceptron(config, mlp, data, expected, perceptrons_per_layer, on_epoc
         new_error = error.compute(data, mlp, expected)
 
         optimizer.on_epoch(new_error)
-        ### Adam
-        # for j in range(len(mlp.weights)):
-        #     m[j] = beta1 * m[j] + (1 - beta1) * gradient[j]
-        #     v[j] = beta2 * v[j] + (1 - beta2) * (gradient[j] ** 2)
-        #
-        #     # Compute bias-corrected first and second moment estimates
-        #     m_hat = m[j] / (1 - beta1 ** t)
-        #     v_hat = v[j] / (1 - beta2 ** t)
-        #
-        #     # Update weights
-        #     mlp.weights[j] -= alpha * m_hat / (np.sqrt(v_hat) + epsilon)
-
-        ### Adaptive eta
-        # if last_error > new_error:
-        #     if error_tendency < 0:
-        #         error_tendency = 0
-        #     error_tendency += 1
-        # if new_error >= last_error:
-        #     if error_tendency > 0:
-        #         error_tendency = 0
-        #     error_tendency -= 1
-        # last_error = new_error
-        # if config['adaptive_eta']:
-        #     if error_tendency >= config['adaptive_eta_iterations_increment']:
-        #         n += config['adaptive_eta_increment']
-        #         error_tendency = 0
-        #     if error_tendency <= config['adaptive_eta_iterations_decrement']:
-        #         n -= config['adaptive_eta_decrement_constant'] * n
-        #         error_tendency = 0
 
         ### exec
         if on_epoch is not None:
@@ -154,15 +127,22 @@ if __name__ == "__main__":
         expected = np.copy(data)
         activation_function = activation_from_str(string=config['activation'], beta=config["beta"])
 
+
         # make layers symmetric
         encoder_layers = config['perceptrons_for_layers']
         decoder_layers = config['perceptrons_for_layers'][::-1]
         layers = encoder_layers + decoder_layers[1::]
         mlp = MultiLayerPerceptron(layers, activation_function)
 
+        if(config["pickle"]):
+            with open(config["pickle"], 'rb') as file:
+                mlp = pickle.load(file)
 
         def on_min_error(epoch, mlp, min_error):
-            print_pixels_diff(mlp, data)
+            max_diff = print_pixels_diff(mlp, data)
+            if(max_diff == 0):
+                with open('mlp_max_diff_0.pkl', 'wb') as file:
+                    pickle.dump(mlp, file)
             print("min_error: ", min_error)
 
         train_perceptron(config, mlp, data, expected, perceptrons_per_layer=layers, on_epoch=None, on_min_error=on_min_error)
@@ -172,66 +152,3 @@ if __name__ == "__main__":
 
 
 
-    # # Specify the folder name
-    # folder_name = "./output"
-    #
-    # # Check if the folder exists. If not, create it
-    # if not os.path.exists(folder_name):
-    #     os.makedirs(folder_name)
-    #
-    # current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    # # Create the filename
-    # csv_filename = f"{folder_name}/training_data_{current_time}.csv"
-    #
-    # # Check if the CSV file already exists
-    # file_exists = os.path.isfile(csv_filename)
-    #
-    # # Open the CSV file and create a CSV writer object
-    # with open(csv_filename, mode='a', newline='') as csv_file:
-    #     csv_writer = csv.writer(csv_file)
-    #
-    #     # Write the headers for the CSV file only if the file is new
-    #     if not file_exists:
-    #         csv_writer.writerow(['config_id', 'epoca', 'error_training', 'error_test', 'entrada', 'salida',
-    #                              'capas_ocultas', 'activacion', 'eta', 'beta', 'activation', 'error_function', 'batch',
-    #                              'noise_stddev', 'data_augmentation', 'iteration'])
-    #
-    #     for config_id, config_file_path in enumerate(sys.argv[1:]):
-    #         with open(config_file_path, "r") as config_file:
-    #             config = json.load(config_file)
-    #             for i in range(config['iterations']):
-    #                 # for augmentation in [True, False]:
-    #
-    #                 expected = np.array(config['expected'])
-    #                 data = read_input(config['input'], config['input_length'])  #
-    #                 activation_function = activation_from_str(string=config['activation'], beta=config["beta"])  #
-    #                 error = error_from_str(config["error"])
-    #                 mlp = MultiLayerPerceptron(config['perceptrons_for_layers'], activation_function)  #
-    #                 train_data, train_expected, test_data, test_expected = split_data(data, expected, config["test_pct"])
-    #
-    #                 if config["data_augmentation"]:
-    #                     train_data, train_expected = augment_training_data(train_data, train_expected, config['noise_stddev'])
-    #
-    #
-    #                 def on_epoch(epoch, mlp, actual_eta):
-    #                     training_error = error.compute(train_data, mlp, train_expected)
-    #                     test_error = error.compute(test_data, mlp, test_expected)
-    #                     csv_writer.writerow(
-    #                         [config_id, epoch, training_error, test_error, config['input'], config['input_length'],
-    #                          config['perceptrons_for_layers'], config['activation'], config['n'],
-    #                          config['beta'], config['activation'], config["error"], config["batch"], config["noise_stddev"], augmentation, i])
-    #                 # TODO: make csv show actual eta
-    #
-    #                 def on_min_error(epoch, mlp, min_error):
-    #                     print("min_error: ", min_error)
-    #
-    #
-    #                 train_perceptron(config, mlp, train_data, train_expected, on_epoch, on_min_error)
-    #
-    #             for weights in mlp.get_all_weights():  #
-    #                 print(weights)
-    #
-    #             for i in range(len(data)):
-    #                 print("expected: ", expected[i])
-    #                 obtained = mlp.forward(data[i])
-    #                 print("obtained: ", obtained)
