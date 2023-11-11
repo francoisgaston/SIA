@@ -55,8 +55,8 @@ class AdaptiveEta:
 class Momemtum:
 
     def __init__(self, config, perceptrons_per_layer):
-        self.beta = config["momemtum_beta"]
-        self.alpha = config["momemtum_alpha"]
+        self.beta = config["momentum_beta"]
+        self.alpha = config["momentum_alpha"]
         self.m = [np.zeros((perceptrons_per_layer[indx], perceptrons_per_layer[indx - 1] + 1)) for indx in
                   range(len(perceptrons_per_layer) - 1, 0, -1)]
 
