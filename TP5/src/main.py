@@ -10,7 +10,7 @@ from condition import from_str as condition_from_str
 from activation import from_str as activation_from_str
 from error import from_str as error_from_str
 from multilayerPerceptron import MultiLayerPerceptron
-
+from optimizer import from_str as optimizer_from_str
 
 
 def add_gaussian_noise(data, labels, stddev):
@@ -19,6 +19,7 @@ def add_gaussian_noise(data, labels, stddev):
     noisy_data = data + np.random.normal(0, stddev, data.shape)
     noisy_labels = labels + np.random.normal(0, stddev, labels.shape)
     return noisy_data, noisy_labels
+
 
 def augment_training_data(data, labels, noise_stddev):
     noisy_data, noisy_labels = add_gaussian_noise(np.array(data), np.array(labels), noise_stddev)
@@ -38,6 +39,7 @@ def print_pixels_diff(mlp, data):
         max_diff = max(max_diff,diff)
         # print(f"{i}: {diff} pixels")
     print(f"max_diff: {max_diff}\n")
+
 
 # Recibe la data y lo transforma en np's arrays de cada numero
 def read_input(file, input_length):
@@ -65,24 +67,20 @@ def split_data(data, expected, test_pct):
     return train_data, train_expected, test_data, test_expected
 
 
-
-
-
 def train_perceptron(config, mlp, data, expected, perceptrons_per_layer, on_epoch=None, on_min_error=None):
     if len(data) == 0:
         return []
 
     i = 0
     min_error = sys.float_info.max
-    n = config['n']
 
     condition = condition_from_str(config['error'], config['epsilon'])
     error = error_from_str(config["error"])
     limit = config["limit"]
     batch = config["batch"] if config["batch"] <= len(data) else len(data)
-
-    last_error = min_error
-    error_tendency = 0
+    optimizer = optimizer_from_str(config["optimizer"],config["optimizer_config"],config['n'],perceptrons_per_layer)
+    # last_error = min_error
+    # error_tendency = 0
 
     while not condition.check_stop(min_error) and i < limit:
         final_delta_w = [np.zeros((perceptrons_per_layer[indx], perceptrons_per_layer[indx - 1] + 1)) for indx in
@@ -92,7 +90,8 @@ def train_perceptron(config, mlp, data, expected, perceptrons_per_layer, on_epoc
         for u in u_arr:
             values = mlp.forward(data[u])
             aux_error = np.array(expected[u]) - np.array(values)
-            deltas = mlp.backward(aux_error, data[u], n)
+            gradients = mlp.backward(aux_error, data[u], 1)
+            deltas = optimizer.get_deltas(gradients)
             for aux in range(len(final_delta_w)):
                 final_delta_w[aux] += deltas[aux]
 
@@ -100,6 +99,7 @@ def train_perceptron(config, mlp, data, expected, perceptrons_per_layer, on_epoc
 
         new_error = error.compute(data, mlp, expected)
 
+        optimizer.on_epoch(new_error)
         ### Adam
         # for j in range(len(mlp.weights)):
         #     m[j] = beta1 * m[j] + (1 - beta1) * gradient[j]
@@ -113,26 +113,27 @@ def train_perceptron(config, mlp, data, expected, perceptrons_per_layer, on_epoc
         #     mlp.weights[j] -= alpha * m_hat / (np.sqrt(v_hat) + epsilon)
 
         ### Adaptive eta
-        if last_error > new_error:
-            if error_tendency < 0:
-                error_tendency = 0
-            error_tendency += 1
-        if new_error >= last_error:
-            if error_tendency > 0:
-                error_tendency = 0
-            error_tendency -= 1
-        last_error = new_error
-        if config['adaptive_eta']:
-            if error_tendency >= config['adaptive_eta_iterations_increment']:
-                n += config['adaptive_eta_increment']
-                error_tendency = 0
-            if error_tendency <= config['adaptive_eta_iterations_decrement']:
-                n -= config['adaptive_eta_decrement_constant'] * n
-                error_tendency = 0
+        # if last_error > new_error:
+        #     if error_tendency < 0:
+        #         error_tendency = 0
+        #     error_tendency += 1
+        # if new_error >= last_error:
+        #     if error_tendency > 0:
+        #         error_tendency = 0
+        #     error_tendency -= 1
+        # last_error = new_error
+        # if config['adaptive_eta']:
+        #     if error_tendency >= config['adaptive_eta_iterations_increment']:
+        #         n += config['adaptive_eta_increment']
+        #         error_tendency = 0
+        #     if error_tendency <= config['adaptive_eta_iterations_decrement']:
+        #         n -= config['adaptive_eta_decrement_constant'] * n
+        #         error_tendency = 0
 
         ### exec
         if on_epoch is not None:
-            on_epoch(i, mlp, n)
+            # on_epoch(i, mlp, n)
+            on_epoch(i, mlp)
 
         if condition.check_replace(min_error, new_error):
             if on_min_error is not None:
