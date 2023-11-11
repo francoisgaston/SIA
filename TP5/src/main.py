@@ -1,6 +1,6 @@
 import csv
 import pickle
-import datetime
+from datetime import datetime
 import json
 import numpy as np
 import sys
@@ -134,14 +134,18 @@ if __name__ == "__main__":
         layers = encoder_layers + decoder_layers[1::]
         mlp = MultiLayerPerceptron(layers, activation_function)
 
-        if(config["pickle"]):
-            with open(config["pickle"], 'rb') as file:
+        if(config["pickle_input"]):
+            with open(config["pickle_input"], 'rb') as file:
                 mlp = pickle.load(file)
 
         def on_min_error(epoch, mlp, min_error):
             max_diff = print_pixels_diff(mlp, data)
+            now = datetime.now()
+            timestamp = now.strftime("%Y%m%d_%H%M%S")
+            pickle_output = config["pickle_output"]
+            file_name = f"pickles/{pickle_output}"
             if(max_diff == 0):
-                with open('mlp_max_diff_0.pkl', 'wb') as file:
+                with open(file_name, 'wb') as file:
                     pickle.dump(mlp, file)
             print("min_error: ", min_error)
 

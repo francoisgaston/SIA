@@ -1,6 +1,7 @@
 {
   "input": "data/fonts.txt",
-  "pickle": "mlp_max_diff_0.pkl",
+  "pickle_input": "mlp_max_diff_0.pkl",
+  "pickle_output": "mlp_max_diff_0.pkl",
   "input_length": 35,
   "perceptrons_for_layers": [35, 30, 20, 10, 5, 2],
   "activation": "SIGMOID",
