@@ -142,14 +142,30 @@ if __name__ == "__main__":
             max_diff = print_pixels_diff(mlp, data)
             now = datetime.now()
             timestamp = now.strftime("%Y%m%d_%H%M%S")
-            pickle_output = config["pickle_output"]
+            pickle_output = config["pickle_output"] + timestamp
             file_name = f"pickles/{pickle_output}"
-            if(max_diff == 0):
+            if(max_diff == 1):
                 with open(file_name, 'wb') as file:
                     pickle.dump(mlp, file)
             print("min_error: ", min_error)
 
         train_perceptron(config, mlp, data, expected, perceptrons_per_layer=layers, on_epoch=None, on_min_error=on_min_error)
+
+        def print_matrix(elem):
+            for i in range(7):
+                print(elem[5*i:5*(i+1)])
+            print("\n-------------\n")
+
+        for i, element in enumerate(data):
+            obtained = np.round(mlp.forward(element))
+            print_matrix(obtained)
+            print_matrix(element)
+            print(f"differing index: {np.where((obtained == 1 and abs(element) == 0) or (abs(obtained) == 0 and element == 1))}")
+            # print(obtained)
+            # print(np.array(element))
+            print("\n--------------\n")
+
+
 
         weights_list = mlp.get_all_weights()
 
@@ -159,8 +175,8 @@ if __name__ == "__main__":
         encoder = MultiLayerPerceptron.from_weight_list(encoder_layers,activation_function,encoder_weigths)
         decoder = MultiLayerPerceptron.from_weight_list(decoder_layers,activation_function, decoder_weigths)
 
-        for weights in mlp.get_all_weights():
-            print(weights)
+        # for weights in mlp.get_all_weights():
+        #     print(weights)
 
 
 
