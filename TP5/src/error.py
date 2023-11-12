@@ -107,7 +107,7 @@ class PixelDiff:
             obtained = mlp.forward(data[i])
             diff = 0
             for j in range(len(data[i])):
-                diff += 1 if (data[i][j] != round(obtained[j])) else 0
+                diff += 1 if (expected[i][j] != round(obtained[j])) else 0
                 # diff += (data[i][j] - np.round(np.abs(obtained[j])))
             max_diff = max(max_diff, diff)
         return max_diff
