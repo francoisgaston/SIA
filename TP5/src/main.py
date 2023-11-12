@@ -134,7 +134,7 @@ if __name__ == "__main__":
         layers = encoder_layers + decoder_layers[1::]
         mlp = MultiLayerPerceptron(layers, activation_function)
 
-        if(config["pickle_input"]):
+        if(config["pickle"]):
             with open(config["pickle_input"], 'rb') as file:
                 mlp = pickle.load(file)
 
