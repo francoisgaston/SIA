@@ -25,8 +25,21 @@ class AccuracyCondition:
         return new_error > curr_error
 
 
-def from_str(string, epsilon):
+# To be used in autoencoder, where we want a minimum error in pixels
+class PixelError:
+    def __init__(self, min_pixel):
+        self.min_pixel = min_pixel
+
+    def check_stop(self, curr_min_pixel):
+        return curr_min_pixel <= self.min_pixel
+
+    def check_replace(self, curr_min_pixel, new_min_pixel):
+        return new_min_pixel < curr_min_pixel
+
+
+def from_str(string, config):
     match string.upper():
-        case "NON_ACCURACY": return NonAccuracyCondition(epsilon=epsilon)
-        case "ACCURACY": return AccuracyCondition(epsilon=epsilon)
-        case _: return NonAccuracyCondition(epsilon=epsilon)
+        case "NON_ACCURACY": return NonAccuracyCondition(epsilon=config['epsilon'])
+        case "ACCURACY": return AccuracyCondition(epsilon=config['epsilon'])
+        case "PIXEL_ERROR": return PixelError(min_pixel=config['min_pixel_error'])
+        case _: return NonAccuracyCondition(epsilon=config['epsilon'])

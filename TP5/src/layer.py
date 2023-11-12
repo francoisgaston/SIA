@@ -117,6 +117,11 @@ class Layer:
         weights = [perceptron.get_variable_weights_with_bias() for perceptron in self.perceptrons]
         return np.array(weights)
 
+    def set_perceptron_weights(self, weights):
+        # set all weigths (with bias)
+        for i, perceptron in enumerate(self.perceptrons):
+            perceptron.set_weights(weights[i])
+
     def get_perceptron_weights_transposed(self):
         aux = self.get_perceptrons_weights()
         return np.transpose(aux)

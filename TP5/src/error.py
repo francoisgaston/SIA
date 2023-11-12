@@ -100,9 +100,19 @@ class Norm2Error:
         return ans/len(data)   # || x1 - x1'|| + ||x2 - x2'|| + ... + ||xn - xn'||
 
 
-# Given two vectors, calculates the norm between both of them: || x1 - x2 ||
-# def norm(x1: ndarray, x2: ndarray) -> float:
-#     return np.linalg.norm(data[i], obtained)
+class PixelDiff:
+    def compute(self, data, mlp, expected):
+        max_diff = 0
+        for i in range(len(data)):
+            obtained = mlp.forward(data[i])
+            diff = 0
+            for j in range(len(data[i])):
+                diff += 1 if (data[i][j] != round(obtained[j])) else 0
+                # diff += (data[i][j] - np.round(np.abs(obtained[j])))
+            max_diff = max(max_diff, diff)
+        return max_diff
+
+
 
 def from_str(string, activation_function=None):
     match string.upper():
@@ -118,5 +128,7 @@ def from_str(string, activation_function=None):
             return CrossEntropyError(activation_function=activation_function)
         case "NORM2":
             return Norm2Error(activation_function=activation_function)
+        case "PIXEL_DIFF":
+            return PixelDiff()
         case _:
             return SumError(activation_function=activation_function)

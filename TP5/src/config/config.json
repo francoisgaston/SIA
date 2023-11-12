@@ -1,6 +1,6 @@
 {
   "input": "data/fonts.txt",
-  "pickle": "mlp_max_diff_0.pkl",
+  "pickle": false,
   "input_length": 35,
   "perceptrons_for_layers": [35, 30, 20, 10, 5, 2],
   "activation": "SIGMOID",
@@ -19,8 +19,12 @@
     "momentum_beta": 0.05,
     "momentum_alpha": 0.9
   },
-  "error": "NORM2",
-  "epsilon": 0,
+  "error": "PIXEL_DIFF",
+  "condition": "PIXEL_ERROR",
+  "condition_config": {
+    "epsilon": 0,
+    "min_pixel_error": 0
+  },
   "limit": 1000000,
   "batch": 20,
   "test_pct": 0.8,

@@ -16,6 +16,15 @@ class MultiLayerPerceptron:
         self.layers = layers
         self.layers_count = len(perceptrons_for_layers)
 
+    @staticmethod
+    def from_weight_list(perceptrons_for_layer, activatiton_function, weights_list):
+        # Los pesos son una matriz que viene por capa ascendente
+        ans = MultiLayerPerceptron(perceptrons_for_layers=perceptrons_for_layer, activation_function=activatiton_function)
+        for (idx, layer) in enumerate(ans.layers):
+            #         Para cada capa, necesito inicializar los pesos
+            layer.set_perceptron_weights(weights_list[idx])
+        return ans
+
     def get_all_weights(self):
         return [layer.get_perceptrons_weights_with_bias() for layer in self.layers]
 

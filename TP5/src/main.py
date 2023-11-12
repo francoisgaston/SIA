@@ -36,7 +36,7 @@ def print_pixels_diff(mlp, data):
            print(data[i], "\n", np.round(obtained), "\n\n")
         diff = 0
         for j in range(len(data[i])):
-            diff += np.round(data[i][j] - obtained[j])
+            diff += 1 if (data[i][j] != round(obtained[j])) else 0
         max_diff = max(max_diff,diff)
         # print(f"{i}: {diff} pixels")
     print(f"max_diff: {max_diff}\n")
@@ -76,7 +76,7 @@ def train_perceptron(config, mlp, data, expected, perceptrons_per_layer, on_epoc
     i = 0
     min_error = sys.float_info.max
 
-    condition = condition_from_str(config['error'], config['epsilon'])
+    condition = condition_from_str(config['condition'], config['condition_config'])
     error = error_from_str(config["error"])
     limit = config["limit"]
     batch = config["batch"] if config["batch"] <= len(data) else len(data)
@@ -110,7 +110,7 @@ def train_perceptron(config, mlp, data, expected, perceptrons_per_layer, on_epoc
 
         if condition.check_replace(min_error, new_error):
             if on_min_error is not None:
-                on_min_error(i, mlp, min_error)
+                on_min_error(i, mlp, new_error)
             min_error = new_error
 
         i += 1
@@ -133,10 +133,10 @@ if __name__ == "__main__":
         decoder_layers = config['perceptrons_for_layers'][::-1]
         layers = encoder_layers + decoder_layers[1::]
         mlp = MultiLayerPerceptron(layers, activation_function)
-
-        if(config["pickle"]):
-            with open(config["pickle"], 'rb') as file:
-                mlp = pickle.load(file)
+        #
+        # if(config["pickle"]):
+        #     with open(config["pickle"], 'rb') as file:
+        #         mlp = pickle.load(file)
 
         def on_min_error(epoch, mlp, min_error):
             max_diff = print_pixels_diff(mlp, data)
@@ -146,6 +146,14 @@ if __name__ == "__main__":
             print("min_error: ", min_error)
 
         train_perceptron(config, mlp, data, expected, perceptrons_per_layer=layers, on_epoch=None, on_min_error=on_min_error)
+
+        weights_list = mlp.get_all_weights()
+
+        encoder_weigths = weights_list[:len(encoder_layers)-1]
+        decoder_weigths = weights_list[len(encoder_weigths):]
+
+        encoder = MultiLayerPerceptron.from_weight_list(encoder_layers,activation_function,encoder_weigths)
+        decoder = MultiLayerPerceptron.from_weight_list(decoder_layers,activation_function, decoder_weigths)
 
         for weights in mlp.get_all_weights():
             print(weights)
