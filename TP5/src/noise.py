@@ -51,13 +51,12 @@ class SaltAndPepperNoise(Noise):
             salt_indices = np.random.choice(nonzero_indexes, salt_pixels, replace=False)
             noisy_element[salt_indices] = 1
 
-        no_none_indexes = np.where(noisy_element == 0)[0]
-        if no_none_indexes.size > 0:
-            pepper_indices = np.random.choice(no_none_indexes, pepper_pixels, replace=False)
+        nonone_indexes = np.where(noisy_element == 0)[0]
+        if nonone_indexes.size > 0:
+            pepper_indices = np.random.choice(nonone_indexes, pepper_pixels, replace=False)
             noisy_element[pepper_indices] = 1
 
         return noisy_element
-
 
 
 def from_str(string, config):
