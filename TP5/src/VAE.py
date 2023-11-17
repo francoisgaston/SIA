@@ -1,0 +1,168 @@
+import pickle
+from datetime import datetime
+import json
+import numpy as np
+import sys
+import random
+
+from condition import from_str as condition_from_str
+from activation import from_str as activation_from_str
+from error import from_str as error_from_str
+from multilayerPerceptron import MultiLayerPerceptron
+from optimizer import from_str as optimizer_from_str
+
+def print_pixels_diff(mlp, data):
+    print("Cantidad de pixeles diferentes por dato:")
+    max_diff = 0
+    for i in range(len(data)):
+        obtained = mlp.forward(data[i])
+        if i == 1:
+           print(data[i], "\n", np.round(obtained), "\n\n")
+        diff = 0
+        for j in range(len(data[i])):
+            diff += 1 if (data[i][j] != round(obtained[j])) else 0
+        max_diff = max(max_diff,diff)
+        # print(f"{i}: {diff} pixels")
+    print(f"max_diff: {max_diff}\n")
+    return max_diff
+
+
+# Recibe la data y lo transforma en np's arrays de cada numero
+def read_input(file, input_length):
+    file1 = open(file, "r+")
+    result = [(1 if character == '1' else 0) for character in file1.read().split()]
+    result = np.array_split(result, len(result) / input_length)
+    return result
+
+
+
+def reparametrization_trick(std, mean):
+    eps = random.uniform(0,1)
+    return eps, (eps * std) + mean
+
+
+def train_perceptron(config, encoder, decoder, data, expected, encoder_layers, decoder_layers, on_epoch=None, on_min_error=None):
+    if len(data) == 0:
+        return []
+
+    i = 0
+    min_error = sys.float_info.max
+
+    condition = condition_from_str(config['condition'], config['condition_config'])
+    error = error_from_str(config["error"])
+    limit = config["limit"]
+    batch = config["batch"] if config["batch"] <= len(data) else len(data)
+    encoder_optimizer = optimizer_from_str(config["optimizer"],config["optimizer_config"],config['n'],encoder_layers)
+    decoder_optimizer = optimizer_from_str(config["optimizer"],config["optimizer_config"],config['n'],decoder_layers)
+
+
+    while not condition.check_stop(min_error) and i < limit:
+
+        encoder_final_delta_w = [np.zeros((encoder_layers[indx], encoder_layers[indx - 1] + 1)) for indx in
+                         range(len(encoder_layers) - 1, 0, -1)]
+        decoder_final_delta_w = [np.zeros((decoder_layers[indx], decoder_layers[indx - 1] + 1)) for indx in
+                                 range(len(decoder_layers) - 1, 0, -1)]
+
+        u_arr = random.sample(range(len(data)), batch)
+        for u in u_arr:
+            # Foward
+            # Resultado encoder
+            encoder_result = encoder.forward(data[u])
+
+            mean = np.array(encoder_result[:2])
+            std = np.array(encoder_result[2::])
+
+            eps, z = reparametrization_trick(std,mean)
+
+            decoder_results = decoder.forward(z)
+
+            # Backward
+            # Parte del decoder
+            aux_error = np.array(expected[u]) - np.array(decoder_results)
+            decoder_gradients = decoder.backward(aux_error, z, 1, gradients=None)
+            decoder_deltas = decoder_optimizer.get_deltas(decoder_gradients)
+            decoder_last_gradients = decoder_gradients[-1]
+            # TODO: fijarse si el nodo 1 es el primero de la matriz
+            decoder_last_gradients = np.delete(decoder_last_gradients,0, axis=1)
+            decoder_last_gradients = np.transpose(decoder_last_gradients)
+            # Reparametrizacion
+            dz_dm = np.ones([1,4])
+            dz_ds = eps * np.ones([1,4])
+            rt_gradients = []
+            for i in range(2):
+                rt_gradients.append(np.dot(dz_ds,decoder_last_gradients[i])[0])
+            for i in range(2):
+                rt_gradients.append(np.dot(dz_dm,decoder_last_gradients[i])[0])
+
+            encoder_reparametrization_gradients = encoder.backward(None,data[u],1,gradients=np.array(rt_gradients))
+
+            # Reconstruction
+            dkl_dm = mean
+            dkl_ds = 0.5*(np.exp(std)-1)
+            kl_gradients = np.concatenate((dkl_ds,dkl_dm))
+            encoder_kl_gradients = encoder.backward(None,data[u],1,gradients=kl_gradients)
+
+            # Sum gradients
+            encoder_gradients = []
+            for i in range(len(encoder_reparametrization_gradients)):
+                encoder_gradients.append(encoder_reparametrization_gradients[i] + encoder_kl_gradients[i])
+            encoder_deltas = encoder_optimizer.get_deltas(encoder_gradients)
+            decoder.apply_delta_w(decoder_deltas)
+            encoder.apply_delta_w(encoder_deltas)
+        #     deltas = optimizer.get_deltas(gradients)
+        #     for aux in range(len(final_delta_w)):
+        #         final_delta_w[aux] += deltas[aux]
+        #
+        # mlp.apply_delta_w(final_delta_w)
+        #
+        # new_error = error.compute(data, mlp, expected)
+        #
+        # optimizer.on_epoch(new_error)
+
+        # ### exec
+        # if on_epoch is not None:
+        #     # on_epoch(i, mlp, n)
+        #     on_epoch(i, mlp)
+        #
+        # if condition.check_replace(min_error, new_error):
+        #     if on_min_error is not None:
+        #         on_min_error(i, mlp, new_error)
+        #     min_error = new_error
+
+        i += 1
+
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Por favor ingrese el archivo de configuración")
+        exit(1)
+
+    with open(sys.argv[1], "r") as config:
+        config = json.load(config)
+        data = np.array(read_input(config['input'], config['input_length']))
+        expected = np.copy(data)
+        activation_function = activation_from_str(string=config['activation'], beta=config["beta"])
+
+        encoder_layers = [config['input_length']] + config['encoder_hidden'] + [4]
+        decoder_layers = [2, 4] + config['decoder_hidden'] + [config['input_length']]
+
+        encoder = MultiLayerPerceptron(encoder_layers, activation_function)
+        decoder = MultiLayerPerceptron(decoder_layers, activation_function)
+
+        def on_min_error(epoch, mlp, min_error):
+            max_diff = print_pixels_diff(mlp, data)
+            now = datetime.now()
+            timestamp = now.strftime("%Y%m%d_%H%M%S")
+            pickle_output = config["pickle_output"] + timestamp
+            file_name = f"pickles/{pickle_output}"
+            if(max_diff == 1):
+                with open(file_name, 'wb') as file:
+                    pickle.dump(mlp, file)
+            print("min_error: ", min_error)
+
+        train_perceptron(config, encoder, decoder, data, expected, encoder_layers = encoder_layers, decoder_layers = decoder_layers, on_epoch=None, on_min_error=on_min_error)
+
+
+
+
+
