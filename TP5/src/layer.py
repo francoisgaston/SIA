@@ -101,6 +101,8 @@ class Layer:
     def get_perceptrons_activation(self):
         activation = [perceptron.get_activation() for perceptron in self.perceptrons]
         activation = np.array(activation)
+        # Agrego el 1 en la posicion 0
+        # Entonces tengo a las variaciones de los pesos en la posicion 0
         return np.insert(activation, 0, 1)
     
 

@@ -68,7 +68,6 @@ def train_perceptron(config, encoder, decoder, data, expected, encoder_layers, d
             # Foward
             # Resultado encoder
             encoder_result = encoder.forward(data[u])
-
             mean = np.array(encoder_result[:2])
             std = np.array(encoder_result[2::])
 
@@ -97,8 +96,8 @@ def train_perceptron(config, encoder, decoder, data, expected, encoder_layers, d
             encoder_reparametrization_gradients = encoder.backward(None,data[u],1,gradients=np.array(rt_gradients))
 
             # Reconstruction
-            dkl_dm = mean
-            dkl_ds = 0.5*(np.exp(std)-1)
+            dkl_dm = -1* mean
+            dkl_ds = (-0.5)*(np.exp(std)-1)
             kl_gradients = np.concatenate((dkl_ds,dkl_dm))
             encoder_kl_gradients = encoder.backward(None,data[u],1,gradients=kl_gradients)
 
@@ -107,8 +106,30 @@ def train_perceptron(config, encoder, decoder, data, expected, encoder_layers, d
             for i in range(len(encoder_reparametrization_gradients)):
                 encoder_gradients.append(encoder_reparametrization_gradients[i] + encoder_kl_gradients[i])
             encoder_deltas = encoder_optimizer.get_deltas(encoder_gradients)
-            decoder.apply_delta_w(decoder_deltas)
-            encoder.apply_delta_w(encoder_deltas)
+            encoder_final_delta_w += encoder_deltas
+            decoder_final_delta_w += decoder_deltas
+
+        encoder.apply_delta_w(encoder_final_delta_w)
+        decoder.apply_delta_w(decoder_final_delta_w)
+
+        new_error = 0
+        for input_data in data:
+            encoder_results = encoder.forward(input_data)
+            mean = np.array(encoder_results[:2])
+            std = np.array(encoder_results[2::])
+            eps, z = reparametrization_trick(std, mean)
+            decoder_results = decoder.forward(z)
+            new_error += error.difference(decoder_results, input_data)
+
+        if condition.check_replace(min_error, new_error):
+            if on_min_error is not None:
+                on_min_error(i, new_error)
+            min_error = new_error
+
+        encoder_optimizer.on_epoch(new_error)
+        decoder_optimizer.on_epoch(new_error)
+
+
         #     deltas = optimizer.get_deltas(gradients)
         #     for aux in range(len(final_delta_w)):
         #         final_delta_w[aux] += deltas[aux]
@@ -149,18 +170,18 @@ if __name__ == "__main__":
         encoder = MultiLayerPerceptron(encoder_layers, activation_function)
         decoder = MultiLayerPerceptron(decoder_layers, activation_function)
 
-        def on_min_error(epoch, mlp, min_error):
-            max_diff = print_pixels_diff(mlp, data)
-            now = datetime.now()
-            timestamp = now.strftime("%Y%m%d_%H%M%S")
-            pickle_output = config["pickle_output"] + timestamp
-            file_name = f"pickles/{pickle_output}"
-            if(max_diff == 1):
-                with open(file_name, 'wb') as file:
-                    pickle.dump(mlp, file)
+        def on_min_error(epoch, min_error):
+            # max_diff = print_pixels_diff(mlp, data)
+            # now = datetime.now()
+            # timestamp = now.strftime("%Y%m%d_%H%M%S")
+            # pickle_output = config["pickle_output"] + timestamp
+            # file_name = f"pickles/{pickle_output}"
+            # if(max_diff == 1):
+            #     with open(file_name, 'wb') as file:
+            #         pickle.dump(mlp, file)
             print("min_error: ", min_error)
 
-        train_perceptron(config, encoder, decoder, data, expected, encoder_layers = encoder_layers, decoder_layers = decoder_layers, on_epoch=None, on_min_error=on_min_error)
+        train_perceptron(config, encoder, decoder, data, expected, encoder_layers=encoder_layers, decoder_layers = decoder_layers, on_epoch=None, on_min_error=on_min_error)
 
 
 
