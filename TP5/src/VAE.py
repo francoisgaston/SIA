@@ -5,12 +5,36 @@ import numpy as np
 import sys
 import random
 from matplotlib import pyplot as plt
+from plotly import graph_objects as go
 
 from condition import from_str as condition_from_str
 from activation import from_str as activation_from_str
 from error import from_str as error_from_str
 from multilayerPerceptron import MultiLayerPerceptron
 from optimizer import from_str as optimizer_from_str
+
+
+def plot_latent_encode(encoder, data):
+    # fonts = ['`', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
+    #         'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
+    #            't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~', 'DEL']
+    digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    fig = go.Figure()
+    for i in range(len(data)):
+        dots_x = []
+        dots_y = []
+        for j in range(50):
+            output = encoder.forward(data[i])
+            std = np.array(output[:2])
+            mean = np.array(output[2::])
+            dot = reparametrization_trick(std, mean)[1]
+            dots_x.append(dot[0])
+            dots_y.append(dot[1])
+        fig.add_trace(go.Scatter(x=dots_x, y=dots_y, mode='markers', name=digits[i]))
+    # fig.show()
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    fig.write_html(f"plots/latent_{timestamp}.html")
+
 
 def plot_latent(decoder, n=20, fig_size=15, digit_size=7):
     figure = np.zeros((digit_size * n, digit_size * n))
@@ -34,6 +58,7 @@ def plot_latent(decoder, n=20, fig_size=15, digit_size=7):
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     plt.savefig(f"plots/latent_{timestamp}.png")
 
+
 def loss_function(mean, std, data, result):
     rec = 0.5 * np.mean((data - result) ** 2)
     kl = -0.5 * np.sum(1 + std - mean ** 2 - np.exp(std))
@@ -46,11 +71,11 @@ def print_pixels_diff(mlp, data):
     for i in range(len(data)):
         obtained = mlp.forward(data[i])
         if i == 1:
-           print(data[i], "\n", np.round(obtained), "\n\n")
+            print(data[i], "\n", np.round(obtained), "\n\n")
         diff = 0
         for j in range(len(data[i])):
             diff += 1 if (data[i][j] != round(obtained[j])) else 0
-        max_diff = max(max_diff,diff)
+        max_diff = max(max_diff, diff)
         # print(f"{i}: {diff} pixels")
     print(f"max_diff: {max_diff}\n")
     return max_diff
@@ -64,7 +89,6 @@ def read_input(file, input_length):
     return result
 
 
-
 def reparametrization_trick(std, mean):
     # eps = random.uniform(0,1)
     eps = np.random.standard_normal()
@@ -73,7 +97,8 @@ def reparametrization_trick(std, mean):
     return eps, (eps * std) + mean
 
 
-def train_perceptron(config, encoder, decoder, data, expected, encoder_layers, decoder_layers, on_epoch=None, on_min_error=None):
+def train_perceptron(config, encoder, decoder, data, expected, encoder_layers, decoder_layers, on_epoch=None,
+                     on_min_error=None):
     if len(data) == 0:
         return []
 
@@ -84,9 +109,8 @@ def train_perceptron(config, encoder, decoder, data, expected, encoder_layers, d
     error = error_from_str(config["error"])
     limit = config["limit"]
     batch = config["batch"] if config["batch"] <= len(data) else len(data)
-    encoder_optimizer = optimizer_from_str(config["optimizer"],config["optimizer_config"],config['n'],encoder_layers)
-    decoder_optimizer = optimizer_from_str(config["optimizer"],config["optimizer_config"],config['n'],decoder_layers)
-
+    encoder_optimizer = optimizer_from_str(config["optimizer"], config["optimizer_config"], config['n'], encoder_layers)
+    decoder_optimizer = optimizer_from_str(config["optimizer"], config["optimizer_config"], config['n'], decoder_layers)
 
     while not condition.check_stop(min_error) and i < limit:
 
@@ -104,7 +128,7 @@ def train_perceptron(config, encoder, decoder, data, expected, encoder_layers, d
             std = np.array(encoder_result[:2])
             mean = np.array(encoder_result[2::])
 
-            eps, z = reparametrization_trick(std,mean)
+            eps, z = reparametrization_trick(std, mean)
 
             decoder_results = decoder.forward(z)
 
@@ -221,6 +245,7 @@ if __name__ == "__main__":
         encoder = MultiLayerPerceptron(encoder_layers, activation_function)
         decoder = MultiLayerPerceptron(decoder_layers, activation_function)
 
+
         def on_min_error(epoch, min_error):
             # max_diff = print_pixels_diff(mlp, data)
             # now = datetime.now()
@@ -234,7 +259,4 @@ if __name__ == "__main__":
 
         train_perceptron(config, encoder, decoder, data, expected, encoder_layers=encoder_layers, decoder_layers=decoder_layers, on_epoch=None, on_min_error=on_min_error)
         plot_latent(decoder)
-
-
-
-
+        plot_latent_encode(encoder, data)
