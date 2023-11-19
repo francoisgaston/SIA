@@ -4,7 +4,7 @@
   "pickle": false,
   "pickle_output": "mlp_max_diff_0.pkl",
   "input_length": 35,
-  "perceptrons_for_layers": [35, 30, 20, 10, 5, 2, 1],
+  "perceptrons_for_layers": [35, 30, 20, 10, 5, 2],
   "activation": "SIGMOID",
   "beta": 0.8,
   "n": 0.05,

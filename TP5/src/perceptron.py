@@ -6,6 +6,7 @@ class Perceptron:
     def __init__(self, in_count, activation_function):
         # O(Wx + b)
         self.weights = np.random.rand(1 + in_count) * 2 - 1
+        # self.weights = np.ones(1+in_count)
         self.h = 0
         self.activation_function = activation_function
 
