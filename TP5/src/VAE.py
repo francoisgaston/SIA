@@ -122,6 +122,11 @@ def train_perceptron(config, encoder, decoder, data, expected, encoder_layers, d
             encoder_final_delta_w += encoder_deltas
             decoder_final_delta_w += decoder_deltas
 
+        print("encoder: ")
+        print(encoder_final_delta_w)
+        print("decoder: ")
+        print(decoder_final_delta_w)
+
         encoder.apply_delta_w(encoder_final_delta_w)
         decoder.apply_delta_w(decoder_final_delta_w)
 
@@ -135,6 +140,7 @@ def train_perceptron(config, encoder, decoder, data, expected, encoder_layers, d
             #for i in range(len(decoder_results)):
             #    print("exp " + str(input_data[i]) + " sal " + str(decoder_results[i]))
             #print("---------------------")
+            print("new error: " + str(error.difference(decoder_results, input_data)))
             new_error = max(new_error, error.difference(decoder_results, input_data))
 
         if condition.check_replace(min_error, new_error):
@@ -182,6 +188,9 @@ if __name__ == "__main__":
 
         encoder_layers = [config['input_length']] + config['encoder_hidden'] + [4]
         decoder_layers = [2, 4] + config['decoder_hidden'] + [config['input_length']]
+
+        #encoder_layers = config['encoder_hidden']
+        #decoder_layers = config['decoder_hidden']
 
         encoder = MultiLayerPerceptron(encoder_layers, activation_function)
         decoder = MultiLayerPerceptron(decoder_layers, activation_function)
