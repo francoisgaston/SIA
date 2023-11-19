@@ -1,10 +1,10 @@
 {
-  "input": "data/fonts.txt",
+  "input": "data/fonts2.txt",
   "pickle_input": "mlp_max_diff_0.pkl",
   "pickle_output": "mlp_max_diff_1.pkl",
-  "input_length": 35,
-  "encoder_hidden": [30, 25, 20,10],
-  "decoder_hidden": [10,20, 25, 30],
+  "input_length": 49,
+  "encoder_hidden": [25,10],
+  "decoder_hidden": [10, 25],
   "activation": "SIGMOID",
   "beta": 0.5,
   "n": 0.01,
@@ -27,8 +27,8 @@
     "epsilon": 0,
     "min_pixel_error": 1
   },
-  "limit": 1000000,
-  "batch": 20,
+  "limit": 1000,
+  "batch": 10,
   "test_pct": 0.8,
   "noise_stddev": 0.000001,
   "data_augmentation": false

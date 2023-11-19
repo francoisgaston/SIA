@@ -55,7 +55,9 @@ class MultiLayerPerceptron:
         if gradients is None:
             activation_diff_diagonal = np.diag(activation_diff)
             d = np.matmul(error, activation_diff_diagonal)
-
+        else:
+            activation_diff_diagonal = np.diag(activation_diff)
+            d = np.matmul(gradients, activation_diff_diagonal)
         d_n = n * d
         # d_n = []
         # for d_i in d:
