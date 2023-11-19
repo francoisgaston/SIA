@@ -38,6 +38,8 @@ def read_input(file, input_length):
 
 def reparametrization_trick(std, mean):
     eps = random.uniform(0,1)
+    # eps = np.random.standard_normal()
+    # eps = random.uniform(-1,1)
     return eps, (eps * std) + mean
 
 
@@ -68,8 +70,8 @@ def train_perceptron(config, encoder, decoder, data, expected, encoder_layers, d
             # Foward
             # Resultado encoder
             encoder_result = encoder.forward(data[u])
-            mean = np.array(encoder_result[:2])
-            std = np.array(encoder_result[2::])
+            std = np.array(encoder_result[:2])
+            mean = np.array(encoder_result[2::])
 
             eps, z = reparametrization_trick(std,mean)
 
@@ -85,6 +87,7 @@ def train_perceptron(config, encoder, decoder, data, expected, encoder_layers, d
             decoder_last_gradients = np.delete(decoder_last_gradients,0, axis=1)
             decoder_last_gradients = np.transpose(decoder_last_gradients)
             # Reparametrizacion
+            # OJO: Esta hardcodeado, se asume que la segunda (despues de la capa de 2 nodos) capa del decoder tiene 4 nodos
             dz_dm = np.ones([1,4])
             dz_ds = eps * np.ones([1,4])
             rt_gradients = []
@@ -96,8 +99,8 @@ def train_perceptron(config, encoder, decoder, data, expected, encoder_layers, d
             encoder_reparametrization_gradients = encoder.backward(None,data[u],1,gradients=np.array(rt_gradients))
 
             # Reconstruction
-            dkl_dm = -1* mean
-            dkl_ds = (-0.5)*(np.exp(std)-1)
+            dkl_dm = 1* mean
+            dkl_ds = (0.5)*(np.exp(std)-1)
             kl_gradients = np.concatenate((dkl_ds,dkl_dm))
             encoder_kl_gradients = encoder.backward(None,data[u],1,gradients=kl_gradients)
 
@@ -105,7 +108,8 @@ def train_perceptron(config, encoder, decoder, data, expected, encoder_layers, d
             encoder_gradients = []
             for i in range(len(encoder_reparametrization_gradients)):
                 encoder_gradients.append(encoder_reparametrization_gradients[i] + encoder_kl_gradients[i])
-            encoder_deltas = encoder_optimizer.get_deltas(encoder_gradients)
+            # encoder_deltas = encoder_optimizer.get_deltas(encoder_gradients)
+            encoder_deltas = encoder_gradients
             encoder_final_delta_w += encoder_deltas
             decoder_final_delta_w += decoder_deltas
 
@@ -115,19 +119,19 @@ def train_perceptron(config, encoder, decoder, data, expected, encoder_layers, d
         new_error = 0
         for input_data in data:
             encoder_results = encoder.forward(input_data)
-            mean = np.array(encoder_results[:2])
-            std = np.array(encoder_results[2::])
+            std = np.array(encoder_results[:2])
+            mean = np.array(encoder_results[2::])
             eps, z = reparametrization_trick(std, mean)
             decoder_results = decoder.forward(z)
-            new_error += error.difference(decoder_results, input_data)
+            new_error = max(new_error, error.difference(decoder_results, input_data))
 
         if condition.check_replace(min_error, new_error):
             if on_min_error is not None:
                 on_min_error(i, new_error)
             min_error = new_error
 
-        encoder_optimizer.on_epoch(new_error)
-        decoder_optimizer.on_epoch(new_error)
+        # encoder_optimizer.on_epoch(new_error)
+        # decoder_optimizer.on_epoch(new_error)
 
 
         #     deltas = optimizer.get_deltas(gradients)
@@ -181,7 +185,7 @@ if __name__ == "__main__":
             #         pickle.dump(mlp, file)
             print("min_error: ", min_error)
 
-        train_perceptron(config, encoder, decoder, data, expected, encoder_layers=encoder_layers, decoder_layers = decoder_layers, on_epoch=None, on_min_error=on_min_error)
+        train_perceptron(config, encoder, decoder, data, expected, encoder_layers=encoder_layers, decoder_layers=decoder_layers, on_epoch=None, on_min_error=on_min_error)
 
 
 

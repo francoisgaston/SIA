@@ -3,11 +3,11 @@
   "pickle_input": "mlp_max_diff_0.pkl",
   "pickle_output": "mlp_max_diff_1.pkl",
   "input_length": 35,
-  "encoder_hidden": [30, 25, 20,10,5],
-  "decoder_hidden": [5,10,20, 25, 30],
+  "encoder_hidden": [30, 25, 20,10],
+  "decoder_hidden": [10,20, 25, 30],
   "activation": "SIGMOID",
-  "beta": 0.8,
-  "n": 0.05,
+  "beta": 0.5,
+  "n": 0.01,
   "optimizer": "ADAM",
   "optimizer_config": {
     "adaptive_eta_iterations_increment": 20,
@@ -21,7 +21,7 @@
     "momentum_beta": 0.05,
     "momentum_alpha": 0.9
   },
-  "error": "PIXEL_DIFF",
+  "error": "NORM2",
   "condition": "PIXEL_ERROR",
   "condition_config": {
     "epsilon": 0,
@@ -31,6 +31,5 @@
   "batch": 20,
   "test_pct": 0.8,
   "noise_stddev": 0.000001,
-  "data_augmentation": false,
-  "iterations": 5
+  "data_augmentation": false
 }
