@@ -1,12 +1,12 @@
 {
-  "input": "data/fonts2.txt",
+  "input": "data/numbers.txt",
   "pickle_input": "mlp_max_diff_0.pkl",
   "pickle_output": "mlp_max_diff_1.pkl",
   "input_length": 49,
-  "encoder_hidden": [25,10],
-  "decoder_hidden": [10, 25],
+  "encoder_hidden": [40, 20, 10],
+  "decoder_hidden": [10, 20, 40],
   "activation": "SIGMOID",
-  "beta": 0.5,
+  "beta": 0.7,
   "n": 0.01,
   "optimizer": "ADAM",
   "optimizer_config": {
@@ -21,13 +21,13 @@
     "momentum_beta": 0.05,
     "momentum_alpha": 0.9
   },
-  "error": "NORM2",
+  "error": "QUADRATIC_MULTILAYER",
   "condition": "PIXEL_ERROR",
   "condition_config": {
     "epsilon": 0,
     "min_pixel_error": 1
   },
-  "limit": 1000,
+  "limit": 5000,
   "batch": 10,
   "test_pct": 0.8,
   "noise_stddev": 0.000001,
