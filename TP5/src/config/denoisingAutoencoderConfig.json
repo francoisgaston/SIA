@@ -1,10 +1,9 @@
 {
   "input": "data/fonts.txt",
   "pickle_input": "mlp_max_diff_0.pkl",
-  "pickle": false,
-  "pickle_output": "mlp_max_diff_0.pkl",
+  "pickle_output": "mlp_max_diff_1.pkl",
   "input_length": 35,
-  "perceptrons_for_layers": [35, 30, 20, 10, 5, 2, 1],
+  "perceptrons_for_layers": [35, 30, 20, 10],
   "activation": "SIGMOID",
   "beta": 0.8,
   "n": 0.05,
@@ -21,12 +20,23 @@
     "momentum_beta": 0.05,
     "momentum_alpha": 0.9
   },
-  "error": "NORM2",
-  "epsilon": 0,
+  "error": "PIXEL_DIFF",
+  "condition": "PIXEL_ERROR",
+  "condition_config": {
+    "epsilon": 0,
+    "min_pixel_error": 1
+  },
   "limit": 1000000,
   "batch": 20,
   "test_pct": 0.8,
-  "noise_stddev": 0.000001,
+  "noise": "SALT_AND_PEPPER",
+  "noise_config": {
+    "noise_stddev": 0.1,
+    "noise_median": 0.5,
+    "noise_prob": 0.1,
+    "salt_prob": 0.1,
+    "pepper_prob": 0.1
+  },
   "data_augmentation": false,
   "iterations": 5
 }

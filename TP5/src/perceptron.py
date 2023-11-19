@@ -15,6 +15,9 @@ class Perceptron:
     def add_delta_weights(self, delta_weights):
         self.weights += delta_weights
 
+    def set_weights(self,weights):
+        self.weights = np.copy(weights)
+
     def get_activation(self):
         return self.activation_function.eval(self.h)
 

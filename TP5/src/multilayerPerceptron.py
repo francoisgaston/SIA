@@ -16,6 +16,15 @@ class MultiLayerPerceptron:
         self.layers = layers
         self.layers_count = len(perceptrons_for_layers)
 
+    @staticmethod
+    def from_weight_list(perceptrons_for_layer, activatiton_function, weights_list):
+        # Los pesos son una matriz que viene por capa ascendente
+        ans = MultiLayerPerceptron(perceptrons_for_layers=perceptrons_for_layer, activation_function=activatiton_function)
+        for (idx, layer) in enumerate(ans.layers):
+            #         Para cada capa, necesito inicializar los pesos
+            layer.set_perceptron_weights(weights_list[idx])
+        return ans
+
     def get_all_weights(self):
         return [layer.get_perceptrons_weights_with_bias() for layer in self.layers]
 
@@ -28,7 +37,7 @@ class MultiLayerPerceptron:
     # x: input de entrada
     # n: tasa de aprendizaje (eta)
     # error: diferencias entre lo esperado y lo calculado para cada neurona de salida
-    def backward(self, error, x, n):
+    def backward(self, error, x, n, gradients = None):
         # Obtenemos el theta'(h) de la capa de salida
         activation_diff = self.layers[len(self.layers)-1].get_perceptrons_activation_diff()
 
@@ -41,8 +50,11 @@ class MultiLayerPerceptron:
         #for index in range(len(activation_diff)):
         #    d_aux = activation_diff[index] * error[index]
         #    d.append(d_aux)
-        activation_diff_diagonal = np.diag(activation_diff)
-        d = np.matmul(error, activation_diff_diagonal)
+
+        d = gradients
+        if gradients is None:
+            activation_diff_diagonal = np.diag(activation_diff)
+            d = np.matmul(error, activation_diff_diagonal)
 
         d_n = n * d
         # d_n = []

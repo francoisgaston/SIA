@@ -45,6 +45,13 @@ class QuadraticError:
 
 
 class QuadraticErrorMultilayer:
+
+    def difference(self, obtained, expected):
+        ans = 0
+        for j in range(len(expected)):
+            ans += (expected[j] - obtained[j]) ** 2
+        return ans / 2.0
+
     # expected: [[]] con los valores esperados para cada caso
     def compute(self, data, mlp, expected):
         ans = 0
@@ -80,6 +87,8 @@ class Norm2Error:
     def __init__(self, activation_function=None):
         self._activation_function = activation_function
 
+    def difference(self, obtained, expected):
+        return np.linalg.norm(expected - obtained)
 
     def compute(self, data, mlp, expected):
         """
@@ -96,27 +105,37 @@ class Norm2Error:
         ans = 0.0
         for i in range(len(data)):
             obtained = mlp.forward(data[i])
-            ans += np.linalg.norm(expected[i] - obtained) # ||xn - xn'||
-        return ans/len(data)   # || x1 - x1'|| + ||x2 - x2'|| + ... + ||xn - xn'||
+            ans += np.linalg.norm(expected[i] - obtained)  # ||xn - xn'||
+        return ans / len(data)  # || x1 - x1'|| + ||x2 - x2'|| + ... + ||xn - xn'||
 
 
-# Given two vectors, calculates the norm between both of them: || x1 - x2 ||
-# def norm(x1: ndarray, x2: ndarray) -> float:
-#     return np.linalg.norm(data[i], obtained)
+class PixelDiff:
+
+    def difference(self, obtained, expected):
+        diff = 0
+        for j in range(len(expected)):
+            diff += 1 if (expected[j] != round(obtained[j])) else 0
+        return diff
+
+    def compute(self, data, mlp, expected):
+        max_diff = 0
+        for i in range(len(data)):
+            obtained = mlp.forward(data[i])
+            diff = 0
+            for j in range(len(data[i])):
+                diff += 1 if (expected[i][j] != round(obtained[j])) else 0
+                # diff += (data[i][j] - np.round(np.abs(obtained[j])))
+            max_diff = max(max_diff, diff)
+        return max_diff
+
 
 def from_str(string, activation_function=None):
     match string.upper():
-        case "SUM":
-            return SumError(activation_function=activation_function)
-        case "ACCURACY":
-            return AccuracyError(activation_function=activation_function)
-        case "QUADRATIC":
-            return QuadraticError(activation_function=activation_function)
         case "QUADRATIC_MULTILAYER":
             return QuadraticErrorMultilayer()
-        case "CROSSENTROPY":
-            return CrossEntropyError(activation_function=activation_function)
         case "NORM2":
-            return Norm2Error(activation_function=activation_function)
+            return Norm2Error()
+        case "PIXEL_DIFF":
+            return PixelDiff()
         case _:
-            return SumError(activation_function=activation_function)
+            return QuadraticErrorMultilayer()
