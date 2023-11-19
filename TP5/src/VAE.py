@@ -96,7 +96,8 @@ def train_perceptron(config, encoder, decoder, data, expected, encoder_layers, d
                                  range(len(decoder_layers) - 1, 0, -1)]
 
         u_arr = random.sample(range(len(data)), batch)
-        for u in u_arr:
+        loss = 0
+        for u in range(len(data)):
             # Foward
             # Resultado encoder
             encoder_result = encoder.forward(data[u])
@@ -107,13 +108,13 @@ def train_perceptron(config, encoder, decoder, data, expected, encoder_layers, d
 
             decoder_results = decoder.forward(z)
 
-            loss = loss_function(mean, std, data[u], decoder_results)
+            loss += loss_function(mean, std, data[u], decoder_results)
             # print("loss", loss)
 
             # Backward
             # Parte del decoder
             aux_error = np.array(expected[u]) - np.array(decoder_results)
-            decoder_gradients = decoder.backward(aux_error, z, 1, gradients=None)
+            decoder_gradients, decoder_last_gradients_2 = decoder.backward(aux_error, z, 1, gradients=None)
             decoder_deltas = decoder_optimizer.get_deltas(decoder_gradients)
             # decoder_deltas = decoder_gradients
             decoder_last_gradients = decoder_gradients[-1]
@@ -129,14 +130,16 @@ def train_perceptron(config, encoder, decoder, data, expected, encoder_layers, d
                 rt_gradients.append(np.dot(dz_ds,decoder_last_gradients[j])[0])
             for j in range(2):
                 rt_gradients.append(np.dot(dz_dm,decoder_last_gradients[j])[0])
-
-            encoder_reparametrization_gradients = encoder.backward(None,data[u],1,gradients=np.array(rt_gradients))
+            aux_1 = np.copy(decoder_last_gradients_2)
+            aux_2 = eps * np.copy(decoder_last_gradients_2)
+            aux_3 = np.concatenate((aux_2,aux_1))
+            encoder_reparametrization_gradients = encoder.backward_2(None,data[u],1,gradients=np.array(aux_3))
 
             # Reconstruction
             dkl_dm = -1* mean
             dkl_ds = (-0.5)*(np.exp(std)-1)
             kl_gradients = np.concatenate((dkl_ds,dkl_dm))
-            encoder_kl_gradients = encoder.backward(None,data[u],1,gradients=kl_gradients)
+            encoder_kl_gradients = encoder.backward_2(None,data[u],1,gradients=kl_gradients)
 
             # Sum gradients
             encoder_gradients = []
@@ -151,8 +154,10 @@ def train_perceptron(config, encoder, decoder, data, expected, encoder_layers, d
             for j in range(len(decoder_final_delta_w)):
                 decoder_final_delta_w[j] += decoder_deltas[j]
             # decoder_final_delta_w += decoder_deltas
-
+        # print("loss",loss)
+        # Estos cambian
         encoder.apply_delta_w(encoder_final_delta_w)
+        # Estos son iguales!
         decoder.apply_delta_w(decoder_final_delta_w)
 
         new_error = 0

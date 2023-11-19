@@ -27,7 +27,7 @@
     "epsilon": 0,
     "min_pixel_error": 1
   },
-  "limit": 1000,
+  "limit": 5000,
   "batch": 10,
   "test_pct": 0.8,
   "noise_stddev": 0.000001,
