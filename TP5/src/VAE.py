@@ -11,6 +11,12 @@ from error import from_str as error_from_str
 from multilayerPerceptron import MultiLayerPerceptron
 from optimizer import from_str as optimizer_from_str
 
+def loss_function(mean, std, data, result):
+    rec = 0.5 * np.mean((data - result) ** 2)
+    kl = -0.5 * np.sum(1 + std - mean ** 2 - np.exp(std))
+    return rec + kl
+
+
 def print_pixels_diff(mlp, data):
     print("Cantidad de pixeles diferentes por dato:")
     max_diff = 0
@@ -77,6 +83,9 @@ def train_perceptron(config, encoder, decoder, data, expected, encoder_layers, d
 
             decoder_results = decoder.forward(z)
 
+            loss = loss_function(mean, std, data[u], decoder_results)
+            #print("loss", loss)
+
             # Backward
             # Parte del decoder
             aux_error = np.array(expected[u]) - np.array(decoder_results)
@@ -91,10 +100,10 @@ def train_perceptron(config, encoder, decoder, data, expected, encoder_layers, d
             dz_dm = np.ones([1,4])
             dz_ds = eps * np.ones([1,4])
             rt_gradients = []
-            for i in range(2):
-                rt_gradients.append(np.dot(dz_ds,decoder_last_gradients[i])[0])
-            for i in range(2):
-                rt_gradients.append(np.dot(dz_dm,decoder_last_gradients[i])[0])
+            for j in range(2):
+                rt_gradients.append(np.dot(dz_ds,decoder_last_gradients[j])[0])
+            for j in range(2):
+                rt_gradients.append(np.dot(dz_dm,decoder_last_gradients[j])[0])
 
             encoder_reparametrization_gradients = encoder.backward(None,data[u],1,gradients=np.array(rt_gradients))
 
@@ -106,10 +115,10 @@ def train_perceptron(config, encoder, decoder, data, expected, encoder_layers, d
 
             # Sum gradients
             encoder_gradients = []
-            for i in range(len(encoder_reparametrization_gradients)):
-                encoder_gradients.append(encoder_reparametrization_gradients[i] + encoder_kl_gradients[i])
-            # encoder_deltas = encoder_optimizer.get_deltas(encoder_gradients)
-            encoder_deltas = encoder_gradients
+            for j in range(len(encoder_reparametrization_gradients)):
+                encoder_gradients.append(encoder_reparametrization_gradients[j] + encoder_kl_gradients[j])
+            encoder_deltas = encoder_optimizer.get_deltas(encoder_gradients)
+            #encoder_deltas = encoder_gradients
             encoder_final_delta_w += encoder_deltas
             decoder_final_delta_w += decoder_deltas
 
@@ -123,6 +132,9 @@ def train_perceptron(config, encoder, decoder, data, expected, encoder_layers, d
             mean = np.array(encoder_results[2::])
             eps, z = reparametrization_trick(std, mean)
             decoder_results = decoder.forward(z)
+            #for i in range(len(decoder_results)):
+            #    print("exp " + str(input_data[i]) + " sal " + str(decoder_results[i]))
+            #print("---------------------")
             new_error = max(new_error, error.difference(decoder_results, input_data))
 
         if condition.check_replace(min_error, new_error):
