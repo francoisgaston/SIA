@@ -36,7 +36,7 @@ def plot_latent_encode(encoder, data):
     fig.write_html(f"plots/latent_{timestamp}.html")
 
 
-def plot_latent(decoder, n=20, fig_size=15, digit_size=7):
+def plot_latent(decoder, n=20, fig_size=15, digit_size=12):
     figure = np.zeros((digit_size * n, digit_size * n))
     grid_x = np.linspace(-1.0, 1.0, n)
     grid_y = np.linspace(-1.0, 1.0, n)[::-1]

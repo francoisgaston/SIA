@@ -13,7 +13,7 @@ def imagen_a_matriz(imagen_path):
 
     return matriz_binaria
 
-path = 'xgtKvIT'
+path = 'IjuNF65'
 
 # Ruta de la imagen de entrada
 imagen_path = '/home/gaston/Descargas/' + path + '.png'
@@ -32,10 +32,6 @@ for layer in matriz_resultante:
 			i+=1
 			if i == 15:
 				i = 0
-				if bit == 1:
-					bit = 0
-				else:
-					bit = 1
 				print(bit, "," , end='')
 
 
@@ -52,10 +48,6 @@ for layer in matriz_resultante:
 			i+=1
 			if i == 15:
 				i = 0
-				if bit == 1:
-					bit = 0
-				else:
-					bit = 1
 				print(bit, "" , end='')
 		print("")
 	
