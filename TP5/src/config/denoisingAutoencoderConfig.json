@@ -1,5 +1,5 @@
 {
-  "input": "data/fonts.txt",
+  "input": "data/fonts_1.txt",
   "pickle_input": "mlp_max_diff_0.pkl",
   "pickle_output": "mlp_max_diff_1.pkl",
   "input_length": 35,
@@ -20,11 +20,13 @@
     "momentum_beta": 0.05,
     "momentum_alpha": 0.9
   },
-  "error": "PIXEL_DIFF",
-  "condition": "PIXEL_ERROR",
+  "error": "NORM2",
+  "condition": "STRUCTURE",
   "condition_config": {
     "epsilon": 0,
-    "min_pixel_error": 1
+    "min_pixel_error": 10,
+    "structure_threshold": 3,
+    "structure_condition": "PIXEL_ERROR"
   },
   "limit": 1000000,
   "batch": 20,

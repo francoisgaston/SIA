@@ -24,6 +24,7 @@ def train_perceptron(config, mlp, data, expected, perceptrons_per_layer, on_epoc
 
     i = 0
     min_error = sys.float_info.max
+    max_diff = sys.float_info.max
 
     condition = condition_from_str(config['condition'], config['condition_config'])
     error = error_from_str(config["error"])
@@ -32,7 +33,7 @@ def train_perceptron(config, mlp, data, expected, perceptrons_per_layer, on_epoc
     optimizer = optimizer_from_str(config["optimizer"], config["optimizer_config"], config['n'], perceptrons_per_layer)
     noise = noise_from_str(config["noise"], config["noise_config"])
 
-    while not condition.check_stop(min_error) and i < limit:
+    while not condition.check_stop(max_diff) and i < limit:
         final_delta_w = [np.zeros((perceptrons_per_layer[indx], perceptrons_per_layer[indx - 1] + 1)) for indx in
                          range(len(perceptrons_per_layer) - 1, 0, -1)]
         u_arr = random.sample(range(len(data)), batch)
@@ -41,7 +42,7 @@ def train_perceptron(config, mlp, data, expected, perceptrons_per_layer, on_epoc
             noisy_value = noise.apply(data[u])
             values = mlp.forward(noisy_value)
             aux_error = np.array(expected[u]) - np.array(values)
-            gradients = mlp.backward(aux_error, data[u], 1)
+            gradients, _ = mlp.backward(aux_error, data[u], 1)
             deltas = optimizer.get_deltas(gradients)
             for aux in range(len(final_delta_w)):
                 final_delta_w[aux] += deltas[aux]
@@ -50,6 +51,8 @@ def train_perceptron(config, mlp, data, expected, perceptrons_per_layer, on_epoc
 
         noisy_data = noise.apply_all(data)
         new_error = error.compute(noisy_data, mlp, expected)
+
+        max_diff = print_pixels_diff(mlp, noisy_data)
 
         optimizer.on_epoch(new_error)
 
@@ -110,13 +113,22 @@ if __name__ == "__main__":
             print("\n-------------\n")
 
 
-        for i, element in enumerate(data):
-            obtained = np.round(mlp.forward(element))
-            print_matrix(obtained)
-            print_matrix(element)
-            print(
-                f"differing index: {np.where((obtained == 1 and abs(element) == 0) or (abs(obtained) == 0 and element == 1))}")
-            print("\n--------------\n")
+        # for i, element in enumerate(data):
+        #     obtained = np.round(mlp.forward(element))
+        #     print_matrix(obtained)
+        #     print_matrix(element)
+        #     print(
+        #         f"differing index: {np.where((obtained == 1 & abs(element) == 0) | (abs(obtained) == 0 & element == 1))}")
+        #     print("\n--------------\n")
+
+        max_diff = print_pixels_diff(mlp, data)
+        now = datetime.now()
+        timestamp = now.strftime("%Y%m%d_%H%M%S")
+        pickle_output = config["pickle_output"] + timestamp
+        file_name = f"pickles/{pickle_output}"
+        with open(file_name, 'wb') as file:
+            pickle.dump(mlp, file)
+
 
         weights_list = mlp.get_all_weights()
 
