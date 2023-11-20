@@ -21,8 +21,8 @@
     "momentum_beta": 0.05,
     "momentum_alpha": 0.9
   },
-  "error": "NORM2",
-  "condition": "PIXEL_ERROR",
+  "error": "PIXEL_DIFF",
+  "condition": "PIXEL_DIFF",
   "condition_config": {
     "epsilon": 0,
     "min_pixel_error": 1
