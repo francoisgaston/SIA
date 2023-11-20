@@ -259,4 +259,4 @@ if __name__ == "__main__":
 
         train_perceptron(config, encoder, decoder, data, expected, encoder_layers=encoder_layers, decoder_layers=decoder_layers, on_epoch=None, on_min_error=on_min_error)
         plot_latent(decoder)
-        plot_latent_encode(encoder, data)
+        #plot_latent_encode(encoder, data)
