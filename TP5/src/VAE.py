@@ -6,6 +6,9 @@ import sys
 import random
 from matplotlib import pyplot as plt
 from plotly import graph_objects as go
+import os
+# import datetime
+import csv
 
 from condition import from_str as condition_from_str
 from activation import from_str as activation_from_str
@@ -14,7 +17,7 @@ from multilayerPerceptron import MultiLayerPerceptron
 from optimizer import from_str as optimizer_from_str
 
 
-def plot_latent_encode(encoder, data):
+def plot_latent_encode(encoder, data,name_data):
     elements = ['`', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
             'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
                't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~', 'DEL']
@@ -31,12 +34,13 @@ def plot_latent_encode(encoder, data):
             dots_x.append(dot[0])
             dots_y.append(dot[1])
         fig.add_trace(go.Scatter(x=dots_x, y=dots_y, mode='markers', name=elements[i]))
+    fig.update_layout(title="Latent space for each input (5K)")
     fig.show()
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-    fig.write_html(f"plots/latent_encoder_{timestamp}.html")
+    fig.write_html(f"plots/latent_encoder_{timestamp}_{name_data}.html")
 
 
-def plot_latent(decoder, n=20, output_size=15, image_size=12):
+def plot_latent(decoder, n=20, output_size=15, image_size=12,name_data=None):
     figure = np.zeros((image_size * n, image_size * n))
     grid_x = np.linspace(-1.0, 1.0, n)
     grid_y = np.linspace(-1.0, 1.0, n)[::-1]
@@ -61,9 +65,10 @@ def plot_latent(decoder, n=20, output_size=15, image_size=12):
     plt.yticks(pixel_range, sample_range_y)
 
     plt.imshow(figure, cmap="Greys_r")
+    plt.title("Output for latent space values (5K)")
     # guardamos el archivo
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-    plt.savefig(f"plots/latent_decoder_{timestamp}.png")
+    plt.savefig(f"plots/latent_decoder_{timestamp}_{name_data}.png")
 
 
 def loss_function(mean, std, data, result):
@@ -91,7 +96,7 @@ def print_pixels_diff(mlp, data):
 # Recibe la data y lo transforma en np's arrays de cada numero
 def read_input(file, input_length):
     file1 = open(file, "r+")
-    result = [(1 if character == '1' else 0) for character in file1.read().split()]
+    result = [(1 if character == '1' else -1) for character in file1.read().split()]
     result = np.array_split(result, len(result) / input_length)
     return result
 
@@ -128,7 +133,8 @@ def train_perceptron(config, encoder, decoder, data, expected, encoder_layers, d
 
         u_arr = random.sample(range(len(data)), batch)
         loss = 0
-        for u in range(len(data)):
+        # for u in range(len(data)):
+        for u in u_arr:
             # Foward
             # Resultado encoder
             encoder_result = encoder.forward(data[u])
@@ -161,6 +167,7 @@ def train_perceptron(config, encoder, decoder, data, expected, encoder_layers, d
             #     rt_gradients.append(np.dot(dz_ds,decoder_last_gradients[j])[0])
             # for j in range(2):
             #     rt_gradients.append(np.dot(dz_dm,decoder_last_gradients[j])[0])
+            # FIX
             # dz_dm
             aux_1 = np.copy(decoder_last_gradients_2)
             # dz_ds
@@ -202,36 +209,17 @@ def train_perceptron(config, encoder, decoder, data, expected, encoder_layers, d
             #    print("exp " + str(input_data[i]) + " sal " + str(decoder_results[i]))
             #print("---------------------")
             new_error = max(new_error, error.difference(decoder_results, input_data))
-
+        if on_epoch is not None:
+            on_epoch(i,new_error)
         if condition.check_replace(min_error, new_error):
             if on_min_error is not None:
                 on_min_error(i, new_error)
             min_error = new_error
 
-        # encoder_optimizer.on_epoch(new_error)
-        # decoder_optimizer.on_epoch(new_error)
-
-
-        #     deltas = optimizer.get_deltas(gradients)
-        #     for aux in range(len(final_delta_w)):
-        #         final_delta_w[aux] += deltas[aux]
-        #
-        # mlp.apply_delta_w(final_delta_w)
-        #
-        # new_error = error.compute(data, mlp, expected)
-        #
-        # optimizer.on_epoch(new_error)
-
-        # ### exec
-        # if on_epoch is not None:
-        #     # on_epoch(i, mlp, n)
-        #     on_epoch(i, mlp)
-        #
-        # if condition.check_replace(min_error, new_error):
-        #     if on_min_error is not None:
-        #         on_min_error(i, mlp, new_error)
-        #     min_error = new_error
-        # print("i",i)
+        encoder_optimizer.on_epoch(new_error)
+        decoder_optimizer.on_epoch(new_error)
+        if i%1000 == 0:
+            print("loss",loss)
         i += 1
 
 
@@ -245,9 +233,8 @@ if __name__ == "__main__":
         data = np.array(read_input(config['input'], config['input_length']))
         expected = np.copy(data)
         activation_function = activation_from_str(string=config['activation'], beta=config["beta"])
-
         encoder_layers = [config['input_length']] + config['encoder_hidden'] + [4]
-        decoder_layers = [2] + config['decoder_hidden'] + [config['input_length']]
+        decoder_layers = [2, 4] + config['decoder_hidden'] + [config['input_length']]
 
         encoder = MultiLayerPerceptron(encoder_layers, activation_function)
         decoder = MultiLayerPerceptron(decoder_layers, activation_function)
@@ -255,10 +242,13 @@ if __name__ == "__main__":
         if config["encoder_pickle_input"]:
             with open(config["encoder_pickle_input"], 'rb') as file:
                 encoder = pickle.load(file)
-        if  config["decoder_pickle_input"]:
+        if config["decoder_pickle_input"]:
             with open(config["decoder_pickle_input"], 'rb') as file:
                 decoder = pickle.load(file)
 
+        # csv_values = [["Epoch","Optimizer","Error"]]
+        # def on_epoch(epoch, error):
+        #     csv_values.append([epoch, config["optimizer"],error])
         def on_min_error(epoch, min_error):
             # max_diff = print_pixels_diff(mlp, data)
             # now = datetime.now()
@@ -272,13 +262,20 @@ if __name__ == "__main__":
 
         if config["train"] :
             train_perceptron(config, encoder, decoder, data, expected, encoder_layers=encoder_layers, decoder_layers=decoder_layers, on_epoch=None, on_min_error=on_min_error)
+        #
+        # current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        # csv_filename = f"csv/{config['names_description']}_{current_time}.csv"
+        # os.makedirs(os.path.dirname(csv_filename), exist_ok=True)
+        # with open(csv_filename, mode='a', newline='') as out:
+        #     csv_writer = csv.writer(out)
+        #     csv_writer.writerows(csv_values)
 
         if config["encoder_pickle_output"] :
-            with open("pickles/"+config["encoder_pickle_output"], 'wb') as file:
+            with open("pickles/"+config["encoder_pickle_output"]+config["names_description"], 'wb') as file:
                 pickle.dump(encoder, file)
         if config["decoder_pickle_output"] :
-            with open("pickles/"+config["decoder_pickle_output"], 'wb') as file:
+            with open("pickles/"+config["decoder_pickle_output"]+config["names_description"], 'wb') as file:
                 pickle.dump(decoder, file)
 
-        plot_latent(decoder,image_size=7)
-        plot_latent_encode(encoder, data)
+        plot_latent(decoder,image_size=7,name_data=config["names_description"])
+        plot_latent_encode(encoder, data, name_data=config["names_description"])
