@@ -49,7 +49,7 @@ class SaltAndPepperNoise(Noise):
         nonzero_indexes = np.flatnonzero(noisy_element)
         if nonzero_indexes.size > 0:
             salt_indices = np.random.choice(nonzero_indexes, salt_pixels, replace=False)
-            noisy_element[salt_indices] = 1
+            noisy_element[salt_indices] = 0
 
         nonone_indexes = np.where(noisy_element == 0)[0]
         if nonone_indexes.size > 0:

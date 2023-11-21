@@ -3,7 +3,7 @@
   "pickle_input": "mlp_max_diff_0.pkl",
   "pickle_output": "mlp_max_diff_1.pkl",
   "input_length": 35,
-  "perceptrons_for_layers": [35, 30, 20, 10],
+  "perceptrons_for_layers": [35, 30, 20, 10, 5, 2],
   "activation": "SIGMOID",
   "beta": 0.8,
   "n": 0.05,
@@ -28,7 +28,7 @@
     "structure_threshold": 3,
     "structure_condition": "PIXEL_ERROR"
   },
-  "limit": 1000000,
+  "limit": 200,
   "batch": 20,
   "test_pct": 0.8,
   "noise": "SALT_AND_PEPPER",

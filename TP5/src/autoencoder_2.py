@@ -1,3 +1,6 @@
+import csv
+from datetime import datetime
+import matplotlib.pyplot as plt
 import pickle
 from datetime import datetime
 import json
@@ -120,9 +123,9 @@ def train_perceptron(config, encoder, decoder, data, expected, encoder_layers,de
         decoder_optimizer.on_epoch(new_error)
 
         ### exec
-        # if on_epoch is not None:
-        #     # on_epoch(i, mlp, n)
-        #     on_epoch(i, mlp)
+        if on_epoch is not None:
+            # on_epoch(i, mlp, n)
+            on_epoch(i, new_error, config)
 
         if condition.check_replace(min_error, new_error):
             if on_min_error is not None:
@@ -148,52 +151,23 @@ if __name__ == "__main__":
         encoder_layers = config['perceptrons_for_layers']
         decoder_layers = config['perceptrons_for_layers'][::-1]
 
-        # layers = encoder_layers + decoder_layers[1::]
-        # mlp = MultiLayerPerceptron(layers, activation_function)
-
         encoder = MultiLayerPerceptron(encoder_layers,activation_function)
         decoder = MultiLayerPerceptron(decoder_layers,activation_function)
 
-        # if(config["pickle_input"]):
-        #     with open(config["pickle_input"], 'rb') as file:
-        #         mlp = pickle.load(file)
 
         def on_min_error(epoch, min_error):
-            # max_diff = print_pixels_diff(mlp, data)
-            # now = datetime.now()
-            # timestamp = now.strftime("%Y%m%d_%H%M%S")
-            # pickle_output = config["pickle_output"] + timestamp
-            # file_name = f"pickles/{pickle_output}"
-            # if(max_diff == 1):
-            #     with open(file_name, 'wb') as file:
-            #         pickle.dump(mlp, file)
-            print("min_error: ", min_error)
+           print("min_error: ", min_error)
 
-        train_perceptron(config, encoder, decoder, data, expected, encoder_layers=encoder_layers,decoder_layers=decoder_layers, on_epoch=None, on_min_error=on_min_error)
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        csv_file_name = f'logs/autoencoder2_error_epochs_{timestamp}.csv'  # Use f-string for formatting
+        with open(csv_file_name, mode='a', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(['Epoch', 'Error', 'Optimizer', 'Architecture'])  # Write header if file doesn't exist
 
-        # def print_matrix(elem):
-        #     for i in range(7):
-        #         print(elem[5*i:5*(i+1)])
-        #     print("\n-------------\n")
-        #
-        # for i, element in enumerate(data):
-        #     obtained = np.round(mlp.forward(element))
-        #     print_matrix(obtained)
-        #     print_matrix(element)
-        #     print(f"differing index: {np.where((obtained == 1 and abs(element) == 0) or (abs(obtained) == 0 and element == 1))}")
-        #     print("\n--------------\n")
+            def on_epoch(epoch, min_error, config):
+                    writer.writerow([epoch, min_error, config["optimizer"], config["perceptrons_for_layers"]])
 
+            train_perceptron(config, encoder, decoder, data, expected, encoder_layers=encoder_layers,decoder_layers=decoder_layers, on_epoch=on_epoch, on_min_error=on_min_error)
 
-
-        # weights_list = mlp.get_all_weights()
-        #
-        # encoder_weigths = weights_list[:len(encoder_layers)-1]
-        # decoder_weigths = weights_list[len(encoder_weigths):]
-        #
-        # encoder = MultiLayerPerceptron.from_weight_list(encoder_layers,activation_function,encoder_weigths)
-        # decoder = MultiLayerPerceptron.from_weight_list(decoder_layers,activation_function, decoder_weigths)
-
-        # for weights in mlp.get_all_weights():
-        #     print(weights)
 
 
