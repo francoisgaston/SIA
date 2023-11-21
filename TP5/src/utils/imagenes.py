@@ -13,7 +13,7 @@ def imagen_a_matriz(imagen_path):
 
     return matriz_binaria
 
-path = 'IjuNF65'
+path = 'CKGxZOs'
 
 # Ruta de la imagen de entrada
 imagen_path = '/home/gaston/Descargas/' + path + '.png'

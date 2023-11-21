@@ -6,6 +6,9 @@ import sys
 import random
 from matplotlib import pyplot as plt
 from plotly import graph_objects as go
+import os
+import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap, Normalize
 
 from condition import from_str as condition_from_str
 from activation import from_str as activation_from_str
@@ -14,11 +17,29 @@ from multilayerPerceptron import MultiLayerPerceptron
 from optimizer import from_str as optimizer_from_str
 
 
+def plot_pattern(pattern, iteration="", save_path="plots", target_size=(20, 20)):
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
+
+    pattern_reshaped = np.array(pattern).reshape(target_size)
+
+    # Set normalization range from 0 to 1
+    norm = Normalize(vmin=0, vmax=1)
+
+    # Define a custom colormap with white, greyscale, and black segments
+    cmap = LinearSegmentedColormap.from_list('custom_gray', [(1, 1, 1), (0.5, 0.5, 0.5), (0, 0, 0)], N=256)
+
+    plt.imshow(pattern_reshaped, cmap=cmap, norm=norm)
+    plt.axis('off')
+    filename = os.path.join(save_path, f"pattern{iteration}.png")
+    plt.savefig(filename)
+    plt.close()
+
 def plot_latent_encode(encoder, data):
-    # fonts = ['`', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
-    #         'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
-    #            't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~', 'DEL']
-    digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    elements = ['`', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
+            'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
+               't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~', 'DEL']
+    # elements = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
     fig = go.Figure()
     for i in range(len(data)):
         dots_x = []
@@ -30,33 +51,40 @@ def plot_latent_encode(encoder, data):
             dot = reparametrization_trick(std, mean)[1]
             dots_x.append(dot[0])
             dots_y.append(dot[1])
-        fig.add_trace(go.Scatter(x=dots_x, y=dots_y, mode='markers', name=digits[i]))
-    # fig.show()
+        fig.add_trace(go.Scatter(x=dots_x, y=dots_y, mode='markers', name=elements[i]))
+    fig.show()
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-    fig.write_html(f"plots/latent_{timestamp}.html")
+    fig.write_html(f"plots/latent_encoder_{timestamp}.html")
 
 
-def plot_latent(decoder, n=20, fig_size=15, digit_size=12):
-    figure = np.zeros((digit_size * n, digit_size * n))
+def plot_latent(decoder, n=20, output_size=15, image_size=12):
+    figure = np.zeros((image_size * n, image_size * n))
     grid_x = np.linspace(-1.0, 1.0, n)
     grid_y = np.linspace(-1.0, 1.0, n)[::-1]
+    # Para cada uno en la grilla
     for i, yi in enumerate(grid_y):
         for j, xi in enumerate(grid_x):
             z = np.array([[xi, yi]])
             output = decoder.forward(z)
-            digit = output.reshape(digit_size, digit_size)
-            figure[i * digit_size: (i + 1) * digit_size, j * digit_size: (j + 1) * digit_size] = digit
-    plt.figure(figsize=(fig_size, fig_size))
-    start_range = digit_size // 2
-    end_range = n * digit_size + start_range
-    pixel_range = np.arange(start_range, end_range, digit_size)
+            # Lo pasamos a matrix
+            digit = output.reshape(image_size, image_size)
+            # Asignamos esa parte de la figura a la imagen
+            figure[i * image_size: (i + 1) * image_size, j * image_size: (j + 1) * image_size] = digit
+    plt.figure(figsize=(output_size, output_size))
+    start_range = image_size // 2
+    end_range = n * image_size + start_range
+    pixel_range = np.arange(start_range, end_range, image_size)
+    # limitamos los decimales de los valores del espacio (input del decoder)
     sample_range_x = np.round(grid_x, 1)
     sample_range_y = np.round(grid_y, 1)
+    # configuramos las labels para cada posicion
     plt.xticks(pixel_range, sample_range_x)
     plt.yticks(pixel_range, sample_range_y)
+
     plt.imshow(figure, cmap="Greys_r")
+    # guardamos el archivo
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-    plt.savefig(f"plots/latent_{timestamp}.png")
+    plt.savefig(f"plots/latent_decoder_{timestamp}.png")
 
 
 def loss_function(mean, std, data, result):
@@ -84,7 +112,7 @@ def print_pixels_diff(mlp, data):
 # Recibe la data y lo transforma en np's arrays de cada numero
 def read_input(file, input_length):
     file1 = open(file, "r+")
-    result = [(1 if character == '1' else -1) for character in file1.read().split()]
+    result = [(1 if character == '1' else 0) for character in file1.read().split()]
     result = np.array_split(result, len(result) / input_length)
     return result
 
@@ -147,14 +175,16 @@ def train_perceptron(config, encoder, decoder, data, expected, encoder_layers, d
             decoder_last_gradients = np.transpose(decoder_last_gradients)
             # Reparametrizacion
             # OJO: Esta hardcodeado, se asume que la segunda (despues de la capa de 2 nodos) capa del decoder tiene 4 nodos
-            dz_dm = np.ones([1,10])
-            dz_ds = eps * np.ones([1,10])
-            rt_gradients = []
-            for j in range(2):
-                rt_gradients.append(np.dot(dz_ds,decoder_last_gradients[j])[0])
-            for j in range(2):
-                rt_gradients.append(np.dot(dz_dm,decoder_last_gradients[j])[0])
+            # dz_dm = np.ones([1,10])
+            # dz_ds = eps * np.ones([1,10])
+            # rt_gradients = []
+            # for j in range(2):
+            #     rt_gradients.append(np.dot(dz_ds,decoder_last_gradients[j])[0])
+            # for j in range(2):
+            #     rt_gradients.append(np.dot(dz_dm,decoder_last_gradients[j])[0])
+            # dz_dm
             aux_1 = np.copy(decoder_last_gradients_2)
+            # dz_ds
             aux_2 = eps * np.copy(decoder_last_gradients_2)
             aux_3 = np.concatenate((aux_2,aux_1))
             encoder_reparametrization_gradients = encoder.backward_2(None,data[u],1,gradients=np.array(aux_3))
@@ -179,9 +209,7 @@ def train_perceptron(config, encoder, decoder, data, expected, encoder_layers, d
                 decoder_final_delta_w[j] += decoder_deltas[j]
             # decoder_final_delta_w += decoder_deltas
         # print("loss",loss)
-        # Estos cambian
         encoder.apply_delta_w(encoder_final_delta_w)
-        # Estos son iguales!
         decoder.apply_delta_w(decoder_final_delta_w)
 
         new_error = 0
@@ -245,6 +273,12 @@ if __name__ == "__main__":
         encoder = MultiLayerPerceptron(encoder_layers, activation_function)
         decoder = MultiLayerPerceptron(decoder_layers, activation_function)
 
+        if config["encoder_pickle_input"]:
+            with open(config["encoder_pickle_input"], 'rb') as file:
+                encoder = pickle.load(file)
+        if  config["decoder_pickle_input"]:
+            with open(config["decoder_pickle_input"], 'rb') as file:
+                decoder = pickle.load(file)
 
         def on_min_error(epoch, min_error):
             # max_diff = print_pixels_diff(mlp, data)
@@ -257,6 +291,22 @@ if __name__ == "__main__":
             #         pickle.dump(mlp, file)
             print("min_error: ", min_error)
 
-        train_perceptron(config, encoder, decoder, data, expected, encoder_layers=encoder_layers, decoder_layers=decoder_layers, on_epoch=None, on_min_error=on_min_error)
-        plot_latent(decoder)
-        #plot_latent_encode(encoder, data)
+        if config["train"] :
+            train_perceptron(config, encoder, decoder, data, expected, encoder_layers=encoder_layers, decoder_layers=decoder_layers, on_epoch=None, on_min_error=on_min_error)
+
+        if config["encoder_pickle_output"] :
+            with open("pickles/"+config["encoder_pickle_output"], 'wb') as file:
+                pickle.dump(encoder, file)
+        if config["decoder_pickle_output"] :
+            with open("pickles/"+config["decoder_pickle_output"], 'wb') as file:
+                pickle.dump(decoder, file)
+
+        # for u in range(len(data)):
+        #    print(encoder.forward(data[u]))
+
+        # for i in range(20):
+        #    plot_pattern((decoder.forward([0,  0.6 + i/10.0])   +1) /2, iteration=str(i), target_size=(12, 12))
+        # print((decoder.forward([0.3,0.7])+1) /2)
+
+        plot_latent(decoder,image_size=7)
+        plot_latent_encode(encoder, data)

@@ -25,19 +25,22 @@ def augment_training_data(data, labels, noise_stddev):
     return np.concatenate((data, noisy_data)), np.concatenate((labels, noisy_labels))
 
 
-def print_pixels_diff(mlp, data):
-    print("Cantidad de pixeles diferentes por dato:")
+def print_pixels_diff(mlp, data, do_print=False):
+    if do_print:
+        print("Cantidad de pixeles diferentes por dato:")
     max_diff = 0
     for i in range(len(data)):
         obtained = mlp.forward(data[i])
         if i == 1:
-           print(data[i], "\n", np.round(obtained), "\n\n")
+           if do_print:
+               print(data[i], "\n", np.round(obtained), "\n\n")
         diff = 0
         for j in range(len(data[i])):
             diff += 1 if (data[i][j] != round(obtained[j])) else 0
         max_diff = max(max_diff,diff)
         # print(f"{i}: {diff} pixels")
-    print(f"max_diff: {max_diff}\n")
+
+    print(f"max_diff: {max_diff}")
     return max_diff
 
 
