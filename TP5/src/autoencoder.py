@@ -91,7 +91,7 @@ def train_perceptron(config, mlp, data, expected, perceptrons_per_layer, on_epoc
         for u in u_arr:
             values = mlp.forward(data[u])
             aux_error = np.array(expected[u]) - np.array(values)
-            gradients = mlp.backward(aux_error, data[u], 1)
+            gradients, _ = mlp.backward(aux_error, data[u], 1)
             deltas = optimizer.get_deltas(gradients)
             for aux in range(len(final_delta_w)):
                 final_delta_w[aux] += deltas[aux]
