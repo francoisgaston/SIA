@@ -7,6 +7,9 @@ import random
 from matplotlib import pyplot as plt
 from plotly import graph_objects as go
 import os
+import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap, Normalize
+import os
 # import datetime
 import csv
 
@@ -16,6 +19,24 @@ from error import from_str as error_from_str
 from multilayerPerceptron import MultiLayerPerceptron
 from optimizer import from_str as optimizer_from_str
 
+
+def plot_pattern(pattern, iteration="", save_path="plots", target_size=(20, 20)):
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
+
+    pattern_reshaped = np.array(pattern).reshape(target_size)
+
+    # Set normalization range from 0 to 1
+    norm = Normalize(vmin=0, vmax=1)
+
+    # Define a custom colormap with white, greyscale, and black segments
+    cmap = LinearSegmentedColormap.from_list('custom_gray', [(1, 1, 1), (0.5, 0.5, 0.5), (0, 0, 0)], N=256)
+
+    plt.imshow(pattern_reshaped, cmap=cmap, norm=norm)
+    plt.axis('off')
+    filename = os.path.join(save_path, f"pattern{iteration}.png")
+    plt.savefig(filename)
+    plt.close()
 
 def plot_latent_encode(encoder, data,name_data):
     elements = ['`', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
@@ -276,6 +297,11 @@ if __name__ == "__main__":
         if config["decoder_pickle_output"] :
             with open("pickles/"+config["decoder_pickle_output"]+config["names_description"], 'wb') as file:
                 pickle.dump(decoder, file)
+        # for u in range(len(data)):
+        #    print(encoder.forward(data[u]))
 
+        # for i in range(20):
+        #    plot_pattern((decoder.forward([0,  0.6 + i/10.0])   +1) /2, iteration=str(i), target_size=(12, 12))
+        # print((decoder.forward([0.3,0.7])+1) /2)
         plot_latent(decoder,image_size=7,name_data=config["names_description"])
         plot_latent_encode(encoder, data, name_data=config["names_description"])

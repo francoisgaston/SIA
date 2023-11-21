@@ -3,15 +3,11 @@ from datetime import datetime
 import json
 import numpy as np
 import sys
-import random
 
-from condition import from_str as condition_from_str
-from activation import from_str as activation_from_str
-from error import from_str as error_from_str
-from multilayerPerceptron import MultiLayerPerceptron
-from optimizer import from_str as optimizer_from_str
-from autoencoder import read_input, print_pixels_diff
+from TP5.src.autoencoder import read_input
 from noise import from_str as noise_from_str
+
+from utils.PrintLetter import plot_pattern
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
@@ -23,8 +19,8 @@ if __name__ == "__main__":
         _input = config['input']
         _input_length = config['input_length']
         noise = noise_from_str(config["noise"], config["noise_config"])
-    # with open('pickles/mlp_max_diff_1.pkl20231120_151625', 'rb') as file:
-    with open('pickles/mlp_max_diff_1.pkl20231120_154628', 'rb') as file:
+    with open('pickles/mlp_max_diff_1.pkl20231120_170957-10x10', 'rb') as file:
+    # with open('pickles/mlp_max_diff_1.pkl20231120_174143-7x5', 'rb') as file:
 
         mlp = pickle.load(file)
         data = np.array(read_input(_input, _input_length))
@@ -61,3 +57,9 @@ if __name__ == "__main__":
                 print("\t\t\t", noisy_data[i])
                 print("\t\t\t Obtained: -------------------------------------------------------------")
                 print("\t\t\t", result)
+
+            size = (10, 10)
+
+            plot_pattern(data[i], str(i) + '_original', save_path="plots/denoising", target_size=size)
+            plot_pattern(result, str(i) + '_obtained', save_path="plots/denoising", target_size=size)
+            plot_pattern(noisy_data[i], str(i) + '_noisy', save_path="plots/denoising", target_size=size)
