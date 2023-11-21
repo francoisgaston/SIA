@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+numpy = "*"
+plotly = "*"
+pandas = "*"
+pillow = "*"
+kaleido = "*"
+scikit-learn = "*"
+matplotlib = "*"
+jupyter = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3"
