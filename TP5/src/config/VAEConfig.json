@@ -1,7 +1,9 @@
 {
   "input": "data/emojis.txt",
   "pickle_input": "mlp_max_diff_0.pkl",
-  "pickle_output": "mlp_max_diff_1.pkl",
+  "pickle_encoder": "pickles/encoder_g.pkl",
+  "pickle_decoder": "pickles/decoder_g.pkl",
+  "pickle_output": ".pkl",
   "input_length": 144,
   "encoder_hidden": [100, 50, 10],
   "decoder_hidden": [10, 50, 100],
@@ -27,8 +29,8 @@
     "epsilon": 0,
     "min_pixel_error": 1
   },
-  "limit": 1000,
-  "batch": 10,
+  "limit": 5000,
+  "batch": 20,
   "test_pct": 0.8,
   "noise_stddev": 0.000001,
   "data_augmentation": false

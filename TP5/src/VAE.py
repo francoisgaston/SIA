@@ -6,6 +6,9 @@ import sys
 import random
 from matplotlib import pyplot as plt
 from plotly import graph_objects as go
+import os
+import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap, Normalize
 
 from condition import from_str as condition_from_str
 from activation import from_str as activation_from_str
@@ -13,6 +16,24 @@ from error import from_str as error_from_str
 from multilayerPerceptron import MultiLayerPerceptron
 from optimizer import from_str as optimizer_from_str
 
+
+def plot_pattern(pattern, iteration="", save_path="plots", target_size=(20, 20)):
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
+
+    pattern_reshaped = np.array(pattern).reshape(target_size)
+
+    # Set normalization range from 0 to 1
+    norm = Normalize(vmin=0, vmax=1)
+
+    # Define a custom colormap with white, greyscale, and black segments
+    cmap = LinearSegmentedColormap.from_list('custom_gray', [(1, 1, 1), (0.5, 0.5, 0.5), (0, 0, 0)], N=256)
+
+    plt.imshow(pattern_reshaped, cmap=cmap, norm=norm)
+    plt.axis('off')
+    filename = os.path.join(save_path, f"pattern{iteration}.png")
+    plt.savefig(filename)
+    plt.close()
 
 def plot_latent_encode(encoder, data):
     # fonts = ['`', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
@@ -36,7 +57,7 @@ def plot_latent_encode(encoder, data):
     fig.write_html(f"plots/latent_{timestamp}.html")
 
 
-def plot_latent(decoder, n=20, fig_size=15, digit_size=12):
+def plot_latent(decoder, n=10, fig_size=15, digit_size=12):
     figure = np.zeros((digit_size * n, digit_size * n))
     grid_x = np.linspace(-1.0, 1.0, n)
     grid_y = np.linspace(-1.0, 1.0, n)[::-1]
@@ -54,7 +75,7 @@ def plot_latent(decoder, n=20, fig_size=15, digit_size=12):
     sample_range_y = np.round(grid_y, 1)
     plt.xticks(pixel_range, sample_range_x)
     plt.yticks(pixel_range, sample_range_y)
-    plt.imshow(figure, cmap="Greys_r")
+    plt.imshow(figure, cmap='gray_r', vmin=0, vmax=1)
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     plt.savefig(f"plots/latent_{timestamp}.png")
 
@@ -246,6 +267,14 @@ if __name__ == "__main__":
         decoder = MultiLayerPerceptron(decoder_layers, activation_function)
 
 
+        #if(config["pickle_encoder"]):
+        #    with open(config["pickle_encoder"], 'rb') as file:
+        #        encoder = pickle.load(file)
+
+        #if(config["pickle_decoder"]):
+        #    with open(config["pickle_decoder"], 'rb') as file2:
+        #        decoder = pickle.load(file2)
+
         def on_min_error(epoch, min_error):
             # max_diff = print_pixels_diff(mlp, data)
             # now = datetime.now()
@@ -258,5 +287,23 @@ if __name__ == "__main__":
             print("min_error: ", min_error)
 
         train_perceptron(config, encoder, decoder, data, expected, encoder_layers=encoder_layers, decoder_layers=decoder_layers, on_epoch=None, on_min_error=on_min_error)
+
+        pickle_output = "encoder" + config["pickle_output"]
+        file_name = f"pickles/{pickle_output}"
+        with open(file_name, 'wb') as file:
+            pickle.dump(encoder, file)
+
+        pickle_output = "decoder" + config["pickle_output"]
+        file_name = f"pickles/{pickle_output}"
+        with open(file_name, 'wb') as file:
+            pickle.dump(decoder, file)
+
+        #for u in range(len(data)):
+        #    print(encoder.forward(data[u]))
+
+        #for i in range(20):
+        #    plot_pattern((decoder.forward([0,  0.6 + i/10.0])   +1) /2, iteration=str(i), target_size=(12, 12))
+        #print((decoder.forward([0.3,0.7])+1) /2)
+
         plot_latent(decoder)
         #plot_latent_encode(encoder, data)
