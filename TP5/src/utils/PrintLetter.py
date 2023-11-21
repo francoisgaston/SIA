@@ -3,9 +3,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.colors import LinearSegmentedColormap, Normalize
 
-def plot_pattern(pattern, iteration="", save_path="plots", target_size=(20, 20)):
-    if not os.path.exists(save_path):
-        os.makedirs(save_path)
+def plot_pattern(pattern, target_size=(20, 20), filename="plots/pattern.png"):
+    path = os.path.dirname(filename)
+    if not os.path.exists(path):
+        os.makedirs(path)
 
     pattern_reshaped = np.array(pattern).reshape(target_size)
 
@@ -17,7 +18,6 @@ def plot_pattern(pattern, iteration="", save_path="plots", target_size=(20, 20))
 
     plt.imshow(pattern_reshaped, cmap=cmap, norm=norm)
     plt.axis('off')
-    filename = os.path.join(save_path, f"pattern{iteration}.png")
     plt.savefig(filename)
     plt.close()
 
